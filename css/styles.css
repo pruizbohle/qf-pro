@@ -1,0 +1,57 @@
+/* --- Base --- */
+:root{
+  --bg:#0b1422; --bg-2:#0f1a2b; --card:#0f1a2b; --muted:#a8b3cf;
+  --line:rgba(148,163,184,.14); --accent:#60a5fa; --accent-2:#7dd3fc;
+}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:#dbeafe;font-family:ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial}
+
+/* --- Rejilla app --- */
+.app{display:grid;grid-template-columns:260px 1fr;gap:0;min-height:100vh}
+.sidebar{background:linear-gradient(180deg,#0b1422,#0a1220);border-right:1px solid var(--line);padding:20px 16px;position:sticky;top:0;align-self:start;height:100vh}
+.main{background:var(--bg);padding-bottom:64px}
+
+/* --- Header (estático, no sticky) --- */
+.app-header{border-bottom:1px solid var(--line);background:var(--bg)}
+.app-header .bar{display:grid;grid-template-columns:220px 1fr 40px;gap:16px;align-items:center;padding:12px 16px}
+.brand strong{font-weight:700}
+.brand .muted{color:var(--muted);font-size:.9rem}
+.search{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
+.search input{width:100%;background:transparent;border:0;outline:0;color:#dbeafe}
+.user{width:36px;height:36px;border-radius:999px;background:#1f2a44;border:1px solid var(--line)}
+
+/* --- Nav --- */
+nav a.nav-item{display:block;padding:10px 12px;border-radius:10px;color:#dbeafe;text-decoration:none;margin:4px 0;border:1px solid transparent}
+nav a.nav-item:hover{background:rgba(96,165,250,.08);border-color:rgba(96,165,250,.25)}
+nav a.nav-item.active{background:linear-gradient(135deg,rgba(96,165,250,.12),rgba(125,211,252,.08));border-color:rgba(96,165,250,.35)}
+
+/* --- Utilidades --- */
+.container{padding:16px}
+.grid2{display:grid;grid-template-columns:1fr 320px;gap:16px}
+.row{display:flex;align-items:center;gap:8px}
+.list{display:grid;gap:8px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px;text-align:center}
+.pill{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid rgba(96,165,250,.25);background:linear-gradient(135deg,rgba(96,165,250,.10),rgba(125,211,252,.06));text-decoration:none;color:#dbeafe}
+.btn{background:#12233a;border:1px solid var(--line);color:#dbeafe;border-radius:10px;padding:8px 10px;cursor:pointer}
+.btn:hover{border-color:rgba(96,165,250,.35)}
+.pick{display:inline-flex;gap:8px;align-items:center}
+.muted{color:var(--muted)}
+h1,h2,h3{margin:.2rem 0}
+input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbeafe;border-radius:10px;padding:8px}
+
+/* --- Índice: énfasis fichas --- */
+.fichas-wrap{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.ficha-card{position:relative}
+.ficha-card .trash{position:absolute;top:8px;right:8px;cursor:pointer;opacity:.9}
+.timebar{height:6px;background:#102035;border-radius:8px;overflow:hidden;margin-top:8px;border:1px solid var(--line)}
+.timebar > span{display:block;height:100%;background:linear-gradient(90deg,var(--accent),var(--accent-2))}
+
+/* --- Atención: panel derecho con fichas --- */
+.right-list{position:sticky;top:12px;align-self:start}
+.tab-btn{border:1px solid #22314a;background:#0f1a2b;color:#dbeafe;padding:8px 12px;border-radius:10px;cursor:pointer}
+.tab-btn.active{border-color:rgba(96,165,250,.35);background:linear-gradient(135deg,rgba(96,165,250,.12),rgba(125,211,252,.08))}
+
+/* Responsive mínimo */
+@media (max-width:1100px){ .app{grid-template-columns:1fr} .sidebar{display:none} .grid2{grid-template-columns:1fr} }

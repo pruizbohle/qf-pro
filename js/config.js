@@ -1,0 +1,6 @@
+export const CONFIG = {
+  MAX_OPEN: 5,
+  INACTIVITY_MS: 15*60*1000,
+  TTL_MS: 60*60*1000,
+  WARN_COUNTDOWN_MS: 60*1000
+};

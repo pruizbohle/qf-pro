@@ -1,0 +1,46 @@
+{
+  "pairs": [
+    {
+      "a_base": "atorvastatina",
+      "b_base": "claritromicina",
+      "severidad": "Moderada",
+      "mecanismo": "Inhibición CYP3A4 → ↑ niveles de estatina",
+      "recomendacion": "Evitar si es posible o usar la menor dosis; considerar estatina no CYP3A4. Vigilar mialgias/CPK."
+    },
+    {
+      "a_base": "atorvastatina",
+      "b_base": "amlodipino",
+      "severidad": "Leve-Moderada",
+      "mecanismo": "Posible ↑ niveles de estatina",
+      "recomendacion": "Generalmente segura; vigilar síntomas musculares si dosis altas."
+    },
+    {
+      "a_base": "enalapril",
+      "b_base": "espironolactona",
+      "severidad": "Moderada-Alta",
+      "mecanismo": "Riesgo de hiperpotasemia",
+      "recomendacion": "Usar con precaución; controlar K+ y función renal."
+    },
+    {
+      "a_base": "ibuprofeno",
+      "b_base": "enalapril",
+      "severidad": "Moderada",
+      "mecanismo": "AINE reduce efecto antihipertensivo y ↑ riesgo de IRA",
+      "recomendacion": "Usar el menor tiempo posible; considerar alternativa analgésica; monitorizar PA/creatinina."
+    },
+    {
+      "a_base": "ibuprofeno",
+      "b_base": "losartan",
+      "severidad": "Moderada",
+      "mecanismo": "AINE + ARA II → riesgo de IRA (especial si diurético concomitante)",
+      "recomendacion": "Evitar triple whammy (IECA/ARA II + diurético + AINE); hidratar y monitorizar función renal."
+    },
+    {
+      "a_base": "ibuprofeno",
+      "b_base": "hidroclorotiazida",
+      "severidad": "Moderada",
+      "mecanismo": "AINE reduce efecto diurético/antihipertensivo",
+      "recomendacion": "Usar AINE a demanda el menor tiempo; vigilar PA y retención."
+    }
+  ]
+}

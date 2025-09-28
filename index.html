@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QF PRO — Inicio</title>
+  <link rel="stylesheet" href="./css/styles.css"/>
+</head>
+<body>
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar">
+    <div class="brand">
+      <strong>QF PRO</strong><br><span class="muted">Inicio</span>
+    </div>
+    <nav style="margin-top:12px">
+      <a class="nav-item active" href="index.html">🏷️ Inicio</a>
+      <a class="nav-item" href="sections/atencion.html">🧑‍⚕️ Atención farmacéutica</a>
+      <a class="nav-item" href="sections/generador.html">📝 Generador de texto</a>
+      <a class="nav-item" href="sections/vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="sections/calculadoras.html">🧮 Calculadoras</a>
+      <a class="nav-item" href="sections/tests.html">🧩 Tests</a>
+      <a class="nav-item" href="sections/material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="sections/proa.html">🧪 PROA</a>
+      <a class="nav-item" href="sections/plantas.html">🌿 Plantas medicinales</a>
+      <a class="nav-item" href="sections/protocolos.html">📑 Orientaciones técnicas</a>
+      <a class="nav-item" href="sections/config.html">⚙️ Configuración</a>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <div class="main">
+    <div id="header"></div>
+
+    <main class="container">
+      <div class="row" style="gap:12px;align-items:center">
+        <label class="pick">Nueva ficha (iniciales 3 letras):
+          <input id="ini" maxlength="3" style="text-transform:uppercase;width:90px" placeholder="ABC">
+        </label>
+        <button id="btn-crear" class="btn">Crear</button>
+        <span class="muted">Límite 5 · Vigencia 3 días</span>
+      </div>
+
+      <h2 style="margin-top:8px">Fichas activas</h2>
+      <div id="fichas" class="fichas-wrap"></div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import { mountHeader } from "./js/header.js";
+  import { FichasStore } from "./js/fichasStore.js";
+  mountHeader();
+
+  const $ini = document.getElementById('ini');
+  const $crear = document.getElementById('btn-crear');
+  const $wrap = document.getElementById('fichas');
+
+  const TTL_MS = 3*24*60*60*1000;
+  const fmt = ts => new Date(ts).toLocaleString();
+
+  function pctRemaining(f){
+    const elapsed = Date.now()-f.createdAt; const left = Math.max(0, TTL_MS-elapsed);
+    return Math.round((left/TTL_MS)*100);
+  }
+
+  function card(f){
+    const p = pctRemaining(f);
+    const div = document.createElement('div');
+    div.className = 'card ficha-card';
+    div.innerHTML = `
+      <div class="row" style="justify-content:space-between">
+        <h3>${f.id}</h3>
+        <span class="trash" title="Eliminar" data-del="1">🗑️</span>
+      </div>
+      <div class="muted">Creada: ${fmt(f.createdAt)} · Últ. act.: ${fmt(f.lastActive)}</div>
+      <div class="row" style="margin-top:8px;gap:8px">
+        <a class="pill" href="sections/atencion.html#${f.id}">Abrir en Atención</a>
+        <a class="pill" href="sections/generador.html#${f.id}">Generar texto</a>
+      </div>
+      <div class="timebar" title="Tiempo restante"><span style="width:${p}%"></span></div>
+    `;
+    div.querySelector('[data-del]')?.addEventListener('click',()=>{ FichasStore.remove(f.id); render(); });
+    return div;
+  }
+
+  function render(){
+    const L = FichasStore.list();
+    $wrap.innerHTML = '';
+    L.forEach(f=> $wrap.appendChild(card(f)));
+    if(!L.length) $wrap.innerHTML = '<div class="card muted">— Sin fichas —</div>';
+  }
+
+  $crear.onclick = ()=>{
+    const ini = ($ini.value||'').toUpperCase().trim();
+    try{ FichasStore.create(ini); $ini.value=''; render(); }catch(e){ alert(e.message); }
+  };
+
+  render(); setInterval(render, 60*1000); // refresca barras cada minuto
+</script>
+</body>
+</html>

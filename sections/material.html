@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QF PRO — Material de consulta</title>
+  <link rel="stylesheet" href="../css/styles.css"/>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><strong>QF PRO</strong><br><span class="muted">Material</span></div>
+    <nav style="margin-top:12px">
+      <a class="nav-item" href="../index.html">🏷️ Inicio</a>
+      <a class="nav-item" href="atencion.html">🧑‍⚕️ Atención</a>
+      <a class="nav-item" href="generador.html">📝 Generador</a>
+      <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="calculadoras.html">🧮 Calculadoras</a>
+      <a class="nav-item" href="tests.html">🧪 Tests</a>
+      <a class="nav-item active" href="material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="proa.html">🧫 PROA</a>
+      <a class="nav-item" href="protocolos.html">📑 Orientaciones</a>
+      <a class="nav-item" href="config.html">⚙️ Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div id="header"></div>
+    <main class="container">
+      <h2>Colecciones</h2>
+      <div class="fichas-wrap" style="margin-top:10px">
+        <a class="card" href="vademecum.html"><b>Vademécum</b><div class="muted">Búsqueda de fármacos y presentaciones</div></a>
+        <a class="card" href="material.html#beers"><b>Beers/STOPP/START</b><div class="muted">Criterios geriátricos</div></a>
+        <a class="card" href="material.html#renal"><b>Ajuste renal</b><div class="muted">Medicamentos con ajuste en ERC</div></a>
+        <a class="card" href="material.html#embarazo"><b>Embarazo</b><div class="muted">Precauciones y contraindicaciones</div></a>
+        <a class="card" href="material.html#interacciones"><b>Interacciones</b><div class="muted">Interacciones clínicamente relevantes</div></a>
+        <a class="card" href="material.html#arsenal"><b>Arsenales</b><div class="muted">Listas APS / Secundario</div></a>
+      </div>
+
+      <h2 style="margin-top:18px">Búsqueda rápida</h2>
+      <div class="card">
+        <input id="q" placeholder="Ej: losartán, embarazo, STOPP, simvastatina+claritromicina">
+        <div class="row" style="margin-top:8px"><button id="go" class="btn">Buscar</button></div>
+        <div id="out" class="list" style="margin-top:10px"></div>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import { mountHeader } from "../js/header.js";
+  mountHeader();
+  const $q=document.getElementById('q'), $go=document.getElementById('go'), $out=document.getElementById('out');
+  const params=new URLSearchParams(location.search); if(params.get('q')) $q.value=params.get('q');
+
+  $go.onclick=()=>{
+    const v=($q.value||'').toLowerCase();
+    $out.innerHTML='';
+    if(!v) return;
+    // Router mínimo: demostrativo
+    if(v.includes('interacc')) $out.innerHTML='<div class="card">🔗 Te conviene ir a <a class="pill" href="vademecum.html#interacciones">Interacciones del vademécum</a></div>';
+    else if(v.includes('beers')||v.includes('stopp')||v.includes('start')) $out.innerHTML='<div class="card">📎 Ver criterios en colecciones (demo)</div>';
+    else $out.innerHTML='<div class="card">🔎 Consulta general — integraremos buscador avanzado</div>';
+  };
+</script>
+</body>
+</html>

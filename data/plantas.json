@@ -1,0 +1,54 @@
+{
+  "matico": {
+    "id": "matico",
+    "nombre": "Matico (Buddleja globosa)",
+    "usos": ["Cicatrizante", "Hemostático"],
+    "presentaciones": [
+      { "forma": "infusión", "parte": "hojas", "dosis": "1 taza, 2-3 veces/día" },
+      { "forma": "tópico", "parte": "hojas machacadas", "dosis": "aplicar sobre heridas" }
+    ],
+    "precauciones": ["Evitar uso en embarazo", "No sustituye tratamiento médico"],
+    "interacciones": ["Potencial sinergia con antiagregantes"],
+    "etiquetas": ["Tradicional", "Herida", "Uso externo"]
+  },
+  "manzanilla": {
+    "id": "manzanilla",
+    "nombre": "Manzanilla (Matricaria recutita)",
+    "usos": ["Trastornos digestivos", "Ansiedad leve"],
+    "presentaciones": [
+      { "forma": "infusión", "parte": "flores", "dosis": "1 taza, hasta 3 veces/día" },
+      { "forma": "tópico", "parte": "compresas", "dosis": "aplicar en piel o mucosas" }
+    ],
+    "precauciones": ["Reacciones alérgicas en personas sensibles a Asteráceas"],
+    "interacciones": ["Posible potenciación con anticoagulantes/antiagregantes"],
+    "etiquetas": ["Digestivo", "Ansiedad", "Tradicional"]
+  },
+  "boldo": {
+    "id": "boldo",
+    "nombre": "Boldo (Peumus boldus)",
+    "usos": ["Trastornos digestivos", "Colelitiasis leve"],
+    "presentaciones": [
+      { "forma": "infusión", "parte": "hojas", "dosis": "1 taza, 2 veces/día" }
+    ],
+    "precauciones": [
+      "Contraindicado en embarazo",
+      "Evitar en obstrucción biliar severa"
+    ],
+    "interacciones": ["Puede potenciar efecto de anticoagulantes"],
+    "etiquetas": ["Digestivo", "Hígado", "Tradicional"]
+  },
+  "quina_roja": {
+    "id": "quina_roja",
+    "nombre": "Quina roja (Cinchona officinalis)",
+    "usos": ["Fiebre", "Tónico amargo"],
+    "presentaciones": [
+      { "forma": "decocción", "parte": "corteza", "dosis": "1 taza, 1-2 veces/día" }
+    ],
+    "precauciones": [
+      "Altas dosis pueden causar arritmias",
+      "Evitar en embarazo"
+    ],
+    "interacciones": ["Potencial interacción con antiarrítmicos"],
+    "etiquetas": ["Fiebre", "Tónico", "Tradicional"]
+  }
+}

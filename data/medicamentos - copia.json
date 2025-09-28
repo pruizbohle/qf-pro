@@ -1,0 +1,69 @@
+{
+  "aas": { "id": "aas", "base": "aas", "nombre": "ACIDO ACETILSALICILICO", "presentaciones": ["100 MG"], "forma": "comprimido", "aps": true },
+
+  "acido_valproico": { "id": "acido_valproico", "base": "acido_valproico", "nombre": "ACIDO VALPROICO", "presentaciones": ["500 MG LP", "200 MG E"], "forma": "comprimido", "aps": true },
+
+  "amlodipino": { "id": "amlodipino", "base": "amlodipino", "nombre": "AMLODIPINO", "presentaciones": ["5 MG", "10 MG"], "forma": "comprimido", "aps": true },
+  "atenolol": { "id": "atenolol", "base": "atenolol", "nombre": "ATENOLOL", "presentaciones": ["50 MG"], "forma": "comprimido", "aps": true },
+  "atorvastatina": { "id": "atorvastatina", "base": "atorvastatina", "nombre": "ATORVASTATINA", "presentaciones": ["20 MG"], "forma": "comprimido", "aps": true },
+
+  "ipratropio": { "id": "ipratropio", "base": "ipratropio", "nombre": "BROMURO DE IPRATROPIO", "presentaciones": ["20 MCG/DOSIS (200 DOS)"], "forma": "inhalador", "aps": true },
+  "budesonida": { "id": "budesonida", "base": "budesonida", "nombre": "BUDESONIDA", "presentaciones": ["200 MCG/DOSIS (200 DOS)"], "forma": "inhalador", "aps": true },
+
+  "carbamazepina": { "id": "carbamazepina", "base": "carbamazepina", "nombre": "CARBAMAZEPINA", "presentaciones": ["400 MG LP", "200 MG"], "forma": "comprimido", "aps": true },
+  "carvedilol": { "id": "carvedilol", "base": "carvedilol", "nombre": "CARVEDILOL", "presentaciones": ["6,25 MG", "12,5 MG", "25 MG"], "forma": "comprimido", "aps": true },
+
+  "celecoxib": { "id": "celecoxib", "base": "celecoxib", "nombre": "CELECOXIB", "presentaciones": ["200 MG"], "forma": "capsula", "aps": true },
+  "desloratadina": { "id": "desloratadina", "base": "desloratadina", "nombre": "DESLORATADINA", "presentaciones": ["5 MG"], "forma": "comprimido", "aps": true },
+
+  "enalapril": { "id": "enalapril", "base": "enalapril", "nombre": "ENALAPRIL MALEATO", "presentaciones": ["10 MG"], "forma": "comprimido", "aps": true },
+  "espironolactona": { "id": "espironolactona", "base": "espironolactona", "nombre": "ESPIRONOLACTONA", "presentaciones": ["25 MG"], "forma": "comprimido", "aps": true },
+
+  "fenitoina": { "id": "fenitoina", "base": "fenitoina", "nombre": "FENITOINA SODICA", "presentaciones": ["100 MG"], "forma": "comprimido", "aps": true },
+
+  "fluticasona": { "id": "fluticasona", "base": "fluticasona", "nombre": "FLUTICASONA PROPIONATO", "presentaciones": ["125 MCG/DOSIS (60 DOS)"], "forma": "inhalador", "aps": true },
+  "fluticasona_salmeterol": { "id": "fluticasona_salmeterol", "base": "fluticasona_salmeterol", "nombre": "FLUTICASONA PROPIONATO/SALMETEROL", "presentaciones": ["125/25 MCG (120 DOS)", "250/25 MCG (120 DOS)"], "forma": "inhalador", "aps": true },
+
+  "furosemida": { "id": "furosemida", "base": "furosemida", "nombre": "FUROSEMIDA", "presentaciones": ["40 MG"], "forma": "comprimido", "aps": true },
+  "gemfibrozilo": { "id": "gemfibrozilo", "base": "gemfibrozilo", "nombre": "GEMFIBROZILO", "presentaciones": ["600 MG"], "forma": "comprimido", "aps": true },
+  "glibenclamida": { "id": "glibenclamida", "base": "glibenclamida", "nombre": "GLIBENCLAMIDA", "presentaciones": ["5 MG"], "forma": "comprimido", "aps": true },
+
+  "hctz_triamtereno": { "id": "hctz_triamtereno", "base": "hctz_triamtereno", "nombre": "HIDROCLOROTIAZIDA + TRIAMTERENO", "presentaciones": ["(FORMULA APS)"], "forma": "comprimido", "aps": true },
+  "hidroclorotiazida": { "id": "hidroclorotiazida", "base": "hidroclorotiazida", "nombre": "HIDROCLOROTIAZIDA", "presentaciones": ["25 MG", "50 MG"], "forma": "comprimido", "aps": true },
+
+  "insulina_cristalina": { "id": "insulina_cristalina", "base": "insulina_cristalina", "nombre": "INSULINA CRISTALINA", "presentaciones": ["100 UI/ML (FCO 10 ML)"], "forma": "insulina", "aps": true },
+  "insulina_lenta": { "id": "insulina_lenta", "base": "insulina_lenta", "nombre": "INSULINA LENTA", "presentaciones": ["100 UI/ML (FCO 10 ML)"], "forma": "insulina", "aps": true },
+
+  "lamotrigina": { "id": "lamotrigina", "base": "lamotrigina", "nombre": "LAMOTRIGINA", "presentaciones": ["50 MG", "100 MG"], "forma": "comprimido", "aps": true },
+
+  "levetiracetam": { "id": "levetiracetam", "base": "levetiracetam", "nombre": "LEVETIRACETAM", "presentaciones": ["1000 MG", "500 MG", "100 MG/ML SOLUCION ORAL (300 ML)"], "forma": "comprimido", "aps": true },
+
+  "levodopa_benserazida": { "id": "levodopa_benserazida", "base": "levodopa_benserazida", "nombre": "LEVODOPA/BENSERAZIDA", "presentaciones": ["200/50 MG"], "forma": "comprimido", "aps": true },
+  "levodopa_carbidopa": { "id": "levodopa_carbidopa", "base": "levodopa_carbidopa", "nombre": "LEVODOPA/CARBIDOPA", "presentaciones": ["250/25 MG"], "forma": "comprimido", "aps": true },
+
+  "levotiroxina": { "id": "levotiroxina", "base": "levotiroxina", "nombre": "LEVOTIROXINA SODICA", "presentaciones": ["50 MCG", "100 MCG"], "forma": "comprimido", "aps": true },
+
+  "losartan": { "id": "losartan", "base": "losartan", "nombre": "LOSARTAN POTASICO", "presentaciones": ["50 MG"], "forma": "comprimido", "aps": true },
+
+  "metformina": { "id": "metformina", "base": "metformina", "nombre": "METFORMINA CLORHIDRATO", "presentaciones": ["850 MG", "1000 MG LP"], "forma": "comprimido", "aps": true },
+
+  "pramipexol": { "id": "pramipexol", "base": "pramipexol", "nombre": "PRAMIPEXOL", "presentaciones": ["1 MG", "0,25 MG"], "forma": "comprimido", "aps": true },
+
+  "prednisona": { "id": "prednisona", "base": "prednisona", "nombre": "PREDNISONA", "presentaciones": ["5 MG", "20 MG", "20 MG/5 ML (60 ML)"], "forma": "comprimido", "aps": true },
+
+  "quetiapina": { "id": "quetiapina", "base": "quetiapina", "nombre": "QUETIAPINA", "presentaciones": ["25 MG"], "forma": "comprimido", "aps": true },
+
+  "risperidona": { "id": "risperidona", "base": "risperidona", "nombre": "RISPERIDONA", "presentaciones": ["1 MG", "3 MG"], "forma": "comprimido", "aps": true },
+
+  "salbutamol": { "id": "salbutamol", "base": "salbutamol", "nombre": "SALBUTAMOL", "presentaciones": ["100 MCG/DOSIS (200 DOS)"], "forma": "inhalador", "aps": true },
+  "salmeterol": { "id": "salmeterol", "base": "salmeterol", "nombre": "SALMETEROL", "presentaciones": ["25 MCG/DOSIS (120 DOS)"], "forma": "inhalador", "aps": true },
+
+  "tramadol": { "id": "tramadol", "base": "tramadol", "nombre": "TRAMADOL CLORHIDRATO", "presentaciones": ["50 MG CAPSULAS", "100 MG/ML GOTAS (10 ML)"], "forma": "capsula", "aps": true },
+
+  "trihexifenidilo": { "id": "trihexifenidilo", "base": "trihexifenidilo", "nombre": "TRIHEXIFENIDILO CLORHIDRATO", "presentaciones": ["2 MG"], "forma": "comprimido", "aps": true },
+
+  "vildagliptina": { "id": "vildagliptina", "base": "vildagliptina", "nombre": "VILDAGLIPTINA", "presentaciones": ["50 MG"], "forma": "comprimido", "aps": true },
+
+  "claritromicina": { "id": "claritromicina", "base": "claritromicina", "nombre": "CLARITROMICINA", "presentaciones": ["500 MG"], "forma": "comprimido", "aps": true },
+  "diazepam": { "id": "diazepam", "base": "diazepam", "nombre": "DIAZEPAM", "presentaciones": ["5 MG"], "forma": "comprimido", "aps": true }
+}

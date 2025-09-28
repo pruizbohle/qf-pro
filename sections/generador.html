@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QF PRO — Generador</title>
+  <link rel="stylesheet" href="../css/styles.css"/>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><strong>QF PRO</strong><br><span class="muted">Generador</span></div>
+    <nav style="margin-top:12px">
+      <a class="nav-item" href="../index.html">🏷️ Inicio</a>
+      <a class="nav-item" href="atencion.html">🧑‍⚕️ Atención</a>
+      <a class="nav-item active" href="generador.html">📝 Generador</a>
+      <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="material.html">📚 Material</a>
+      <a class="nav-item" href="config.html">⚙️ Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div id="header"></div>
+    <main class="container">
+      <div class="row" style="gap:8px">
+        <label>Ficha:
+          <select id="sel-ficha"></select>
+        </label>
+        <button id="btn-compilar" class="btn">Compilar</button>
+      </div>
+      <div class="card" style="margin-top:10px">
+        <textarea id="texto" rows="18" style="width:100%" placeholder="Texto listo para ficha clínica…"></textarea>
+      </div>
+    </main>
+  </div>
+</div>
+
+<script type="module">
+  import { mountHeader } from "../js/header.js";
+  import { FichasStore } from "../js/fichasStore.js";
+  mountHeader();
+
+  const $sel=document.getElementById('sel-ficha'), $txt=document.getElementById('texto'), $btn=document.getElementById('btn-compilar');
+
+  function loadFichas(){
+    const L=FichasStore.list();
+    $sel.innerHTML = `<option value="">— Selecciona —</option>` + L.map(f=>`<option value="${f.id}">${f.id}</option>`).join("");
+    const h=(location.hash||'').replace('#','').toUpperCase(); if(h) $sel.value=h;
+  }
+
+  const mapAnt = x => x; // ya vienen en bonito: HTA, DM2 IR, etc.
+
+  function paraAnam(f){
+    const sym = f.sexo==='F'?'♀️':(f.sexo==='M'?'♂️':'');
+    const datos = [];
+    datos.push(`Paciente ${sym||''}${f.age65?' (+65)':''}`.trim());
+    datos.push(`asiste ${f.datos.acompana}`);
+    if(f.datos.convive==='con' && f.datos.conQuien) datos.push(`vive con ${f.datos.conQuien}`); else datos.push(`vive ${f.datos.convive}`);
+    datos.push(`en sector ${f.datos.sector}`);
+    if(f.datos.jubilacion) datos.push(`jubilado ${f.datos.jubilacion}`);
+    if(f.datos.ocupacion) datos.push(`se desempeñó como ${f.datos.ocupacion}`);
+    if(f.datos.analfabeto) datos.push(`analfabeto`);
+    if(f.datos.dependienteSevero) datos.push(`dependiente severo`);
+    if(f.datos.ayudasTecnicas) datos.push(`usa ayudas técnicas`);
+    const lineaDatos = datos.filter(Boolean).join(", ") + ".";
+
+    const ant = f.anamnesis.antecedentes?.length ? `Antecedentes: ${f.anamnesis.antecedentes.map(mapAnt).join(", ")}.` : "";
+    const mot = f.anamnesis.motivo?.length ? `Motivo: ${f.anamnesis.motivo.map(m=> m==='adh'?'evaluación de adherencia':(m==='educ'?'educación':'evaluación de reacción adversa')).join(", ")}.` : "";
+
+    const t=f.anamnesis.terapia||{};
+    const t1 = `Respecto a la terapia: ${t.carga==='muchos'?'cree que toma muchos':'toma una cantidad apropiada'} medicamentos; ${t.abandono==='deja'?'deja':'no deja'} de tomarlos si se siente bien/mal.`;
+    const t2 = `${t.patologiaPrior?`Lo que más le preocupa es ${t.patologiaPrior}. `:""}${t.medicamentoPrior?`Prioriza ${t.medicamentoPrior}. `:""}`.trim();
+    const t3 = `Conocimiento: nombres ${trad(t.conoceNombres)}, posología ${trad2(t.conocePosologia)}, indicaciones ${trad2(t.conoceIndicaciones)}.`;
+
+    const notas = f.anamnesis.textoLibre ? `Notas: ${f.anamnesis.textoLibre}` : "";
+
+    return [lineaDatos, ant, mot, t1, t2, t3, notas].filter(Boolean).join("\n");
+  }
+  function trad(v){ return v==='conoce'?'conoce':(v==='algunos'?'conoce algunos':'no conoce'); }
+  function trad2(v){ return v==='conoce'?'conoce':(v==='moderado'?'conoce moderadamente':'no conoce'); }
+
+  function paraMeds(f){
+    const seg = (name, arr)=> arr?.length ? `${name}: ${arr.map(x=>`${x.nombre}${x.presentacion?' '+x.presentacion:''}${x.posologia?' · '+x.posologia:''}`).join("; ")}.` : "";
+    const s1=seg("APS", f.meds.aps), s2=seg("Secundario", f.meds.secundario), s3=seg("Extrasistema", f.meds.extra);
+    const s4 = f.meds.automed?.length ? `Automedicación: ${f.meds.automed.map(x=>x.texto).join("; ")}.` : "";
+    const s5 = f.meds.plantas?.length ? `Plantas: ${f.meds.plantas.map(x=>x.nombre).join("; ")}.` : "";
+    return [s1,s2,s3,s4,s5].filter(Boolean).join("\n");
+  }
+
+  function paraPRM(f){
+    if(!f.prm?.length) return "PRM: No se identifican o no se observan.";
+    return "PRM:\n" + f.prm.map(x=>`- ${x.tipo}: ${x.detalle.replace(/<br>/g,"; ")}`).join("\n");
+  }
+  function paraEA(f){
+    return f.eventosAdversos?.length ? "Reacciones adversas: " + f.eventosAdversos.map(e=>`${e.medNombre}: ${e.efecto}`).join("; ") + "." : "";
+  }
+  function paraOtros(f){
+    const tests = f.tests?.length ? `Tests: ${f.tests.map(t=>`${t.tipo}=${t.resultado}`).join("; ")}.` : "";
+    const calc = f.calculos?.length ? `Cálculos: ${f.calculos.map(c=>`${c.tipo}=${c.resultado}`).join("; ")}.` : "";
+    const obs  = f.notas ? `Observaciones: ${f.notas}` : "";
+    return [tests,calc,obs].filter(Boolean).join("\n");
+  }
+
+  $btn.onclick=()=>{
+    const id=$sel.value; if(!id) return;
+    const f=FichasStore.get(id); if(!f) return;
+    const lines=[paraAnam(f), paraMeds(f), paraPRM(f), paraEA(f), paraOtros(f)].filter(Boolean).join("\n\n");
+    $txt.value = lines;
+  };
+
+  loadFichas();
+</script>
+</body>
+</html>

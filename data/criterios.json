@@ -1,0 +1,12 @@
+{
+  "beers": [
+    { "base": "alprazolam", "texto": "Evitar benzodiacepinas en adultos mayores por riesgo de caídas y deterioro cognitivo." }
+  ],
+  "stopp": [
+    { "base": "alprazolam", "texto": "No mantener benzodiacepinas por más de 4 semanas en adultos mayores." }
+  ],
+  "start": [
+    { "base": "enalapril", "texto": "Indicar IECA en insuficiencia cardíaca sintomática si no está prescrito." }
+  ]
+}
+
