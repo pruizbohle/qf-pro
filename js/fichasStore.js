@@ -4,7 +4,13 @@ const TTL_MS = 3 * 24 * 60 * 60 * 1000; // 3 días
 const MAX = 5;
 
 const now = () => Date.now();
-const load = () => { try { return JSON.parse(localStorage.getItem(KEY)) || { fichas: [] }; } catch { return { fichas: [] }; } };
+const load = () => { 
+  try { 
+    return JSON.parse(localStorage.getItem(KEY)) || { fichas: [] }; 
+  } catch { 
+    return { fichas: [] }; 
+  } 
+};
 const save = (s) => localStorage.setItem(KEY, JSON.stringify(s));
 
 function cleanup(state){
@@ -62,11 +68,11 @@ export const FichasStore = {
       },
 
       meds: {
-        aps: [],         // {id,nombre,presentacion,posologia}
-        secundario: [],
+        apsRecetas: [],   // 👈 recetas APS
+        secRecetas: [],   // 👈 recetas Secundario
         extra: [],
-        automed: [],     // {texto}
-        plantas: [],     // {id,nombre}
+        automed: [],      // {texto}
+        plantas: [],      // {id,nombre}
         enabled: { aps:false, secundario:false, extra:false, automed:false, plantas:false }
       },
 
@@ -93,8 +99,11 @@ export const FichasStore = {
   },
 
   setLocked(id, locked){
-    const f = this.get(id); if(!f) return;
-    f.locked = !!locked; f.lastActive = now(); save(this.state);
+    const f = this.get(id); 
+    if(!f) return;
+    f.locked = !!locked; 
+    f.lastActive = now(); 
+    save(this.state);
   },
 
   remove(id){

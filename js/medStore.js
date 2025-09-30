@@ -26,6 +26,12 @@ export async function loadAll() {
         nombre,
         presentacion: `${m.FUERZA || ""} ${m.FORMA || ""}`.toUpperCase(),
         forma: normalizarForma(m.FORMA),
+
+        // 👇 claves de nivel superior para filtros rápidos
+        aps: m.APS === "SI",
+        secundario: m.SECUNDARIO === "SI",
+
+        // 👇 banderas completas para PRM/criterios
         flags: {
           aps: m.APS === "SI",
           beers: m.BEERS === "SI",
