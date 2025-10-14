@@ -55,3 +55,65 @@ input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbe
 
 /* Responsive mínimo */
 @media (max-width:1100px){ .app{grid-template-columns:1fr} .sidebar{display:none} .grid2{grid-template-columns:1fr} }
+
+/* chat gpt */
+.grid2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  gap: 24px;
+}
+.btn-lg {
+  display: block;
+  width: 100%;
+  padding: 10px 16px;
+  border: 1px solid rgba(148,163,184,.3);
+  border-radius: 8px;
+  background: #101c33;
+  color: #e5e7eb;
+  text-align: center;
+  transition: background .2s;
+}
+.btn-lg:hover {
+  background: #15274a;
+}
+
+/* chat gpt - panel derecho*/
+
+.grid3 {
+  display: grid;
+  grid-template-columns: 1fr 280px; /* contenido principal + panel derecho */
+  align-items: flex-start;
+  gap: 24px;
+}
+
+.fichas-panel {
+  border-left: 1px solid rgba(148,163,184,0.2);
+  padding-left: 16px;
+}
+
+.fichas-lista {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  font-size: 14px;
+}
+
+.ficha-card {
+  background: #101c33;
+  border: 1px solid rgba(148,163,184,.3);
+  border-radius: 8px;
+  padding: 10px 12px;
+}
+
+/* selecciona tipo de atencion */
+
+.btn-lg.active {
+  background: #1a3a69 !important;
+  border: 1px solid #3b82f6;
+  color: #fff;
+}
+
+/* margen paciente */
+
+.tabs-row{ margin-left:8px; /* además #header-paciente tiene margin-left:8px */ }

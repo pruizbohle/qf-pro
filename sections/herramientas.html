@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QF PRO — Herramientas</title>
+  <link rel="stylesheet" href="../css/styles.css"/>
+  <style>
+    .btn-group{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+    .btn-toggle{padding:6px 10px;border-radius:8px;border:1px solid var(--border,#ccc);cursor:pointer;background:#fff}
+    .btn-toggle.active{background:#0078d7;color:#fff;border-color:#0078d7}
+    .subtabs{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}
+    .hidden{display:none}
+    .col{display:flex;flex-direction:column}
+    .muted{opacity:.85}
+    .grid{display:grid;gap:8px}
+    .grid.cols-2{grid-template-columns:repeat(2,minmax(0,1fr))}
+    @media (max-width:720px){.grid.cols-2{grid-template-columns:1fr}}
+    .pill-info{border:1px dashed var(--border,#d0d0d0); padding:4px 8px; border-radius:8px}
+
+    /* Modal fijo con scroll interno */
+    .modal-backdrop{position:fixed;inset:0;background:rgba(0,0,0,.45);display:none;align-items:center;justify-content:center;z-index:1000;animation:fadeIn .15s ease-out}
+    .modal{width:min(780px,95vw);max-height:80vh;background:#fff;border-radius:12px;box-shadow:0 10px 30px rgba(0,0,0,.25);display:flex;flex-direction:column;overflow:hidden;transform:translateY(10px);animation:popIn .2s ease-out}
+    .modal-header{padding:12px 16px;border-bottom:1px solid #eee;display:flex;align-items:center;gap:8px}
+    .modal-body{padding:12px 16px;overflow:auto}
+    .modal-footer{padding:10px 16px;border-top:1px solid #eee;display:flex;gap:8px;justify-content:flex-end}
+    .close-x{margin-left:auto;cursor:pointer;border:none;background:transparent;font-size:18px}
+    @keyframes fadeIn{from{opacity:0} to{opacity:1}}
+    @keyframes popIn{from{opacity:0;transform:translateY(12px)} to{opacity:1;transform:translateY(0)}}
+    .btn-secondary{background:#f5f5f5;border:1px solid #ddd}
+  </style>
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand">
+      <strong>QF PRO</strong><br><span class="muted">Herramientas</span>
+    </div>
+    <nav style="margin-top:12px">
+      <a class="nav-item" href="../index.html">🏠 Inicio</a>
+      <a class="nav-item" href="atencion.html">🧑‍⚕️ Atención farmacéutica</a>
+      <a class="nav-item" href="generador.html">📝 Generador de texto</a>
+      <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="material.html">📚 Material de consulta</a>
+      <a class="nav-item active" href="herramientas.html">🧰 Herramientas</a>
+      <a class="nav-item" href="proa.html">🧪 PROA</a>
+      <a class="nav-item" href="plantas.html">🌿 Plantas medicinales</a>
+      <a class="nav-item" href="protocolos.html">📑 Orientaciones técnicas</a>
+      <a class="nav-item" href="config.html">⚙️ Configuración</a>
+    </nav>
+  </aside>
+
+  <div class="main">
+    <div id="header"></div>
+    <main class="container">
+
+      <h3>Seleccione la herramienta que desea usar</h3>
+      <div class="btn-group" id="grp-main">
+        <button class="btn-toggle active" data-target="adh">🧩 Adherencia</button>
+        <button class="btn-toggle" data-target="ram">💊 Causalidad</button>
+        <button class="btn-toggle" data-target="dep">🧍 Dependencia</button>
+        <button class="btn-toggle" data-target="cog">🧠 Cognición</button>
+        <button class="btn-toggle" data-target="calc">⚗️ Calculadoras</button>
+      </div>
+
+      <!-- ================= ADHERENCIA ================= -->
+      <div id="adh" class="tool-group">
+        <div class="subtabs" id="adh-tabs">
+          <button class="btn-toggle active" data-sub="adh-mmas">MMAS-8</button>
+          <button class="btn-toggle" data-sub="adh-arms">ARMS-e</button>
+          <button class="btn-toggle" data-sub="adh-bmq">BMQ</button>
+          <button class="btn-toggle" data-sub="adh-pdc">📅 PDC</button>
+        </div>
+
+        <!-- MMAS-8 -->
+        <div id="adh-mmas" class="tool-card card" data-kind="test" data-tipo="Morisky-Green ampliado (MMAS-8)">
+          <h4>Morisky-Green ampliado (MMAS-8)</h4>
+          <div class="col" style="gap:6px">
+            <label><input type="checkbox" class="mmas"> ¿Olvida alguna vez tomar sus medicamentos?</label>
+            <label><input type="checkbox" class="mmas"> ¿Toma sus medicamentos a la hora indicada?</label>
+            <label><input type="checkbox" class="mmas"> Cuando se siente mejor, ¿deja de tomarlos?</label>
+            <label><input type="checkbox" class="mmas"> Si se siente mal con el tratamiento, ¿lo suspende?</label>
+            <label><input type="checkbox" class="mmas"> En las últimas 2 semanas, ¿olvidó alguna dosis?</label>
+            <label><input type="checkbox" class="mmas"> ¿Tiene dificultades para recordar tomarlos?</label>
+            <label><input type="checkbox" class="mmas"> ¿Cuando viaja o sale, olvida sus medicamentos?</label>
+            <label><input type="checkbox" class="mmas"> ¿Cree que seguir tomándolos le ayudará?</label>
+          </div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="mmas-calc" class="btn">Calcular</button>
+            <button id="mmas-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="mmas-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- ARMS-e -->
+        <div id="adh-arms" class="tool-card card hidden" data-kind="test" data-tipo="ARMS-e">
+          <h4>ARMS-e</h4>
+          <p class="muted">1–4 (1 = nunca, 4 = siempre)</p>
+          <div id="arms-box" class="grid" style="gap:6px"></div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="arms-calc" class="btn">Calcular</button>
+            <button id="arms-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="arms-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- BMQ -->
+        <div id="adh-bmq" class="tool-card card hidden" data-kind="test" data-tipo="BMQ">
+          <h4>BMQ (Beliefs about Medicines Questionnaire)</h4>
+          <p class="muted">1–5 (1 = totalmente en desacuerdo → 5 = totalmente de acuerdo)</p>
+          <div id="bmq-box" class="grid" style="gap:6px"></div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="bmq-calc" class="btn">Calcular</button>
+            <button id="bmq-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="bmq-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- PDC (AVANZADO EN MODAL) -->
+        <div id="adh-pdc" class="tool-card card hidden" data-kind="calc" data-tipo="PDC">
+          <h4>PDC (Proporción de Días Cubiertos) — 180 días</h4>
+          <p class="muted">Calcula automáticamente considerando 6 meses hacia atrás desde el mes actual (excluye el mes en curso) y días de hospitalización.</p>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="pdc-open" class="btn">🧮 Abrir calculadora PDC</button>
+            <button id="pdc-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="pdc-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= CAUSALIDAD ================= -->
+      <div id="ram" class="tool-group hidden">
+        <div id="ram-naranjo" class="tool-card card" data-kind="test" data-tipo="Naranjo">
+          <h4>Test de Naranjo</h4>
+          <div id="naranjo-box" class="grid" style="gap:6px"></div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="naranjo-calc" class="btn">Calcular</button>
+            <button id="naranjo-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="naranjo-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= DEPENDENCIA ================= -->
+      <div id="dep" class="tool-group hidden">
+        <div id="dep-barthel" class="tool-card card" data-kind="test" data-tipo="Barthel">
+          <h4>Índice de Barthel</h4>
+          <p class="muted">0 = dependiente · 5 = ayuda parcial · 10 = independiente</p>
+          <div id="barthel-box" class="grid" style="gap:6px"></div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="barthel-calc" class="btn">Calcular</button>
+            <button id="barthel-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="barthel-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= COGNICIÓN ================= -->
+      <div id="cog" class="tool-group hidden">
+        <div id="cog-mmse" class="tool-card card" data-kind="test" data-tipo="Mini-Mental">
+          <h4>Mini-Mental (MMSE)</h4>
+          <div id="mmse-box" class="grid" style="gap:6px"></div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="mmse-calc" class="btn">Calcular</button>
+            <button id="mmse-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="mmse-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= CALCULADORAS ================= -->
+      <div id="calc" class="tool-group hidden">
+        <div class="subtabs" id="calc-tabs">
+          <button class="btn-toggle active" data-sub="calc-regla">💧 Regla de 3</button>
+          <button class="btn-toggle" data-sub="calc-ped">👶 Dosis pediátricas</button>
+        </div>
+
+        <!-- Regla de 3 -->
+        <div id="calc-regla" class="tool-card card" data-kind="calc" data-tipo="Regla de 3 (concentración)">
+          <h4>Regla de 3 (concentración ↔ dosis ↔ volumen)</h4>
+          <div class="grid cols-2">
+            <label>Concentración (mg/ml)
+              <input id="r3-conc" type="number" min="0" step="0.01" placeholder="p.ej. 50">
+            </label>
+            <label>Dosis necesaria (mg)
+              <input id="r3-mg" type="number" min="0" step="0.1" placeholder="p.ej. 250">
+            </label>
+            <label>Volumen a administrar (ml)
+              <input id="r3-ml" type="number" min="0" step="0.1" placeholder="p.ej. 5">
+            </label>
+          </div>
+          <div class="row" style="gap:8px;margin-top:8px">
+            <button id="r3-calc-ml" class="btn">Calcular ml (mg / conc)</button>
+            <button id="r3-calc-mg" class="btn">Calcular mg (ml × conc)</button>
+            <button id="r3-reset" class="btn btn-secondary">🔄 Vaciar</button>
+            <span id="r3-out" class="pill result" aria-live="polite"></span>
+          </div>
+        </div>
+
+        <!-- Dosis pediátricas -->
+        <div id="calc-ped" class="tool-card card hidden">
+          <h4>Dosis pediátricas</h4>
+          <div class="subtabs" id="ped-tabs">
+            <button class="btn-toggle active" data-sub="ped-paracetamol">Paracetamol</button>
+            <button class="btn-toggle" data-sub="ped-ibuprofeno">Ibuprofeno</button>
+            <button class="btn-toggle" data-sub="ped-amoxicilina">Amoxicilina</button>
+          </div>
+
+          <!-- Paracetamol -->
+          <div id="ped-paracetamol" class="tool-card-inner" data-kind="calc" data-tipo="Pediátrico: Paracetamol">
+            <div class="grid cols-2">
+              <label>Peso (kg)<input id="pc-peso" type="number" min="1" step="0.1"></label>
+              <label>Dosis mg/kg/dosis (10–15)<input id="pc-mgkg" type="number" value="12.5" step="0.5"></label>
+              <label>Frecuencia (horas)<input id="pc-hrs" type="number" value="6" step="1"></label>
+              <label>Concentración (mg/5 ml)<input id="pc-conc" type="number" value="120" step="1"></label>
+            </div>
+            <div class="row" style="gap:8px;margin-top:8px">
+              <button id="pc-calc" class="btn">Calcular</button>
+              <button id="pc-reset" class="btn btn-secondary">🔄 Vaciar</button>
+              <span id="pc-out" class="pill result"></span>
+            </div>
+          </div>
+
+          <!-- Ibuprofeno -->
+          <div id="ped-ibuprofeno" class="tool-card-inner hidden" data-kind="calc" data-tipo="Pediátrico: Ibuprofeno">
+            <div class="grid cols-2">
+              <label>Peso (kg)<input id="ibu-peso" type="number" min="1" step="0.1"></label>
+              <label>Dosis mg/kg/dosis (5–10)<input id="ibu-mgkg" type="number" value="7.5" step="0.5"></label>
+              <label>Frecuencia (horas)<input id="ibu-hrs" type="number" value="8" step="1"></label>
+              <label>Concentración (mg/5 ml)<input id="ibu-conc" type="number" value="100" step="1"></label>
+            </div>
+            <div class="row" style="gap:8px;margin-top:8px">
+              <button id="ibu-calc" class="btn">Calcular</button>
+              <button id="ibu-reset" class="btn btn-secondary">🔄 Vaciar</button>
+              <span id="ibu-out" class="pill result"></span>
+            </div>
+          </div>
+
+          <!-- Amoxicilina -->
+          <div id="ped-amoxicilina" class="tool-card-inner hidden" data-kind="calc" data-tipo="Pediátrico: Amoxicilina">
+            <div class="grid cols-2">
+              <label>Peso (kg)<input id="amx-peso" type="number" min="1" step="0.1"></label>
+              <label>Dosis mg/kg/día (40–50)<input id="amx-mgkgd" type="number" value="45" step="1"></label>
+              <label>Dosis por día (tomas)<input id="amx-tomas" type="number" value="3" step="1"></label>
+              <label>Concentración (mg/5 ml)<input id="amx-conc" type="number" value="250" step="1"></label>
+            </div>
+            <div class="row" style="gap:8px;margin-top:8px">
+              <button id="amx-calc" class="btn">Calcular</button>
+              <button id="amx-reset" class="btn btn-secondary">🔄 Vaciar</button>
+              <span id="amx-out" class="pill result"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ================= MODO / GUARDADO ================= -->
+      <div class="card" style="margin-top:24px">
+        <div class="row" style="gap:8px">
+          <label>Modo:
+            <select id="modo">
+              <option value="libre">Libre</option>
+              <option value="ficha">Asociado a ficha…</option>
+            </select>
+          </label>
+          <select id="sel-ficha" style="display:none"></select>
+          <button id="save-current" class="btn">💾 Guardar resultado actual en ficha</button>
+        </div>
+      </div>
+
+      <div id="out" class="list" style="margin-top:12px"></div>
+
+    </main>
+  </div>
+</div>
+
+<!-- ============== MODAL PDC (AVANZADO) ============== -->
+<div id="pdc-modal" class="modal-backdrop" role="dialog" aria-modal="true">
+  <div class="modal">
+    <div class="modal-header">
+      <strong>📅 Calculadora PDC (180 días)</strong>
+      <button id="pdc-close" class="close-x" aria-label="Cerrar">✖</button>
+    </div>
+    <div class="modal-body">
+      <!-- Contenido basado en tu calculadora actual -->
+      <div class="grid cols-2">
+        <label>Fecha de inicio del período de estudio
+          <input type="date" id="inicioPeriodo">
+        </label>
+        <label>Días de hospitalización o suspensión
+          <input type="number" id="diasHospitalizacion" value="0" min="0" step="1">
+        </label>
+      </div>
+
+      <div class="grid cols-2" style="margin-top:8px">
+        <label>Fecha de retiro 1 <input type="date" id="fecha1"></label>
+        <label>Fecha de retiro 2 <input type="date" id="fecha2"></label>
+        <label>Fecha de retiro 3 <input type="date" id="fecha3"></label>
+        <label>Fecha de retiro 4 <input type="date" id="fecha4"></label>
+        <label>Fecha de retiro 5 <input type="date" id="fecha5"></label>
+        <label>Fecha de retiro 6 <input type="date" id="fecha6"></label>
+      </div>
+
+      <div class="muted" style="margin-top:8px">
+        <span class="pill-info">El sistema precarga automáticamente los **últimos 6 meses** (excluye el mes actual). El periodo de observación es 180 días.</span>
+      </div>
+
+      <div class="row" style="gap:8px;margin-top:12px">
+        <button id="pdc-calc" class="btn">🧮 Calcular</button>
+        <button id="pdc-save" class="btn">💾 Guardar en ficha</button>
+        <button id="pdc-clear" class="btn btn-secondary">🔄 Vaciar</button>
+      </div>
+
+      <div style="margin-top:10px">
+        <strong>Resultado:</strong> <span id="resultado" class="pill"></span>
+      </div>
+    </div>
+    <div class="modal-footer">
+      <button id="pdc-close-2" class="btn btn-secondary">✖ Cerrar</button>
+    </div>
+  </div>
+</div>
+
+<script type="module">
+import { mountHeader } from "../js/header.js";
+import { FichasStore } from "../js/fichasStore.js";
+mountHeader();
+
+/* ===== Navegación: grupos principales ===== */
+const mainBtns = document.querySelectorAll('#grp-main .btn-toggle');
+mainBtns.forEach(b => b.addEventListener('click', () => {
+  mainBtns.forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('.tool-group').forEach(div => div.classList.add('hidden'));
+  document.getElementById(b.dataset.target).classList.remove('hidden');
+}));
+
+/* ===== Subpestañas: Adherencia ===== */
+const adhTabs = document.querySelectorAll('#adh-tabs .btn-toggle');
+adhTabs.forEach(b => b.addEventListener('click', () => {
+  adhTabs.forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('#adh .tool-card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(b.dataset.sub).classList.remove('hidden');
+}));
+
+/* ===== Subpestañas: Calculadoras ===== */
+const calcTabs = document.querySelectorAll('#calc-tabs .btn-toggle');
+calcTabs.forEach(b => b.addEventListener('click', () => {
+  calcTabs.forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('#calc .tool-card').forEach(c => c.classList.add('hidden'));
+  document.getElementById(b.dataset.sub).classList.remove('hidden');
+}));
+
+/* ===== Subpestañas: Dosis pediátricas ===== */
+const pedTabs = document.querySelectorAll('#ped-tabs .btn-toggle');
+pedTabs.forEach(b => b.addEventListener('click', () => {
+  pedTabs.forEach(x => x.classList.remove('active'));
+  b.classList.add('active');
+  document.querySelectorAll('#calc-ped .tool-card-inner').forEach(c => c.classList.add('hidden'));
+  document.getElementById(b.dataset.sub).classList.remove('hidden');
+}));
+
+/* ===== Modo ficha ===== */
+const $modo=document.getElementById('modo'), $sel=document.getElementById('sel-ficha'), $out=document.getElementById('out');
+function refreshFichas(){ $sel.innerHTML=FichasStore.list().map(f=>`<option>${f.id}</option>`).join(""); }
+$modo.onchange=()=>{ $sel.style.display=$modo.value==='ficha'?'inline-block':'none'; if($modo.value==='ficha') refreshFichas(); };
+
+/* ===== Guardado ===== */
+function saveResult(kind, tipo, resultado){
+  if($modo.value!=='ficha'||!$sel.value) return;
+  if(kind==='calc'){
+    FichasStore.update($sel.value, f => f.calculos.push({ tipo, resultado, fecha: Date.now(), asociado:true }));
+  }else{
+    FichasStore.update($sel.value, f => f.tests.push({ tipo, resultado, fecha: Date.now(), asociado:true }));
+  }
+  $out.innerHTML = `<div class="card">💾 Guardado en ficha ${$sel.value}: ${resultado}</div>` + $out.innerHTML;
+}
+
+/* ===== Botón guardar genérico inferior ===== */
+document.getElementById('save-current').addEventListener('click', () => {
+  const group = document.querySelector('.tool-group:not(.hidden)');
+  const card  = group.querySelector('.tool-card:not(.hidden)') || group.querySelector('.tool-card');
+  const inner = card.querySelector('.tool-card-inner:not(.hidden)');
+  const scope = inner || card;
+  const tipo = scope.dataset?.tipo || scope.querySelector('h4')?.textContent || 'Herramienta';
+  const kind = scope.dataset?.kind || card.dataset?.kind || 'test';
+  const txtEl = scope.querySelector('.result');
+  const txt  = txtEl ? txtEl.textContent : '';
+  if(!txt){ alert('Primero calcula el resultado.'); return; }
+  saveResult(kind, tipo, txt);
+});
+
+/* ===== Helpers ===== */
+const sumSel = (selector) => Array.from(document.querySelectorAll(selector)).reduce((a,b)=>a+Number(b.value||0),0);
+const resetFields = (selContainer) => {
+  const cont = document.querySelector(selContainer);
+  if(!cont) return;
+  cont.querySelectorAll('input[type="number"]').forEach(i=>i.value='');
+  cont.querySelectorAll('input[type="date"]').forEach(i=>i.value='');
+  cont.querySelectorAll('input[type="checkbox"]').forEach(i=>i.checked=false);
+  cont.querySelectorAll('select').forEach(s=>{ if(s.options.length) s.selectedIndex=0; });
+  const pill = cont.querySelector('.result'); if(pill) pill.textContent='';
+};
+
+/* ===== MMAS-8 ===== */
+document.getElementById('mmas-calc').addEventListener('click', () => {
+  const n = document.querySelectorAll('.mmas:checked').length;
+  const clas = (n===8)?'Alta adherencia':(n>=6?'Moderada':'Baja');
+  document.getElementById('mmas-out').textContent = `MMAS-8: ${clas} (${n}/8)`;
+});
+document.getElementById('mmas-reset').addEventListener('click', ()=>resetFields('#adh-mmas'));
+
+/* ===== ARMS-e ===== */
+const armsQ = [
+  "¿Olvida tomar sus medicamentos?","¿Toma sus medicamentos a la hora correcta?","¿Olvida cuántas veces debe tomarlos?",
+  "¿Deja de tomarlo por sentirse mejor?","¿Deja de tomarlo por sentirse mal?","¿Deja pasar días sin tomarlo?",
+  "¿Olvida pedir reabastecimiento a tiempo?","¿Dificultades económicas para comprarlos?","¿Dificultad para llegar al centro de salud?",
+  "¿Se queda sin medicamentos antes de reponer?","¿Necesita ayuda para organizar la medicación?","¿Utiliza estrategias (pastillero, alarma)?"
+];
+const armsBox = document.getElementById('arms-box');
+armsQ.forEach((q,i)=>{
+  const id = `arms-${i+1}`;
+  armsBox.insertAdjacentHTML('beforeend',
+    `<label for="${id}">${i+1}. ${q}
+      <select id="${id}" class="arms" style="width:80px">
+        <option value="1">1</option><option value="2">2</option>
+        <option value="3">3</option><option value="4">4</option>
+      </select>
+    </label>`);
+});
+document.getElementById('arms-calc').addEventListener('click', () => {
+  const sum = sumSel('.arms');
+  const clas = (sum<=20)?'Buena':(sum<=30?'Moderada':'Baja');
+  document.getElementById('arms-out').textContent = `ARMS-e: ${clas} (${sum}/48)`;
+});
+document.getElementById('arms-reset').addEventListener('click', ()=>resetFields('#adh-arms'));
+
+/* ===== BMQ ===== */
+const bmqBox = document.getElementById('bmq-box');
+const bmqQ = {
+  nec: [
+    "Mi salud depende de mis medicamentos.","Si no los tomo, enfermaré.",
+    "Mis medicamentos son necesarios para mantenerme bien.",
+    "Mi vida sería peor sin ellos.","Necesito mis medicamentos para permanecer saludable."
+  ],
+  pre: [
+    "Me preocupa depender demasiado de los medicamentos.","Los medicamentos pueden dañar mi cuerpo.",
+    "Temo efectos adversos a largo plazo.","Interfieren con mi vida diaria.",
+    "Me preocupa tomar demasiados medicamentos."
+  ]
+};
+let bidx = 1;
+bmqBox.insertAdjacentHTML('beforeend', `<b>Necesidad</b>`);
+bmqQ.nec.forEach(q=>{
+  bmqBox.insertAdjacentHTML('beforeend',
+   `<label>${bidx++}. ${q}
+      <select class="bmq-nec" style="width:80px">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option>
+      </select>
+    </label>`);
+});
+bmqBox.insertAdjacentHTML('beforeend', `<b>Preocupación</b>`);
+bmqQ.pre.forEach(q=>{
+  bmqBox.insertAdjacentHTML('beforeend',
+   `<label>${bidx++}. ${q}
+      <select class="bmq-pre" style="width:80px">
+        <option value="1">1</option><option value="2">2</option><option value="3">3</option>
+        <option value="4">4</option><option value="5">5</option>
+      </select>
+    </label>`);
+});
+document.getElementById('bmq-calc').addEventListener('click', () => {
+  const nec = sumSel('.bmq-nec'), pre = sumSel('.bmq-pre');
+  const txt = `BMQ: Necesidad ${nec}/25 · Preocupación ${pre}/25 → ${nec>pre ? "Buena adherencia" : "Riesgo de no adherencia"}`;
+  document.getElementById('bmq-out').textContent = txt;
+});
+document.getElementById('bmq-reset').addEventListener('click', ()=>resetFields('#adh-bmq'));
+
+/* ===== NARANJO ===== */
+const narBox = document.getElementById('naranjo-box');
+[
+  "¿Hay reportes previos de esa RAM?","¿Ocurrió tras la administración del fármaco?","¿Mejoró al suspenderlo?","¿Reapareció al reexponerlo?",
+  "¿Hay causas alternativas posibles?","¿Apareció con placebo?","¿Se detectó el fármaco en niveles tóxicos?",
+  "¿La reacción fue dosis-dependiente?","¿El paciente tuvo reacción similar antes?","¿La RAM fue confirmada objetivamente?"
+].forEach((q,i)=>{
+  narBox.insertAdjacentHTML('beforeend',
+   `<label>${i+1}. ${q}
+      <select class="nar" style="width:100px">
+        <option value="0">No sé</option><option value="1">Sí (+1)</option><option value="-1">No (−1)</option>
+      </select>
+    </label>`);
+});
+document.getElementById('naranjo-calc').addEventListener('click', () => {
+  const sum = sumSel('.nar');
+  let clas='Dudosa'; if(sum>=9) clas='Definida'; else if(sum>=5) clas='Probable'; else if(sum>=1) clas='Posible';
+  document.getElementById('naranjo-out').textContent = `Naranjo: ${clas} (${sum}/10)`;
+});
+document.getElementById('naranjo-reset').addEventListener('click', ()=>resetFields('#ram-naranjo'));
+
+/* ===== BARTHEL ===== */
+const bartBox = document.getElementById('barthel-box');
+["Comer","Bañarse","Vestirse","Aseo personal","Control de esfínteres",
+ "Uso del baño","Traslados silla-cama","Deambulación","Subir/bajar escaleras"]
+.forEach((q,i)=>{
+  bartBox.insertAdjacentHTML('beforeend',
+   `<label>${i+1}. ${q}
+      <select class="bart" style="width:90px">
+        <option value="0">0</option><option value="5">5</option><option value="10">10</option>
+      </select>
+    </label>`);
+});
+document.getElementById('barthel-calc').addEventListener('click', () => {
+  const sum = sumSel('.bart');
+  let clas='Dependencia total'; if(sum>=91) clas='Independiente'; else if(sum>=61) clas='Dependencia moderada'; else if(sum>=21) clas='Dependencia grave';
+  document.getElementById('barthel-out').textContent = `Barthel: ${clas} (${sum}/100)`;
+});
+document.getElementById('barthel-reset').addEventListener('click', ()=>resetFields('#dep-barthel'));
+
+/* ===== MMSE ===== */
+const mmseBox = document.getElementById('mmse-box');
+["Orientación en tiempo","Orientación en lugar","Registro (3 palabras)","Atención / cálculo","Recuerdo","Lenguaje / praxis"]
+.forEach((q,i)=>{
+  const id=`mmse-${i+1}`;
+  mmseBox.insertAdjacentHTML('beforeend',
+   `<label for="${id}">${i+1}. ${q}
+      <input id="${id}" type="number" min="0" max="5" class="mmse" style="width:90px" placeholder="0–5">
+    </label>`);
+});
+document.getElementById('mmse-calc').addEventListener('click', () => {
+  const sum = sumSel('.mmse');
+  let clas='Deterioro cognitivo'; if(sum>=27) clas='Normal'; else if(sum>=24) clas='Deterioro leve';
+  document.getElementById('mmse-out').textContent = `Mini-Mental: ${clas} (${sum}/30)`;
+});
+document.getElementById('mmse-reset').addEventListener('click', ()=>resetFields('#cog-mmse'));
+
+/* ===== Regla de 3 ===== */
+const r3Conc = document.getElementById('r3-conc');
+const r3Mg   = document.getElementById('r3-mg');
+const r3Ml   = document.getElementById('r3-ml');
+document.getElementById('r3-calc-ml').addEventListener('click', ()=>{
+  const conc=Number(r3Conc.value||0), mg=Number(r3Mg.value||0);
+  if(conc<=0||mg<=0){ alert('Revisa concentración y mg.'); return; }
+  const ml = mg/(conc);
+  document.getElementById('r3-out').textContent = `Volumen: ${ml.toFixed(2)} ml (a ${conc} mg/ml)`;
+});
+document.getElementById('r3-calc-mg').addEventListener('click', ()=>{
+  const conc=Number(r3Conc.value||0), ml=Number(r3Ml.value||0);
+  if(conc<=0||ml<=0){ alert('Revisa concentración y ml.'); return; }
+  const mg = conc*ml;
+  document.getElementById('r3-out').textContent = `Dosis: ${mg.toFixed(1)} mg (a ${conc} mg/ml)`;
+});
+document.getElementById('r3-reset').addEventListener('click', ()=>resetFields('#calc-regla'));
+
+/* ===== Pediátricas ===== */
+function mlDesde(mg, concMg5ml){ const mgPorMl = concMg5ml/5.0; return mg/mgPorMl; }
+document.getElementById('pc-calc').addEventListener('click', ()=>{
+  const kg=Number(document.getElementById('pc-peso').value||0);
+  const mgkg=Number(document.getElementById('pc-mgkg').value||0);
+  const hrs=Number(document.getElementById('pc-hrs').value||0);
+  const conc=Number(document.getElementById('pc-conc').value||0);
+  if(kg<=0||mgkg<=0||hrs<=0||conc<=0){ alert('Revisa los datos.'); return; }
+  const mgToma = kg*mgkg;
+  const mlToma = mlDesde(mgToma, conc);
+  const tomasDia = Math.round(24/hrs);
+  const mgDia = mgToma*tomasDia;
+  document.getElementById('pc-out').textContent = `Paracetamol: ${mgToma.toFixed(0)} mg (~${mlToma.toFixed(2)} ml) cada ${hrs} h · ≈ ${mgDia.toFixed(0)} mg/día`;
+});
+document.getElementById('pc-reset').addEventListener('click', ()=>resetFields('#ped-paracetamol'));
+
+document.getElementById('ibu-calc').addEventListener('click', ()=>{
+  const kg=Number(document.getElementById('ibu-peso').value||0);
+  const mgkg=Number(document.getElementById('ibu-mgkg').value||0);
+  const hrs=Number(document.getElementById('ibu-hrs').value||0);
+  const conc=Number(document.getElementById('ibu-conc').value||0);
+  if(kg<=0||mgkg<=0||hrs<=0||conc<=0){ alert('Revisa los datos.'); return; }
+  const mgToma = kg*mgkg;
+  const mlToma = mlDesde(mgToma, conc);
+  const tomasDia = Math.round(24/hrs);
+  const mgDia = mgToma*tomasDia;
+  document.getElementById('ibu-out').textContent = `Ibuprofeno: ${mgToma.toFixed(0)} mg (~${mlToma.toFixed(2)} ml) cada ${hrs} h · ≈ ${mgDia.toFixed(0)} mg/día`;
+});
+document.getElementById('ibu-reset').addEventListener('click', ()=>resetFields('#ped-ibuprofeno'));
+
+document.getElementById('amx-calc').addEventListener('click', ()=>{
+  const kg=Number(document.getElementById('amx-peso').value||0);
+  const mgkgd=Number(document.getElementById('amx-mgkgd').value||0);
+  const tomas=Number(document.getElementById('amx-tomas').value||0);
+  const conc=Number(document.getElementById('amx-conc').value||0);
+  if(kg<=0||mgkgd<=0||tomas<=0||conc<=0){ alert('Revisa los datos.'); return; }
+  const mgDia = kg*mgkgd;
+  const mgToma = mgDia/tomas;
+  const mlToma = mlDesde(mgToma, conc);
+  document.getElementById('amx-out').textContent = `Amoxicilina: ${mgToma.toFixed(0)} mg (~${mlToma.toFixed(2)} ml) cada ${Math.round(24/tomas)} h · ${mgDia.toFixed(0)} mg/día`;
+});
+document.getElementById('amx-reset').addEventListener('click', ()=>resetFields('#ped-amoxicilina'));
+
+/* ====== PDC MODAL ====== */
+const modal = document.getElementById('pdc-modal');
+const openBtn = document.getElementById('pdc-open');
+const closeBtn = document.getElementById('pdc-close');
+const closeBtn2 = document.getElementById('pdc-close-2');
+
+function openModalPDC(){
+  modal.style.display='flex';
+  precargarMesesPDC(); // auto-precarga últimos 6 meses (excluye actual)
+}
+
+function closeModalPDC(){ modal.style.display='none'; }
+
+openBtn.addEventListener('click', openModalPDC);
+closeBtn.addEventListener('click', closeModalPDC);
+closeBtn2.addEventListener('click', closeModalPDC);
+
+/* Precarga automática: últimos 6 meses desde el actual, excluyendo el mes en curso */
+function precargarMesesPDC(){
+  const today = new Date();
+  const startMonth = new Date(today.getFullYear(), today.getMonth() - 6, 1); // 6 meses atrás, inicio
+  const startISO = startMonth.toISOString().substr(0,10);
+  // inicio del período y primer retiro:
+  document.getElementById('inicioPeriodo').value = startISO;
+  document.getElementById('fecha1').value = startISO;
+
+  // fechas subsecuentes (mes 2→6): primer día de cada mes siguiente
+  const ids = ['fecha2','fecha3','fecha4','fecha5','fecha6'];
+  ids.forEach((id, idx)=>{
+    const date = new Date(startMonth.getFullYear(), startMonth.getMonth() + (idx+1), 1);
+    document.getElementById(id).value = date.toISOString().substr(0,10);
+  });
+
+  // hospitalización por defecto 0
+  document.getElementById('diasHospitalizacion').value = 0;
+  document.getElementById('resultado').textContent='';
+}
+
+/* Cálculo PDC (idéntico a tu lógica) */
+function calcularPDC(){
+  const inicioPeriodo = new Date(document.getElementById('inicioPeriodo').value);
+  const diasHospitalizacion = parseInt(document.getElementById('diasHospitalizacion').value) || 0;
+
+  const fechas = [
+    document.getElementById('fecha1').value,
+    document.getElementById('fecha2').value,
+    document.getElementById('fecha3').value,
+    document.getElementById('fecha4').value,
+    document.getElementById('fecha5').value,
+    document.getElementById('fecha6').value
+  ].map(fecha => new Date(fecha)).filter(fecha => !isNaN(fecha.getTime())).sort((a, b) => a - b);
+
+  const fechaFin = new Date(inicioPeriodo.getTime() + 180 * 24 * 60 * 60 * 1000);
+
+  let diasCubiertos = 0;
+  let ultimoDiaCubierto = inicioPeriodo;
+  let diasExtra = 0;
+
+  fechas.forEach((fecha, index) => {
+    const finalRetiro = new Date(fecha.getTime() + 30 * 24 * 60 * 60 * 1000);
+    const proximaFecha = index + 1 < fechas.length ? fechas[index + 1] : fechaFin;
+
+    // días de retiro anticipado (compensan gaps)
+    if (fecha < ultimoDiaCubierto) {
+      diasExtra += (ultimoDiaCubierto - fecha) / (1000 * 3600 * 24);
+    }
+
+    // días cubiertos por retiro, sin doble contaje
+    if (proximaFecha < finalRetiro) {
+      diasCubiertos += (proximaFecha - fecha) / (1000 * 3600 * 24);
+    } else {
+      diasCubiertos += (finalRetiro - fecha) / (1000 * 3600 * 24);
+    }
+
+    if(finalRetiro > ultimoDiaCubierto) ultimoDiaCubierto = finalRetiro;
+  });
+
+  // compensación extra + tope 180 días
+  diasCubiertos += diasExtra;
+  diasCubiertos = Math.min(diasCubiertos, 180);
+
+  // periodo de observación ajustado por hospitalización
+  const periodoObservacion = Math.max(1, 180 - diasHospitalizacion);
+  const pdc = diasCubiertos / periodoObservacion;
+
+  const pct = (pdc*100);
+  const clas = pct>=80 ? 'Adecuada' : (pct>=50 ? 'Parcial' : 'Baja');
+  const txt = `PDC: ${pct.toFixed(1)}% (${clas})`;
+
+  document.getElementById('resultado').textContent = txt;
+
+  // también lo dejamos en la pestaña Adherencia (fuera del modal)
+  document.getElementById('pdc-out').textContent = txt;
+}
+
+document.getElementById('pdc-calc').addEventListener('click', calcularPDC);
+
+/* Guardar en ficha (desde el modal) */
+document.getElementById('pdc-save').addEventListener('click', ()=>{
+  const txt = document.getElementById('resultado').textContent || '';
+  if(!txt){ alert('Primero calcula el PDC.'); return; }
+  saveResult('calc', 'PDC', txt);
+});
+
+/* Vaciar PDC (modal y pestaña) */
+function clearPDC(){
+  ['inicioPeriodo','fecha1','fecha2','fecha3','fecha4','fecha5','fecha6'].forEach(id=>{ const el=document.getElementById(id); if(el) el.value=''; });
+  const hosp=document.getElementById('diasHospitalizacion'); if(hosp) hosp.value=0;
+  document.getElementById('resultado').textContent='';
+  document.getElementById('pdc-out').textContent='';
+}
+document.getElementById('pdc-clear').addEventListener('click', clearPDC);
+// Botón de la tarjeta PDC
+document.getElementById('pdc-reset').addEventListener('click', ()=>{
+  document.getElementById('pdc-out').textContent='';
+});
+
+/* ===== Calculadoras: pestañas ===== */
+document.getElementById('pc-reset').addEventListener('click', ()=>resetFields('#ped-paracetamol'));
+document.getElementById('ibu-reset').addEventListener('click', ()=>resetFields('#ped-ibuprofeno'));
+document.getElementById('amx-reset').addEventListener('click', ()=>resetFields('#ped-amoxicilina'));
+</script>
+</body>
+</html>

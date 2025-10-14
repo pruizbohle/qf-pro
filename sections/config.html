@@ -1,37 +1,1022 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>QF PRO — Configuración</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>QF PRO — Atención farmacéutica</title>
+  <!-- Mantén tu hoja de estilos global -->
   <link rel="stylesheet" href="../css/styles.css"/>
+
+  <style>
+    /* ===== Ajustes mínimos (no pisan tu styles.css) ===== */
+    .tabs-row {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin: 10px 0 6px;
+    }
+    .tabs-row .tab-btn {
+      border: 1px solid rgba(148,163,184,.18);
+      background: transparent;
+      color: #d1d5db;
+      border-radius: 999px;
+      padding: 8px 12px;
+      cursor: pointer;
+    }
+    .tabs-row .tab-btn.active {
+      background: #0c172c;
+      border-color: rgba(148,163,184,.35);
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #0b74d1;
+      color: #fff;
+      border-radius: 999px;
+      padding: 2px 8px;
+      font-size: 12px;
+    }
+    .chip.warn {
+      background: #ff9800;
+      color: #111;
+    }
+    .muted {
+      color: #a8b3cf; /* slightly adjusted muted color for consistency */
+    }
+    .card {
+      background: #0c172c;
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 12px;
+      padding: 12px;
+    }
+    .row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .clean {
+      list-style: none;
+      margin: 0;
+      padding: 0;
+    }
+    .clean > li {
+      padding: 6px 8px;
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 8px;
+      margin: 6px 0;
+    }
+    [data-panel] {
+      display: none;
+    }
+    .modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(15,23,42,.55);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal .box {
+      background: #0c172c;
+      border: 1px solid rgba(148,163,184,.18);
+      border-radius: 12px;
+      width: min(900px,92vw);
+      padding: 16px;
+      max-height: 82vh;
+      overflow: auto;
+    }
+  </style>
 </head>
 <body>
+
 <div class="app">
+  <!-- ===== SIDEBAR (igual a tu estilo) ===== -->
   <aside class="sidebar">
-    <div class="brand"><strong>QF PRO</strong><br><span class="muted">Config</span></div>
+    <div class="brand"><strong>QF PRO</strong><br/><span class="muted">Atención</span></div>
     <nav style="margin-top:12px">
-      <a class="nav-item" href="../index.html">🏷️ Inicio</a>
-      <a class="nav-item active" href="config.html">⚙️ Configuración</a>
+      <a class="nav-item" href="../index.html">🏠 Inicio</a>
+      <a class="nav-item active" href="./atencion.html">🧪 Atención farmacéutica</a>
+      <a class="nav-item" href="./generador.html">🧾 Generador de texto</a>
+      <a class="nav-item" href="./vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="./material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="./herramientas.html">🛠️ Herramientas</a>
+      <a class="nav-item" href="./proa.html">🦠 PROA</a>
+      <a class="nav-item" href="./protocolos.html">📑 Protocolos</a>
+      <a class="nav-item" href="./config.html">⚙️ Configuración</a>
     </nav>
   </aside>
 
-  <div class="main">
-    <div id="header"></div>
-    <main class="container">
-      <div class="card">
-        <p>Este módulo está en desarrollo.</p>
-        <ul>
-          <li>Apariencia</li>
-          <li>Preferencias de datos (APS / Secundario / Particular)</li>
-          <li>Opciones de sesión</li>
-        </ul>
+  <!-- ===== MAIN ===== -->
+  <main class="main">
+    <!-- ===== TOPBAR ===== -->
+    <header class="row recipe-head">
+      <div class="row">
+        <!-- Icono de ficha a la izquierda -->
+        <span style="font-size:1.2rem;">📋</span>
+        <label class="pick mini">Iniciales 
+          <input id="ini" maxlength="6" style="text-transform:uppercase;width:80px" placeholder="ABC"/>
+        </label>
+        <label class="pick mini">Sexo
+          <select id="sexo" style="width:60px">
+            <option value="">—</option>
+            <option value="F">♀️</option>
+            <option value="M">♂️</option>
+          </select>
+        </label>
+        <label class="pick mini"><input id="age65" type="checkbox"> ≥65</label>
+        <span id="flag65-chip" class="chip" style="display:none">≥65 (PPI)</span>
+        <span id="flagEmb-chip" class="chip warn" style="display:none">Seguridad en embarazo</span>
       </div>
-    </main>
+      <div style="margin-left:auto" id="leyenda" class="muted">Sin ficha</div>
+    </header>
+
+    <!-- ===== NAV TABS ===== -->
+    <div class="tabs-row" id="tabs">
+      <button class="tab-btn active" data-tab="ficha">FICHA</button>
+      <button class="tab-btn" data-tab="ante">ANTECEDENTES</button>
+      <button class="tab-btn" data-tab="anam">ANAMNESIS</button>
+      <button class="tab-btn" data-tab="meds">MEDICAMENTOS</button>
+      <button class="tab-btn" data-tab="ea">Reacciones adversas</button>
+      <button class="tab-btn" data-tab="prm">PRM</button>
+      <button class="tab-btn" data-tab="edu">EDUCACIÓN</button>
+      <button class="tab-btn" data-tab="herr">HERRAMIENTAS</button>
+      <button class="tab-btn" data-tab="indi">INDICACIONES</button>
+      <button class="tab-btn" data-tab="acu">ACUERDOS</button>
+      <!-- tabs legacy (ocultos) -->
+      <button class="tab-btn" data-tab="tests" style="display:none">Tests</button>
+      <button class="tab-btn" data-tab="calc"  style="display:none">Calculadoras</button>
+      <button class="tab-btn" data-tab="obs"   style="display:none">Observaciones</button>
+    </div>
+
+    <!-- ===== CONTENIDO ===== -->
+    <section id="content" class="content">
+      <!-- ====== FICHA (Crear/Tipo atención) ====== -->
+      <div id="panel-ficha" data-panel class="card">
+        <div class="seg-title">FICHA</div>
+        <div class="row" style="margin-top:6px">
+          <label class="pick mini"><b>Tipo de atención:</b>
+            <select id="tipo-atencion">
+              <option value="SIN_CONC">Sin entrevista – Conciliación</option>
+              <option value="SIN_RAM">Sin entrevista – RAM</option>
+              <option value="CON_REG">Con entrevista – Regular</option>
+              <option value="CON_MAIS">Con entrevista – Ampliada (MAIS/ECICEP)</option>
+            </select>
+          </label>
+        </div>
+        <div class="muted" style="margin-top:8px">
+          El tipo de atención controla qué pestañas se muestran. Iniciales, sexo y ≥65 se configuran en la cabecera.
+        </div>
+      </div>
+
+      <!-- ====== ANTECEDENTES ====== -->
+      <div id="panel-ante" data-panel class="card">
+        <div class="seg-title">ANTECEDENTES</div>
+        <!-- Lista de antecedentes con sugerencias -->
+        <div class="row" style="gap:8px; margin-top:6px">
+          <input id="ant-input" list="ant-suggest" placeholder="Escribe y Enter: HTA, DM2 IR, ERC…" />
+          <datalist id="ant-suggest"></datalist>
+          <div id="ant-list" class="chips"></div>
+        </div>
+        <!-- Checkboxes específicos de antecedentes -->
+        <div class="row" style="gap:12px; margin-top:10px">
+          <label class="pick mini"><input type="checkbox" id="ant-iamacv"> ANT IAM/ACV</label>
+          <label class="pick mini"><input type="checkbox" id="ant-erc"> ERC</label>
+          <label class="pick mini" id="wrap-embarazo" style="display:none"><input type="checkbox" id="ant-embarazo"> Embarazo</label>
+        </div>
+      </div>
+
+      <!-- ====== ANAMNESIS ====== -->
+      <div id="panel-anam" data-panel class="card">
+        <div class="seg-title">ANAMNESIS</div>
+        <!-- MOTIVO DE CONSULTA -->
+        <div class="seg-title" style="margin-top:6px">MOTIVO DE CONSULTA</div>
+        <div class="row" style="gap:10px; margin-top:6px">
+          <label class="pick"><input type="checkbox" data-mot="adh"> Evaluación de adherencia</label>
+          <label class="pick"><input type="checkbox" data-mot="educ"> Educación</label>
+          <label class="pick"><input type="checkbox" data-mot="ea"> Evaluación de reacción adversa</label>
+        </div>
+        <!-- DATOS PERSONALES -->
+        <div class="seg-title" style="margin-top:14px">DATOS PERSONALES</div>
+        <div class="row" style="gap:10px; flex-wrap: wrap; margin-top:6px">
+          <label class="pick">Asiste:
+            <select id="dp-acomp">
+              <option value="solo">solo</option>
+              <option value="acompanado">acompañado</option>
+            </select>
+          </label>
+          <label class="pick">Vive:
+            <select id="dp-convive">
+              <option value="solo">solo</option>
+              <option value="con">con…</option>
+            </select>
+          </label>
+          <input id="dp-conquien" placeholder="¿con quién? (si aplica)" style="min-width:200px" />
+          <label class="pick">Sector:
+            <select id="dp-sector">
+              <option value="urbano">urbano</option>
+              <option value="rural">rural</option>
+            </select>
+          </label>
+          <input id="dp-ocup" placeholder="Ocupación…" style="min-width:180px" />
+          <input id="dp-jub" placeholder="Jubilado/pensionado…" style="min-width:200px" />
+        </div>
+        <div class="row" style="gap:14px; margin-top:6px; flex-wrap: wrap">
+          <label class="pick"><input type="checkbox" id="dp-ana"> Analfabeto</label>
+          <label class="pick"><input type="checkbox" id="dp-dep"> Dependiente severo</label>
+          <label class="pick"><input type="checkbox" id="dp-ayt"> Ayudas técnicas</label>
+          <!-- Nota: el checkbox de embarazo se maneja en Antecedentes, se omite aquí -->
+        </div>
+        <!-- RESPECTO A LA TERAPIA -->
+        <div class="seg-title" style="margin-top:14px">RESPECTO A LA TERAPIA</div>
+        <div class="row" style="gap:10px; flex-wrap: wrap; margin-top:6px">
+          <label class="pick">Percepción:
+            <select id="tx-carga">
+              <option value="apropiada">toma una cantidad apropiada</option>
+              <option value="muchos">cree que toma muchos</option>
+            </select> medicamentos
+          </label>
+          <label class="pick">Si se siente bien/mal:
+            <select id="tx-abandono">
+              <option value="no-deja">no deja</option>
+              <option value="deja">deja</option>
+            </select> de tomarlos
+          </label>
+        </div>
+        <div class="row" style="gap:10px; flex-wrap: wrap; margin-top:6px">
+          <input id="tx-pat" placeholder="Patología que más preocupa…" style="min-width:220px" />
+          <input id="tx-med" placeholder="Medicamento que más prioriza…" style="min-width:220px" />
+        </div>
+        <div class="row" style="gap:10px; flex-wrap: wrap; margin-top:6px">
+          <label class="pick">Conocimiento nombres:
+            <select id="tx-nom">
+              <option value="conoce">conoce</option>
+              <option value="algunos">conoce algunos</option>
+              <option value="no-conoce">no conoce</option>
+            </select>
+          </label>
+          <label class="pick">Conocimiento posología:
+            <select id="tx-pos">
+              <option value="conoce">conoce</option>
+              <option value="moderado">conoce moderadamente</option>
+              <option value="no-conoce">no conoce</option>
+            </select>
+          </label>
+          <label class="pick">Conocimiento indicaciones:
+            <select id="tx-ind">
+              <option value="conoce">conoce</option>
+              <option value="moderado">conoce moderadamente</option>
+              <option value="no-conoce">no conoce</option>
+            </select>
+          </label>
+        </div>
+        <textarea id="anam-notas" rows="5" style="width:100%; margin-top:10px" placeholder="Notas libres…"></textarea>
+      </div>
+
+      <!-- ====== MEDICAMENTOS ====== -->
+      <div id="panel-meds" data-panel class="card">
+        <div class="seg-title">MEDICAMENTOS</div>
+        <h3>1️⃣ Recetas</h3>
+        <!-- APS y Secundario (se llenan dinámicamente) -->
+        <div id="aps-recetas"></div>
+        <div id="sec-recetas"></div>
+        <!-- Fuentes extra solo con ENTREVISTA -->
+        <div data-sub="extra" style="display:none; margin-top:8px">
+          <h4 class="muted">Recetas privadas</h4>
+          <div id="rec-privadas" class="qty-row"></div>
+          <h4 class="muted" style="margin-top:8px">Automedicación</h4>
+          <div id="rec-automed" class="qty-row"></div>
+          <h4 class="muted" style="margin-top:8px">Plantas medicinales</h4>
+          <div id="rec-plantas" class="qty-row"></div>
+        </div>
+        <h3 style="margin-top:12px">2️⃣ Conciliación</h3>
+        <ul id="conciliacion-list" class="clean"></ul>
+        <button id="btn-conciliar" class="btn">Marcar como conciliado</button>
+        <h3 style="margin-top:12px">3️⃣ Errores de medicación</h3>
+        <div class="row">
+          <select id="err-etapa">
+            <option value="">Etapa…</option>
+            <option>Prescripción</option>
+            <option>Transcripción</option>
+            <option>Dispensación</option>
+            <option>Administración</option>
+            <option>Monitorización</option>
+          </select>
+          <input id="err-desc" placeholder="Descripción breve"/>
+          <button id="err-add" class="btn">Agregar</button>
+        </div>
+        <ul id="errores-list" class="clean"></ul>
+      </div>
+
+      <!-- ====== EA / RAM ====== -->
+      <div id="panel-ea" data-panel class="card">
+        <div class="seg-title">Reacciones adversas</div>
+        <!-- Lista de eventos adversos (RAM) -->
+        <div id="ea-out" class="qty-row"></div>
+      </div>
+
+      <!-- ====== PRM ====== -->
+      <div id="panel-prm" data-panel class="card">
+        <div class="seg-title">PRM</div>
+        <div id="prm-auto"></div>
+        <div class="muted">Se completa automáticamente desde Medicación / Conciliación / RAM.</div>
+      </div>
+
+      <!-- ====== EDUCACIÓN ====== -->
+      <div id="panel-edu" data-panel class="card">
+        <div class="seg-title">EDUCACIÓN</div>
+        <div id="edu-out" class="muted">— Sin contenidos aún —</div>
+      </div>
+
+      <!-- ====== HERRAMIENTAS ====== -->
+      <div id="panel-herr" data-panel class="card">
+        <div class="seg-title">HERRAMIENTAS (Tests + Calculadoras)</div>
+        <div id="herr-out" class="muted">— Sin resultados aún —</div>
+        <div class="muted" style="margin-top:6px">
+          Los resultados que antes veías en “Tests” y “Calculadoras” aparecen aquí combinados.
+        </div>
+      </div>
+
+      <!-- ====== INDICACIONES ====== -->
+      <div id="panel-indi" data-panel class="card">
+        <div class="seg-title">INDICACIONES</div>
+        <div id="ind-out" class="muted">— Sin contenidos aún —</div>
+      </div>
+
+      <!-- ====== ACUERDOS ====== -->
+      <div id="panel-acu" data-panel class="card">
+        <div class="seg-title">ACUERDOS</div>
+        <div id="acu-out" class="muted">— Sin contenidos aún —</div>
+      </div>
+
+      <!-- ====== LEGACY (Tests / Calc / Obs) ====== -->
+      <div id="panel-tests" data-panel class="card">
+        <div class="seg-title">Tests (legacy)</div>
+        <div id="tests-out"></div>
+      </div>
+      <div id="panel-calc" data-panel class="card">
+        <div class="seg-title">Calculadoras (legacy)</div>
+        <div id="calc-out"></div>
+      </div>
+      <div id="panel-obs" data-panel class="card">
+        <div class="seg-title">Observaciones</div>
+        <div id="obs-out"></div>
+      </div>
+    </section>
+
+    <!-- Panel lateral derecho: Lista de fichas -->
+    <aside class="right-list">
+      <h3>Fichas</h3>
+      <div id="lista" class="list"></div>
+    </aside>
+  </main>
+</div>
+
+<!-- ===== MODAL IMPORTAR RAYEN ===== -->
+<div id="import-rayen-modal" class="modal">
+  <div class="box">
+    <div class="seg-title">Importar receta desde Rayen</div>
+    <textarea id="rayen-input" placeholder="Pega aquí el texto de Rayen…"></textarea>
+    <div class="row" style="margin-top:10px">
+      <button id="rayen-process" class="btn">Procesar</button>
+      <button id="rayen-cancel" class="btn soft">Cancelar</button>
+    </div>
   </div>
 </div>
 
 <script type="module">
-  import { mountHeader } from "../js/header.js"; mountHeader();
+  import { mountHeader } from "../js/header.js";
+  import { FichasStore } from "../js/fichasStore.js";
+  import { loadAll } from "../js/medStore.js";
+  mountHeader();
+
+  /* =========================================================
+     UTILIDADES BÁSICAS
+     ========================================================= */
+  const $  = s => document.querySelector(s);
+  const $$ = s => Array.from(document.querySelectorAll(s));
+  const fmt = ts => new Date(ts).toLocaleString();
+  const debounce = (fn, ms = 600) => { 
+    let t; 
+    return (...args) => { 
+      clearTimeout(t); 
+      t = setTimeout(() => fn(...args), ms);
+    } 
+  };
+  const fillVal = (id, v) => { const el = document.getElementById(id); if(el) el.value = v ?? ''; };
+  const fillChk = (id, v) => { const el = document.getElementById(id); if(el) el.checked = !!v; };
+
+  const tabs = ['ficha','ante','anam','meds','ea','prm','edu','herr','indi','acu','tests','calc','obs'];
+  let currentTab = 'ficha';
+
+  /* =========================================================
+     TABS: Navegación Horizontal
+     ========================================================= */
+  function showTab(k) {
+    currentTab = k;
+    tabs.forEach(t => {
+      const panel = document.getElementById('panel-'+t);
+      if(panel) panel.style.display = (t === k ? 'block' : 'none');
+    });
+    $$('#tabs .tab-btn').forEach(btn => {
+      btn.classList.toggle('active', btn.dataset.tab === k);
+    });
+  }
+  // Delegación de eventos de pestañas
+  $('#tabs').addEventListener('click', e => {
+    const btn = e.target.closest('.tab-btn');
+    if(!btn) return;
+    if(btn.style.display === 'none') return; // ignorar clicks en pestañas ocultas
+    showTab(btn.dataset.tab);
+  });
+
+  /* =========================================================
+     Router por Tipo de Atención
+     ========================================================= */
+  const TABS_BY_TIPO = {
+    SIN_CONC: ["ficha","ante","meds","prm","herr","indi"],
+    SIN_RAM:  ["ficha","ante","meds","ea","prm","herr","indi"],
+    CON_REG:  ["ficha","ante","anam","meds","ea","prm","edu","herr","indi"],
+    CON_MAIS: ["ficha","ante","anam","meds","ea","prm","edu","herr","indi","acu"]
+  };
+  function renderFlow(tipo) {
+    const keep = new Set(TABS_BY_TIPO[tipo] || TABS_BY_TIPO.SIN_CONC);
+    // Mostrar u ocultar botones de pestaña
+    $$('#tabs .tab-btn').forEach(btn => {
+      btn.style.display = keep.has(btn.dataset.tab) ? '' : 'none';
+    });
+    // Mostrar u ocultar paneles correspondientes
+    tabs.forEach(t => {
+      const pn = document.getElementById('panel-'+t);
+      if(!pn) return;
+      pn.style.display = keep.has(t) ? (currentTab === t ? 'block' : 'none') : 'none';
+    });
+    // Mostrar secciones extra de medicamentos solo si tipo con entrevista
+    const extras = $('#panel-meds [data-sub="extra"]');
+    if(extras) extras.style.display = (tipo === 'CON_REG' || tipo === 'CON_MAIS') ? '' : 'none';
+    // Si la pestaña actual no pertenece a este tipo, cambiar a la primera permitida
+    if(!keep.has(currentTab)) {
+      const firstTab = [...keep][0];
+      showTab(firstTab);
+    }
+  }
+
+  /* =========================================================
+     FLAGS de Edad / Sexo / Embarazo (visuales + lógicos)
+     ========================================================= */
+  const $sexo    = $('#sexo');
+  const $age65   = $('#age65');
+  const $chip65  = $('#flag65-chip');
+  const $chipEmb = $('#flagEmb-chip');
+  const $wrapEmb = $('#wrap-embarazo');
+  const $chkEmb  = $('#ant-embarazo');
+
+  function recomputeFlagsUI() {
+    const isF  = (($sexo.value || '').toUpperCase() === 'F');
+    const g65  = !!$age65.checked;
+    if($chip65)  $chip65.style.display  = g65 ? '' : 'none';
+    const showEmb = isF && !g65;
+    if($wrapEmb) $wrapEmb.style.display = showEmb ? '' : 'none';
+    if($chipEmb) $chipEmb.style.display = showEmb ? '' : 'none';
+  }
+  $sexo.addEventListener('change', recomputeFlagsUI);
+  $age65.addEventListener('change', recomputeFlagsUI);
+  $chkEmb.addEventListener('change', () => {
+    if(!window.activeId || !window.FichasStore) return;
+    FichasStore.update(window.activeId, f => {
+      f.anamnesis = f.anamnesis || {};
+      f.anamnesis.embarazo = !!$chkEmb.checked;
+    });
+    // Recalcular PRM si existe función
+    window.computePRM?.();
+  });
+
+  /* =========================================================
+     CONCILIACIÓN: Duplicidades por base
+     ========================================================= */
+  function computeConciliacion() {
+    const ul = $('#conciliacion-list');
+    if(!ul || !window.activeId || !window.FichasStore) return;
+    const f = FichasStore.get(window.activeId);
+    if(!f) return;
+    const basesCount = {};
+    // Recorre medicamentos de APS y Secundario
+    (f.meds?.apsRecetas || []).forEach(r => (r.meds || []).forEach(m => {
+      basesCount[m.base] = (basesCount[m.base] || 0) + 1;
+    }));
+    (f.meds?.secRecetas || []).forEach(r => (r.meds || []).forEach(m => {
+      basesCount[m.base] = (basesCount[m.base] || 0) + 1;
+    }));
+    // Extra (si existe, e.g. recetas particulares importadas)
+    (f.meds?.extra || []).forEach(m => {
+      basesCount[m.base] = (basesCount[m.base] || 0) + 1;
+    });
+    const duplicadas = Object.keys(basesCount).filter(base => basesCount[base] > 1);
+    ul.innerHTML = duplicadas.length
+      ? duplicadas.map(base => `<li>Duplicidad: <b>${base.toUpperCase()}</b> (x${basesCount[base]})</li>`).join('')
+      : '<li class="muted">— Sin discrepancias por duplicidad —</li>';
+  }
+  $('#btn-conciliar').addEventListener('click', () => {
+    if(!window.activeId || !window.FichasStore) return;
+    FichasStore.update(window.activeId, f => {
+      f.conciliacion = f.conciliacion || {};
+      f.conciliacion.estado = 'conciliado';
+      f.conciliacion.fecha = new Date().toISOString();
+    });
+    computeConciliacion();
+  });
+
+  /* =========================================================
+     ERRORES DE MEDICACIÓN (ingreso manual)
+     ========================================================= */
+  $('#err-add').addEventListener('click', () => {
+    const etapa = $('#err-etapa').value.trim();
+    const desc  = $('#err-desc').value.trim();
+    if(!etapa || !desc) {
+      return alert('Completa etapa y descripción');
+    }
+    // Agregar a la lista visual
+    const li = document.createElement('li');
+    li.innerHTML = `<b>${etapa}:</b> ${desc}`;
+    $('#errores-list').appendChild(li);
+    $('#err-desc').value = '';
+    // Persistir en ficha (opcional)
+    if(window.activeId && window.FichasStore) {
+      FichasStore.update(window.activeId, f => {
+        f.meds = f.meds || {};
+        f.meds.errores = f.meds.errores || [];
+        f.meds.errores.push({ etapa, desc, ts: Date.now() });
+      });
+    }
+    // Recalcular PRM de seguridad (placeholder)
+    window.computePRM?.();
+  });
+
+  /* =========================================================
+     HERRAMIENTAS (fusiona Tests + Calculadoras)
+     ========================================================= */
+  function renderHerramientas(f) {
+    const out = $('#herr-out');
+    if(!out) return;
+    const testsList = (f?.tests || []).map(t => 
+      `<li>Test: <b>${t.tipo || t.name || '—'}</b> → ${t.resultado ?? t.value ?? t.score ?? '—'}</li>`
+    ).join('');
+    const calcsList = (f?.calculos || []).map(c => 
+      `<li>Calc: <b>${c.tipo || c.name || '—'}</b> → ${c.resultado ?? c.result ?? '—'}</li>`
+    ).join('');
+    out.innerHTML = (testsList || calcsList)
+      ? `<ul class="clean">${testsList}${calcsList}</ul>`
+      : '<em>Sin resultados aún</em>';
+  }
+  window.renderHerramientas = renderHerramientas;
+
+  /* =========================================================
+     IMPORTADOR RAYEN (lógica existente respetada)
+     ========================================================= */
+  const $rayenModal = $('#import-rayen-modal');
+  const $rayenInput = $('#rayen-input');
+  $('#btn-import-rayen')?.addEventListener('click', () => {
+    $rayenModal.style.display = 'flex';
+  });
+  $('#rayen-cancel')?.addEventListener('click', () => {
+    $rayenModal.style.display = 'none'; 
+    $rayenInput.value = '';
+  });
+  // Si ya tienes un handler propio de procesar, este no se ejecutará.
+  if(!$('#rayen-process').dataset.bind) {
+    $('#rayen-process').dataset.bind = "1";
+    $('#rayen-process').addEventListener('click', () => {
+      if(!$rayenInput.value.trim()) {
+        return alert('Pega el texto de Rayen primero.');
+      }
+      // Aquí se integraría el procesamiento real del texto de Rayen,
+      // que guarda en FichasStore, actualiza recetas (renderRecetas) y PRM.
+      // Este bloque es un marcador de posición para no interferir con tu implementación.
+      alert('Procesador Rayen ya integrado en tu proyecto. Este botón solo abre el modal.');
+    });
+  }
+
+  /* =========================================================
+     APERTURA / RENDER DE FICHA (hook sin romper lógica existente)
+     ========================================================= */
+  window.activeId = window.activeId || null;
+  const $leyenda = $('#leyenda');
+
+  // Guardar referencia de cualquier implementación previa de openFicha
+  const _openFichaOrig = window.openFicha;
+  // Hook de openFicha: extendemos comportamiento sin romper lo existente
+  window.openFicha = function(id) {
+    if(typeof _openFichaOrig === 'function') {
+      _openFichaOrig(id);
+    }
+    // Tipo de atención: sincronizar select y renderizar flujo
+    const $tipo = $('#tipo-atencion');
+    if($tipo && window.FichasStore) {
+      const ficha = FichasStore.get(id);
+      $tipo.value = ficha?.atencion?.tipo || 'SIN_CONC';
+      $tipo.onchange = e => {
+        FichasStore.update(id, f => {
+          f.atencion = f.atencion || {};
+          f.atencion.tipo = e.target.value;
+        });
+        renderFlow(e.target.value);
+      };
+      renderFlow($tipo.value);
+      renderHerramientas(ficha);
+    }
+    // Actualizar visualización de chips de flags
+    recomputeFlagsUI();
+    // Recalcular conciliación de medicamentos duplicados
+    computeConciliacion();
+    // Navegar siempre a pestaña FICHA (por diseño del hook)
+    showTab('ficha');
+    // Leyenda superior: mostrar iniciales, sexo, edad si existen datos de paciente
+    if(window.FichasStore) {
+      const f = FichasStore.get(id);
+      $leyenda.textContent = f?.paciente
+        ? `${f.paciente.iniciales || '—'} · ${f.paciente.sexo || '—'} · ${f.paciente.edad || '—'}`
+        : `Ficha ${id} abierta`;
+    }
+  };
+
+  /* =========================================================
+     CREAR / ABRIR / GUARDAR FICHAS
+     ========================================================= */
+  function openFichaSafe(id) {
+    if(!id) return;
+    // (Chequeos de seguridad podrían agregarse aquí)
+    openFicha(id);
+  }
+  // Botón Nueva Ficha (si la store lo soporta)
+  const crearBtn = document.createElement('button');
+  crearBtn.id = 'btn-nueva-ficha'; // en caso de necesitar identificarlo en CSS
+  // (No se muestra un botón explícito en UI porque se usa el campo Iniciales + Enter, pero se deja por compatibilidad)
+  $('#ini')?.addEventListener('keypress', e => {
+    if(e.key === 'Enter') {
+      e.preventDefault();
+      crearBtn.click();
+    }
+  });
+  crearBtn.addEventListener('click', () => {
+    if(!window.FichasStore?.create) {
+      return alert('Implementa FichasStore.create');
+    }
+    const id = FichasStore.create();
+    window.activeId = id;
+    openFicha(id);
+  });
+  // Botón Guardar (si la store lo soporta)
+  $('#btn-guardar')?.addEventListener('click', () => {
+    if(!window.activeId) {
+      return alert('Sin ficha activa');
+    }
+    if(window.FichasStore?.save) {
+      FichasStore.save(window.activeId);
+      alert('Ficha guardada');
+    } else {
+      alert('Implementa FichasStore.save');
+    }
+  });
+
+  /* =========================================================
+     FUNCIONES DE SOPORTE (lista, recetas, PRM, antecedentes, etc.)
+     ========================================================= */
+  // Listar fichas en el panel lateral
+  function renderLista() {
+    const sym = s => s === 'F' ? '♀️' : (s === 'M' ? '♂️' : '');
+    const fichas = FichasStore.list().sort((a, b) => a.id.localeCompare(b.id));
+    if(!fichas.length) {
+      $('#lista').innerHTML = '<div class="muted">— sin fichas —</div>';
+    } else {
+      $('#lista').innerHTML = fichas.map(f => {
+        // Chips de indicadores en la tarjeta
+        const sexSym = sym(f.sexo);
+        const chip65 = f.age65 ? `<span class="chip" style="margin-left:4px">≥65</span>` : '';
+        const chipEmb = (f.anamnesis?.embarazo && f.sexo === 'F' && !f.age65)
+                        ? `<span class="chip warn" style="margin-left:4px">Emb</span>` : '';
+        return `<div class="card ficha-card">
+          <div class="row" style="justify-content: space-between">
+            <b>${f.id}${sexSym ? ' · ' + sexSym : ''}${chip65}${chipEmb}</b>
+            <span class="trash" title="Eliminar" data-del="${f.id}">🗑️</span>
+          </div>
+          <div class="muted">Ult. act.: ${fmt(f.lastActive)}</div>
+          <div class="row" style="gap:6px; margin-top:8px">
+            <button class="btn" data-open="${f.id}">Abrir</button>
+          </div>
+        </div>`;
+      }).join('');
+    }
+    // Asociar eventos a botones Abrir y Eliminar
+    $$('#lista [data-open]').forEach(btn => {
+      btn.onclick = () => openFichaSafe(btn.dataset.open);
+    });
+    $$('#lista [data-del]').forEach(btn => {
+      btn.onclick = () => {
+        FichasStore.remove(btn.dataset.del);
+        if(window.activeId === btn.dataset.del) {
+          window.activeId = null;
+        }
+        renderLista();
+        // Reiniciar vista tras borrar la ficha activa
+        $leyenda.textContent = 'Sin ficha';
+        showTab('ficha');
+      };
+    });
+  }
+
+  // Encontrar receta por ID en una ficha (utilidad para renderRecetas)
+  function findRec(f, kind, recId) {
+    return (f.meds?.[kind] || []).find(r => r.id === recId);
+  }
+
+  // Construir interfaz de recetas APS / Secundarias
+  function renderRecetas(kind, hostSel) {
+    const host = document.querySelector(hostSel);
+    if(!host || !window.activeId) return;
+    host.innerHTML = '';
+    const f = FichasStore.get(window.activeId);
+    if(!f) return;
+    (f.meds[kind] || []).forEach(rec => {
+      // Plantilla de receta (campos de fecha, meses, botón eliminar, lista de medicamentos)
+      const recDiv = document.createElement('div');
+      recDiv.className = 'recipe';
+      recDiv.innerHTML = `
+        <div class="recipe-head">
+          <label>Fecha receta: <input type="date" class="rec-fecha" value="${rec.fechaISO || new Date().toISOString().slice(0,10)}"></label>
+          <label>Duración (meses): <input type="number" min="1" step="1" value="${rec.meses || 3}" class="rec-meses" style="width:90px"></label>
+          <button class="btn-ghost rec-del">Eliminar receta</button>
+        </div>
+        <div class="seg-box" style="margin-top:8px"></div>
+        <ul class="list seg-list" style="margin-top:8px"></ul>
+      `;
+      host.appendChild(recDiv);
+      // Referencias a elementos recién agregados
+      const headFecha = recDiv.querySelector('.rec-fecha');
+      const headMeses = recDiv.querySelector('.rec-meses');
+      const delBtn   = recDiv.querySelector('.rec-del');
+      const segList  = recDiv.querySelector('.seg-list');
+      // Eventos de cambios
+      headFecha.onchange = () => {
+        FichasStore.update(window.activeId, ff => {
+          const r = findRec(ff, kind, rec.id);
+          if(r) r.fechaISO = headFecha.value;
+        });
+      };
+      headMeses.oninput = () => {
+        FichasStore.update(window.activeId, ff => {
+          const r = findRec(ff, kind, rec.id);
+          if(r) r.meses = +headMeses.value || 1;
+        });
+      };
+      delBtn.onclick = () => {
+        FichasStore.update(window.activeId, ff => {
+          ff.meds[kind] = ff.meds[kind].filter(r => r.id !== rec.id);
+        });
+        renderRecetas(kind, hostSel);
+      };
+      // TODO: Renderizar lista de medicamentos (seg-list) dentro de esta receta si se desea.
+      // (Esta implementación base deja ese apartado vacío; se asume otra parte de la app lo maneja.)
+      segList.innerHTML = (rec.meds && rec.meds.length)
+        ? rec.meds.map(m => `<li>${m.nombre || m.sku}</li>`).join('')
+        : '';
+    });
+  }
+
+  // Función para (re)calcular PRM (problemas relacionados con medicamentos)
+  function computePRM() {
+    if(!window.activeId || !window.DB) return;
+    const f = FichasStore.get(window.activeId);
+    if(!f) return;
+    const meds = getAllMeds(f);
+    const bases = meds.map(x => x.base);
+    const baseSet = new Set(bases);
+    const issues = [];
+    // Criterio PPI (Beers/STOPP) - solo si >65
+    if(f.age65) {
+      const ppiMeds = new Set();
+      meds.forEach(m => {
+        if(m.flags?.beers || m.flags?.stopp) {
+          ppiMeds.add(m.nombre);
+        }
+      });
+      if(ppiMeds.size) {
+        issues.push({
+          tipo: "PPI (criterios Beers/STOPP)",
+          detalle: Array.from(ppiMeds).map(n => `• ${n}`).join("<br>")
+        });
+      }
+    }
+    // Ajuste renal: si antecedente ERC
+    const hasERC = (f.anamnesis.antecedentes || []).some(a => a.startsWith('ERC'));
+    if(hasERC) {
+      const renales = meds.filter(m => m.flags?.nefr);
+      if(renales.length) {
+        issues.push({
+          tipo: "Ajuste renal (ERC)",
+          detalle: renales.map(m => `• ${m.nombre} — revisar ajuste según VFG`).join("<br>")
+        });
+      }
+    }
+    // Embarazo: si paciente mujer <65 con embarazo posible
+    const isFemale = f.sexo === 'F';
+    const possiblePreg = !!f.anamnesis?.embarazo;
+    if(isFemale && !f.age65 && possiblePreg) {
+      const risky = meds.filter(m => m.flags?.embarazo);
+      if(risky.length) {
+        issues.push({
+          tipo: "Embarazo",
+          detalle: risky.map(m => `• ${m.nombre} (${m.flags.embarazo})`).join("<br>")
+        });
+      }
+    }
+    // Interacciones medicamentosas
+    const pairs = window.DB?.interacciones?.pairs || [];
+    const interacciones = pairs.filter(p => baseSet.has(p.a_base) && baseSet.has(p.b_base));
+    if(interacciones.length) {
+      issues.push({
+        tipo: "Interacciones",
+        detalle: interacciones.map(p =>
+          `• ${p.a_base.toUpperCase()} + ${p.b_base.toUpperCase()}: <b>${p.severidad}</b> — ${p.recomendacion}`
+        ).join("<br>")
+      });
+    }
+    // Duplicidades terapéuticas
+    const duplicados = [...new Set(bases.filter((b,i,arr) => arr.indexOf(b) !== i))];
+    if(duplicados.length) {
+      issues.push({
+        tipo: "Duplicidades",
+        detalle: duplicados.map(b => `• ${b.toUpperCase()}`).join("<br>")
+      });
+    }
+    // Adherencia (resultados de tests/cálculos indicando no adherencia)
+    const noAdherentes = [...(f.tests || []), ...(f.calculos || [])].filter(x =>
+      /no\s*adher/i.test(x.resultado || '')
+    );
+    if(noAdherentes.length) {
+      issues.push({
+        tipo: "Adherencia",
+        detalle: noAdherentes.map(x => `• ${x.tipo}: ${x.resultado}`).join("<br>")
+      });
+    }
+    // Guardar resultados PRM en la ficha
+    FichasStore.update(window.activeId, ff => {
+      ff.prm = issues.length ? issues.map(x => ({ ...x, fecha: Date.now() })) : [];
+    });
+    // Mostrar lista PRM en interfaz
+    renderPRM(FichasStore.get(window.activeId));
+  }
+
+  // Mostrar lista PRM en panel PRM
+  function renderPRM(f) {
+    const ul = $('#prm-auto');
+    if(!ul) return;
+    ul.innerHTML = (f.prm && f.prm.length)
+      ? `<ul class="clean">` + f.prm.slice().reverse().map(x =>
+          `<li class="card"><b>${x.tipo}</b><div>${x.detalle}</div><div class="muted">${fmt(x.fecha)}</div></li>`
+        ).join('') + `</ul>`
+      : '<div class="muted">— No se identifican problemas —</div>';
+  }
+
+  // Reunir todos los medicamentos de la ficha (APS, Sec, Extra, etc.)
+  function getAllMeds(f) {
+    const all = [];
+    // APS
+    (f.meds?.apsRecetas || []).forEach(r =>
+      (r.meds || []).forEach(m => {
+        const sku = window.DB?.skuById?.[m.sku];
+        if(sku) all.push({ ...m, nombre: sku.nombre, base: sku.base, flags: sku.flags || {} });
+      })
+    );
+    // Secundario
+    (f.meds?.secRecetas || []).forEach(r =>
+      (r.meds || []).forEach(m => {
+        const sku = window.DB?.skuById?.[m.sku];
+        if(sku) all.push({ ...m, nombre: sku.nombre, base: sku.base, flags: sku.flags || {} });
+      })
+    );
+    // Particular (Extra)
+    (f.meds?.extra || []).forEach(m => {
+      const sku = window.DB?.skuById?.[m.sku];
+      if(sku) {
+        all.push({ ...m, nombre: sku.nombre, base: sku.base, flags: sku.flags || {} });
+      } else {
+        // Si no hay SKU (quizás texto libre), igual lo añadimos con base = nombre
+        all.push({ ...m, nombre: m.nombre || m.sku || '(Med)', base: m.base || (m.nombre || ''), flags: {} });
+      }
+    });
+    // Automedicación
+    (f.meds?.automed || []).forEach(m => {
+      // automed base/nombre pueden no tener sku, usar texto directamente
+      all.push({ ...m, nombre: m.texto || 'Automedicación', base: m.base || (m.texto || ''), flags: {} });
+    });
+    // Plantas
+    (f.meds?.plantas || []).forEach(p => {
+      all.push({ ...p, base: p.nombre?.toUpperCase() || p.id || '', flags: {} });
+    });
+    return all;
+  }
+
+  // Inicializar funcionalidad de antecedentes (chips)
+  function initAntecedentes() {
+    const dl = $('#ant-suggest');
+    if(dl) {
+      // catálogo sugerido (sin ERC2/3 específicos para usar checkbox genérico)
+      const ANT_TODOS = ["HTA","DM2 IR","DM2 NIR","DLP","HIPOT4","ERC","POLIARTROSIS","OB","TR SUEÑO","TR DEPRESIVO"];
+      dl.innerHTML = ANT_TODOS.map(x => `<option value="${x}">`).join('');
+    }
+    const inp  = $('#ant-input');
+    const list = $('#ant-list');
+    function renderAnt(f) {
+      const ants = f.anamnesis.antecedentes || [];
+      // Renderizar chips para cada antecedente en array
+      list.innerHTML = ants.map(a =>
+        `<span class="chip">${a}<span class="x" data-x="${a}">✕</span></span>`
+      ).join('') || '';
+      // Botones (x) para quitar antecedente
+      list.querySelectorAll('[data-x]').forEach(xBtn => {
+        xBtn.onclick = () => {
+          FichasStore.update(window.activeId, ff => {
+            ff.anamnesis.antecedentes = (ff.anamnesis.antecedentes || []).filter(z => z !== xBtn.dataset.x);
+          });
+          renderAnt(FichasStore.get(window.activeId));
+          window.computePRM?.();
+        };
+      });
+    }
+    inp.addEventListener('keydown', e => {
+      if(e.key === 'Enter') {
+        e.preventDefault();
+        const val = (inp.value || '').trim();
+        if(!val) return;
+        // En este diseño, forzamos al usuario a usar las sugerencias definidas en ANT_TODOS.
+        // Podríamos permitir cualquier entrada libre si se desea.
+        const dlOptions = Array.from($('#ant-suggest').options).map(o => o.value);
+        if(dlOptions.length && !dlOptions.includes(val)) {
+          alert('Usa una de las sugerencias predefinidas para antecedentes.');
+          return;
+        }
+        FichasStore.update(window.activeId, f => {
+          f.anamnesis.antecedentes = f.anamnesis.antecedentes || [];
+          if(!f.anamnesis.antecedentes.includes(val)) {
+            f.anamnesis.antecedentes.push(val);
+          }
+        });
+        inp.value = '';
+        renderAnt(FichasStore.get(window.activeId));
+        window.computePRM?.();
+      }
+    });
+    // Exponer método para que openFicha pueda invocarlo
+    initAntecedentes.renderAnt = renderAnt;
+  }
+
+  // Inicializar (cargar datos y eventos)
+  loadAll().then(db => {
+    window.DB = db;
+    try {
+      // Cargar catálogo de plantas medicinales si existe
+      fetch('../data/plantas.json')
+        .then(r => r.json())
+        .then(p => { 
+          window.PLANTAS = p;
+          // Rellenar select de plantas (si hubiera uno en UI)
+          // En este diseño, no hay <select id="pl-sel"> explícito, se podría implementar lista similar a ant-suggest.
+        });
+    } catch {}
+    // Inicializar módulos de UI
+    initAntecedentes();
+    // (initMedsUI se omite ya que UI de medicamentos extra está simplificada en esta versión)
+    // Renderizar lista lateral inicial
+    renderLista();
+    // Si hay un hash en la URL al cargar (ID de ficha), abrirla automáticamente
+    const hashId = (location.hash || '').replace('#','').toUpperCase();
+    if(hashId) {
+      const existe = FichasStore.get(hashId);
+      if(existe) {
+        openFichaSafe(hashId);
+      }
+    }
+  });
+
+  /* =========================================================
+     INIT: Configuración Inicial de la Página
+     ========================================================= */
+  (function init() {
+    // Mostrar solo pestaña FICHA inicialmente
+    showTab('ficha');
+    // Ocultar pestañas adicionales hasta tener ficha activa
+    $$('#tabs .tab-btn').forEach(btn => {
+      if(btn.dataset.tab !== 'ficha') btn.style.display = 'none';
+    });
+    // Calcular visibilidad inicial de chips de flags
+    recomputeFlagsUI();
+    // (Si se desea abrir automáticamente la última ficha usada, se puede implementar aquí)
+    // Por ejemplo:
+    // const ultima = FichasStore?.list?.().slice(-1)[0];
+    // if(ultima) { window.activeId = ultima.id; openFichaSafe(ultima.id); }
+  })();
 </script>
 </body>
 </html>

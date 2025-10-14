@@ -31,13 +31,14 @@
     <div class="brand"><strong>QF PRO</strong><br><span class="muted">Atención</span></div>
     <nav style="margin-top:12px">
       <a class="nav-item" href="../index.html">🏷️ Inicio</a>
-      <a class="nav-item active" href="atencion.html">🧑‍⚕️ Atención</a>
-      <a class="nav-item" href="generador.html">📝 Generador</a>
+      <a class="nav-item active" href="atencion.html">🧑‍⚕️ Atención farmacéutica</a>
+      <a class="nav-item" href="generador.html">📝 Generador de texto</a>
       <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
-      <a class="nav-item" href="calculadoras.html">🧮 Calculadoras</a>
-      <a class="nav-item" href="tests.html">🧪 Tests</a>
-      <a class="nav-item" href="material.html">📚 Material</a>
-      <a class="nav-item" href="proa.html">🧫 PROA</a>
+      <a class="nav-item" href="material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="herramientas.html">🧰 Herramientas</a>
+      <a class="nav-item" href="proa.html">🧪 PROA</a>
+      <a class="nav-item" href="plantas.html">🌿 Plantas medicinales</a>
+      <a class="nav-item" href="protocolos.html">📑 Orientaciones técnicas</a>
       <a class="nav-item" href="config.html">⚙️ Configuración</a>
     </nav>
   </aside>
@@ -117,6 +118,7 @@
             <label class="pick"><input type="checkbox" id="dp-ana"> Analfabeto</label>
             <label class="pick"><input type="checkbox" id="dp-dep"> Dependiente severo</label>
             <label class="pick"><input type="checkbox" id="dp-ayt"> Ayudas técnicas</label>
+            <label class="pick"><input type="checkbox" id="an-emb"> Embarazo en curso / posible</label>
           </div>
 
           <!-- RESPECTO A LA TERAPIA -->
@@ -191,12 +193,17 @@
           <!-- APS -->
           <div class="seg-title">APS</div>
           <div id="aps-recetas"></div>
-          <div class="row-end"><button id="aps-add-rec" class="btn">AGREGAR RECETA</button></div>
+          <div class="row-end">
+            <button id="aps-add-rec" class="btn">AGREGAR RECETA</button>
+            <button id="btn-import-rayen" class="btn">IMPORTAR RECETA</button>
+          </div>
 
           <!-- Secundario -->
           <div class="seg-title" style="margin-top:14px">Secundario</div>
           <div id="sec-recetas"></div>
-          <div class="row-end"><button id="sec-add-rec" class="btn">AGREGAR RECETA</button></div>
+          <div class="row-end">
+            <button id="sec-add-rec" class="btn">AGREGAR RECETA</button>
+          </div>
 
           <!-- Particular -->
           <div class="seg-title" style="margin-top:14px">Particular</div>
@@ -262,6 +269,23 @@
         <h3>Fichas</h3>
         <div id="lista" class="list"></div>
       </aside>
+      
+      <!-- Modal Importar Rayen -->
+<div id="import-rayen-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;
+    background:rgba(0,0,0,.6);z-index:1000;justify-content:center;align-items:center;">
+  <div style="background:#0f172a;border:1px solid rgba(148,163,184,.3);padding:20px;border-radius:12px;
+      width:90%;max-width:700px;max-height:90%;overflow:auto;">
+    <h3>Importar receta desde Rayen</h3>
+    <textarea id="rayen-input" placeholder="Pega aquí el texto desde Rayen..." 
+      rows="12" style="width:100%;margin-top:10px;background:#111827;color:#f9fafb;
+      border:1px solid rgba(148,163,184,.3);border-radius:8px;padding:8px;"></textarea>
+    <div class="row-end" style="margin-top:12px;gap:8px;">
+      <button id="rayen-cancel" class="btn-ghost" style="border-color:#ef4444;color:#ef4444">Cancelar</button>
+      <button id="rayen-process" class="btn">Procesar</button>
+    </div>
+  </div>
+</div>
+
     </main>
   </div>
 </div>
@@ -282,6 +306,7 @@
   const $ini=$('#ini'), $age65=$('#age65'), $sexo=$('#sexo');
   const $crear=$('#btn-crear'), $lista=$('#lista'), $titulo=$('#titulo'), $leyenda=$('#leyenda'), $lock=$('#lock'), $guardar=$('#btn-guardar');
   const tabs=['anam','meds','prm','ea','tests','calc','obs'];
+  let currentTab = 'anam';  // estado global de la pestaña activa
 
   loadAll().then(db=>{
     DB=db;
@@ -292,7 +317,11 @@
     const hash=(location.hash||'').replace('#','').toUpperCase(); if(hash) openFicha(hash);
   });
 
-  function showTab(k){ tabs.forEach(t=>$('#panel-'+t).style.display=(t===k)?'block':'none'); document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===k)); }
+  function showTab(k){
+  currentTab = k;  // 👈 guarda pestaña
+  tabs.forEach(t=>$('#panel-'+t).style.display=(t===k)?'block':'none');
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.toggle('active', b.dataset.tab===k));
+}
   document.querySelectorAll('.tab-btn').forEach(b=> b.onclick=()=> showTab(b.dataset.tab));
 
   function renderLista(){
@@ -357,10 +386,10 @@
     buildSimpleBox('#extra-box','extra');
 
     // Automedicación
-    $('#auto-add').onclick=()=>{ if(!activeId) return; const v=($('#auto-line').value||'').trim(); if(!v) return; FichasStore.update(activeId, f=> f.meds.automed.push({texto:v,fecha:Date.now()})); $('#auto-line').value=''; openFicha(activeId); };
+    $('#auto-add').onclick=()=>{ if(!activeId) return; const v=($('#auto-line').value||'').trim(); if(!v) return; FichasStore.update(activeId, f=> f.meds.automed.push({texto:v,fecha:Date.now()})); $('#auto-line').value=''; openFicha(activeId); showTab('meds'); };
 
     // Plantas
-    $('#pl-add').onclick=()=>{ if(!activeId) return; const id=$('#pl-sel').value; const p=PLANTAS[id]; if(!p) return; FichasStore.update(activeId, f=> f.meds.plantas.push({id, nombre:p.nombre})); openFicha(activeId); };
+    $('#pl-add').onclick=()=>{ if(!activeId) return; const id=$('#pl-sel').value; const p=PLANTAS[id]; if(!p) return; FichasStore.update(activeId, f=> f.meds.plantas.push({id, nombre:p.nombre})); openFicha(activeId); showTab('meds'); };
 
     // Recetas APS / Secundario
     $('#aps-add-rec').onclick=()=> addRec('apsRecetas','#aps-recetas');
@@ -395,7 +424,18 @@
       headFecha.onchange=()=> FichasStore.update(activeId, ff=>{ const r=findRec(ff,kind,rec.id); if(r) r.fechaISO=headFecha.value; });
       headMeses.oninput=()=> FichasStore.update(activeId, ff=>{ const r=findRec(ff,kind,rec.id); if(r) r.meses=+headMeses.value||1; });
 
-      delBtn.onclick=()=>{ FichasStore.update(activeId, ff=>{ ff.meds[kind]=ff.meds[kind].filter(x=>x.id!==rec.id); }); renderRecetas(kind,hostSel); computePRM(); };
+      delBtn.classList.add('btn-ghost'); // ya está, dejamos la clase
+delBtn.style.borderColor = '#ef4444';  // rojo suave
+delBtn.style.color = '#ef4444';
+
+delBtn.onclick=()=>{
+  if(!confirm('¿Eliminar esta receta completa?')) return;
+  FichasStore.update(activeId, ff=>{
+    ff.meds[kind] = (ff.meds[kind]||[]).filter(x=>x.id!==rec.id);
+  });
+  renderRecetas(kind,hostSel);
+  computePRM();
+};
 
       // Buscar + agregar dentro de la receta
       mountSearchControls(segBox, kind, rec.id, list);
@@ -473,6 +513,8 @@
       if(q.length<2){ sugg.style.display='none'; sugg.innerHTML=''; picked=null; add.disabled=true; return; }
       let pool = DB.skus;
       if(kind==='apsRecetas') pool=pool.filter(s=> s.aps);
+// if(kind==='secRecetas') pool=pool.filter(s=> s.secundario);  // TODO: activar cuando JSON tenga SECUNDARIO marcado
+
       const items = pool.filter(s=> s.nombre.includes(q)).slice(0,60);
       sugg.style.display='block';
       sugg.innerHTML = items.map(s=>`<div data-sku="${s.skuId}">${s.nombre}</div>`).join('') || '<div class="muted">Sin resultados</div>';
@@ -539,19 +581,32 @@
   }
 
   // LI de medicamento (con botón EA)
-  function liMed(x, kind, recId, idx){
-    const cant = x.forma==='insulina'
-      ? ` ${x.uiAm||0} UI AM - ${x.uiPm||0} UI PM`
-      : (x.cantidad?` ${x.cantidad} ${x.unidad||''}`:'');
-    const posTxt = x.posologia ? ` ${x.posologia}` : '';
-    const data = `data-kind="${kind}" ${recId?`data-rec="${recId}"`:''} data-idx="${idx||0}"`;
-    return `<li class="row"><span>${x.nombre}${cant}${posTxt}</span>
-      <span>
-        <button class="btn ea-btn" ${data} data-ea>EA</button>
-        <button class="btn" ${data} data-rm>Quitar</button>
-      </span>
-    </li>`;
+function liMed(x, kind, recId, idx){
+  // ¿El nombre ya trae la posología inline?
+  const nombreUpper = (x.nombre || '').toUpperCase();
+  const yaLlevaPos = /\b(CADA|SOS)\b/.test(nombreUpper);
+
+  // Solo agregamos cantidad/unidad si NO viene inline
+  let cant = '';
+  if (!yaLlevaPos) {
+    if ((x.forma || '').toLowerCase() === 'insulina' && (x.uiAm || x.uiPm)) {
+      cant = ` ${x.uiAm || 0} UI AM - ${x.uiPm || 0} UI PM`;
+    } else if (x.cantidad) {
+      cant = ` ${x.cantidad} ${x.unidad || ''}`;
+    }
   }
+
+  // No mostrar x.posologia si ya viene inline (además la dejamos vacía al importar)
+  const posTxt = (!yaLlevaPos && x.posologia) ? ` ${x.posologia}` : '';
+
+  const data = `data-kind="${kind}" ${recId ? `data-rec="${recId}"` : ''} data-idx="${idx || 0}"`;
+  return `<li class="row"><span>${(x.nombre || '')}${cant}${posTxt}</span>
+    <span>
+      <button class="btn ea-btn" ${data} data-ea>EA</button>
+      <button class="btn" ${data} data-rm>Quitar</button>
+    </span>
+  </li>`;
+}
 
   function bindListButtons(scope, kind, recId){
     scope.querySelectorAll('[data-rm]').forEach(b=> b.onclick=()=>{
@@ -613,6 +668,11 @@
     fillVal('dp-sector',f.datos.sector); fillVal('dp-ocup',f.datos.ocupacion); fillVal('dp-jub',f.datos.jubilacion);
     fillChk('dp-ana',f.datos.analfabeto); fillChk('dp-dep',f.datos.dependienteSevero); fillChk('dp-ayt',f.datos.ayudasTecnicas);
     bindDatosPersonales();
+    fillChk('an-emb', !!f.anamnesis.embarazo);
+document.getElementById('an-emb').onchange = ()=>{
+  FichasStore.update(activeId, ff=> ff.anamnesis.embarazo = !!document.getElementById('an-emb').checked);
+  computePRM();
+};
 
     const $an=$('#anam-notas'); $an.value=f.anamnesis.textoLibre||''; $an.oninput=debounce(()=>{FichasStore.update(activeId, ff=> ff.anamnesis.textoLibre=$an.value);},600);
 
@@ -637,8 +697,6 @@
 
     // PRM
     computePRM();
-
-    showTab('anam');
   }
 
   function renderStatic(id, arr=[]){
@@ -649,8 +707,15 @@
   // EA select global
   function populateEaSelect(f){
     const sel=$('#ea-med'); const eff=$('#ea-efx');
-    const items=getAllMeds(f).map(x=>({sku:x.sku, base:x.base, nombre:x.nombre}));
-    sel.innerHTML = items.length ? items.map(x=>`<option value="${x.sku}" data-base="${x.base}">${x.nombre}</option>`).join("") : `<option value="">—</option>`;
+    const uniq = new Map();
+getAllMeds(f).forEach(x=>{
+  const key = x.base;             // o x.nombre.toUpperCase()
+  if(!uniq.has(key)) uniq.set(key, {sku:x.sku, base:x.base, nombre:x.nombre});
+});
+const items = Array.from(uniq.values());
+sel.innerHTML = items.length 
+  ? items.map(x=>`<option value="${x.sku}" data-base="${x.base}">${x.nombre}</option>`).join("") 
+  : `<option value="">—</option>`;
     function refreshEff(){ const base=sel.selectedOptions[0]?.dataset.base||''; eff.innerHTML = optionsEA(base).map(e=>`<option>${e}</option>`).join(''); }
     sel.onchange=refreshEff; refreshEff();
   }
@@ -659,7 +724,7 @@
     ul.innerHTML = f.eventosAdversos.length ? f.eventosAdversos.slice().reverse().map(x=>`<li class="row"><span>${x.medNombre}: ${x.efecto}</span></li>`).join('') : '<div class="muted">— vacío —</div>';
   }
 
-// ===== PRM (Beers/STOPP/START/Nefro/Embarazo + Interacciones + Duplicidades + Adherencia)
+// PRM (Beers/STOPP/START/Nefro/Embarazo + Interacciones + Duplicidades + Adherencia)
 function computePRM(){
   if(!activeId || !DB) return;
   const f=FichasStore.get(activeId);
@@ -668,24 +733,42 @@ function computePRM(){
   const set = new Set(bases);
   const out=[];
 
-  // BEERS, STOPP, START
-  meds.forEach(med=>{
-    if(f.age65 && med.flags?.beers){
-      out.push({tipo:"PPI (Beers)", detalle:`• ${med.nombre}`});
+  // PPI (Beers/STOPP) agrupados, sólo si +65
+  if(f.age65){
+    const ppiSet = new Set();
+    meds.forEach(m=>{
+      if(m.flags?.beers || m.flags?.stopp){ ppiSet.add(m.nombre); }
+    });
+    if(ppiSet.size){
+      out.push({ tipo:"PPI (criterios Beers/STOPP)", 
+        detalle: Array.from(ppiSet).map(n=>`• ${n}`).join("<br>") });
     }
-    if(f.age65 && med.flags?.stopp){
-      out.push({tipo:"PPI (STOPP)", detalle:`• ${med.nombre}`});
+  }
+
+  // START (desactivado por ahora)
+  // Aquí no mostramos nada, ya que START debería dispararse sólo si falta el fármaco.
+  // Más adelante se implementará con reglas externas.
+
+  // Ajuste renal: sólo si hay antecedente de ERC
+  const erc = (f.anamnesis.antecedentes||[]).some(a=>/^ERC[2-5]/.test(a) || a.startsWith('ERC'));
+  if(erc){
+    const renales = meds.filter(m=> m.flags?.nefr);
+    if(renales.length){
+      out.push({ tipo:"Ajuste renal (ERC)", 
+        detalle: renales.map(m=>`• ${m.nombre} — revisar ajuste según VFG`).join("<br>") });
     }
-    if(med.flags?.start){
-      out.push({tipo:"Omisión (START)", detalle:`• ${med.nombre}`});
+  }
+
+  // Embarazo: sólo si mujer, <65 y marcado en anamnesis
+  const isF = f.sexo==='F';
+  const posibleEmbarazo = !!f.anamnesis?.embarazo; // necesitas el checkbox en anamnesis
+  if(isF && !f.age65 && posibleEmbarazo){
+    const riesgos = meds.filter(m=> !!m.flags?.embarazo);
+    if(riesgos.length){
+      out.push({ tipo:"Embarazo", 
+        detalle: riesgos.map(m=>`• ${m.nombre} (${m.flags.embarazo})`).join("<br>") });
     }
-    if(med.flags?.nefr){
-      out.push({tipo:"Ajuste renal", detalle:`• ${med.nombre}`});
-    }
-    if(med.flags?.embarazo){
-      out.push({tipo:"Embarazo", detalle:`• ${med.nombre} (${med.flags.embarazo})`});
-    }
-  });
+  }
 
   // Interacciones
   const pairs = DB.interacciones?.pairs||[];
@@ -703,6 +786,7 @@ function computePRM(){
   const neg = (f.tests||[]).concat(f.calculos||[]).filter(x=>/no\s*adher/i.test(x.resultado||''));
   if(neg.length) out.push({tipo:'Adherencia', detalle: neg.map(x=>`• ${x.tipo}: ${x.resultado}`).join("<br>")});
 
+  // Guardar en la ficha
   FichasStore.update(activeId, ff=>{ ff.prm = out.length? out.map(x=>({...x,fecha:Date.now()})) : []; });
   renderPRM(FichasStore.get(activeId));
 }
@@ -783,6 +867,199 @@ function getAllMeds(f){
   }
 
   window.openFicha = openFicha;
+
+// ===== IMPORTAR RECETA RAYEN =====
+const $modalRayen = document.getElementById('import-rayen-modal');
+const $rayenInput = document.getElementById('rayen-input');
+
+// === MAPAS / UTILIDADES PARA IMPORTAR RAYEN ===
+const UNIDAD_POR_FORMA = {
+  "COMPRIMIDO": "COMP",
+  "COMPRIMIDO LP": "COMP",
+  "CAPSULA": "CAP",
+  "UI": "UI",
+  "UNIDAD": "UNIDAD",
+  "DOSIS": "DOSIS",
+  "INHALADOR": "PUFF",           // si posología dice "dosis/disparo" → DOSIS
+  "GOTAS": "GTS",
+  "SUSPENSIÓN ORAL": "ML",
+  "SUSPENSION ORAL": "ML",
+  "JARABE": "ML",
+  "AMPOLLA": "DOSIS",
+  "SOLUCIÓN ORAL": "ML",
+  "SOLUCION ORAL": "ML",
+  "SOLUCIÓN OFTÁLMICA": "GTS",
+  "SOLUCION OFTALMICA": "GTS",
+  "GEL": "UNIDAD",
+  "CREMA": "UNIDAD",
+  "UNGUENTO": "UNIDAD",
+  "UNGÜENTO": "UNIDAD",
+  "SUPOSITORIO": "SUP",
+  "JERINGA": "DOSIS",
+  "PARCHE": "UNIDAD"
+};
+
+const sinAcentos = s => (s || "").normalize("NFD").replace(/\p{Diacritic}/gu, "");
+const normNombre = (s="") => sinAcentos(s.toUpperCase())
+  .replace(/\b(RECUBIERT[OA]S?)\b/g, "")
+  .replace(/\b(DE\s+)?LIBERACION\s+PROLONGADA\b/g, "LP")
+  .replace(/\b(POTASIC[OA]|SODIC[OA]|CLORHIDRATO|SULFATO)\b/g, "")
+  .replace(/\bCOMPRIMIDOS?\b/g, "COMPRIMIDO")
+  .replace(/\bC[ÁA]PSULAS?\b/g, "CAPSULA")
+  .replace(/[().,:]/g, " ")
+  .replace(/\s+/g, " ")
+  .trim();
+
+function unidadDesdePosologia(poso="") {
+  const t = sinAcentos(poso.toLowerCase());
+  if (/\b(puffs?|disparos?)\b/.test(t)) return "PUFF";
+  if (/\bdosis\b/.test(t)) return "DOSIS";
+  if (/\bgotas?\b/.test(t)) return "GTS";
+  if (/\bml|mililitros?\b/.test(t)) return "ML";
+  if (/\bui|u\.?i\.?\b/.test(t)) return "UI";
+  if (/\bsupositorios?\b/.test(t)) return "SUP";
+  if (/\bcomprimidos?\b/.test(t)) return "COMP";
+  if (/\bcapsulas?\b/.test(t)) return "CAP";
+  if (/\bunidades?|aplicaciones?|parches?\b/.test(t)) return "UNIDAD";
+  return null;
+}
+
+function unidadPorForma(formJson = "", poso="") {
+  const f = sinAcentos(formJson.toUpperCase());
+  let unidad = UNIDAD_POR_FORMA[f] || "UNIDAD";
+  if (f === "INHALADOR") {
+    const t = sinAcentos(poso.toLowerCase());
+    if (/\bdosis|disparos?\b/.test(t)) unidad = "DOSIS";
+    else if (/\bpuffs?\b/.test(t)) unidad = "PUFF";
+  }
+  const uPoso = unidadDesdePosologia(poso);
+  return uPoso || unidad;
+}
+
+function extraerCantidad(poso="") {
+  const m = poso.match(/(\d+[.,]?\d*)\s*(comprimidos?|capsulas?|puffs?|disparos?|dosis|gotas?|ml|mililitros?|ui|u\.?i\.?|supositorios?|unidades?|parches?)/i)
+           || poso.match(/\b(\d+[.,]?\d*)\b/);
+  if (!m) return 1;
+  return parseFloat(m[1].replace(",", "."));
+}
+
+function normalizarFrecuencia(poso="") {
+  if (/\bS\.?O\.?S\.?\b/i.test(poso) || /\bA\s*DEMANDA\b/i.test(poso)) return "SOS";
+  const m = poso.match(/(?:cada|c\/|q)\s*(\d+)\s*(h|hr|hrs|hora|horas|d|dia|dias)/i);
+  if (!m) return "CADA 24 HORAS";
+  const n = parseInt(m[1], 10);
+  const u = m[2].toLowerCase();
+  return (u.startsWith("d")) ? "CADA 24 HORAS" : `CADA ${n} HORAS`;
+}
+
+document.getElementById('btn-import-rayen').onclick = ()=>{
+  $modalRayen.style.display = 'flex';
+};
+document.getElementById('rayen-cancel').onclick = ()=>{
+  $modalRayen.style.display = 'none';
+  $rayenInput.value='';
+};
+
+document.getElementById('rayen-process').onclick = ()=>{
+  const raw = $rayenInput.value.trim();
+  if(!raw){ alert("Pega el texto de Rayen primero."); return; }
+  if(!activeId){ alert("Debes tener una ficha abierta."); return; }
+  if(!window.DBmeds || !window.DBmeds.skus?.length){
+    alert("❌ La base de medicamentos no está cargada.");
+    return;
+  }
+
+  const lines = raw.split("\n").map(l=>l.trim()).filter(l=>l);
+
+  // === Fecha opcional (si primera línea es dd-mm-aaaa) ===
+  let startIdx = 0;
+  let fechaISO = new Date().toISOString().slice(0,10);
+  const mFecha = lines[0]?.match(/\b(\d{2})-(\d{2})-(\d{4})\b/);
+  if (mFecha) {
+    const [_, dd, mm, yyyy] = mFecha;
+    fechaISO = `${yyyy}-${mm}-${dd}`;
+    startIdx = 1;
+  }
+
+  // === Receta base ===
+  const recetaId = 'R'+Math.random().toString(36).slice(2,7).toUpperCase();
+  const receta = { id:recetaId, fechaISO, meses:12, meds:[] };
+
+  // === Iterar medicamentos ===
+  for (let i = startIdx; i < lines.length; i++) {
+    const row = lines[i];
+    const m = row.match(/^\(\d+\)\s+(.+?):\s+(.+)$/);
+    if (!m) continue;
+
+    const nombreRayenRaw = m[1].trim();
+    const posoRaw = m[2].trim();
+    const nombreRayen = normNombre(nombreRayenRaw);
+
+    // Limpiar posología
+    let posoLimpio = posoRaw
+      .replace(/por\s+\d+\s*(d[ií]as?|mes(?:es)?)/i, "")
+      .replace(/de\s+la\s+Receta\s+Nº\s+\d+/i, "")
+      .trim();
+
+    // Duración de la receta (para toda la receta)
+    let meses = 12;
+    const mMes = posoRaw.match(/(\d+)\s*mes/i);
+    if (mMes) meses = Math.min(12, parseInt(mMes[1], 10));
+    else {
+      const mDia = posoRaw.match(/(\d+)\s*d[ií]as?/i);
+      if (mDia) meses = Math.min(12, Math.max(1, Math.round(parseInt(mDia[1],10)/30)));
+    }
+    receta.meses = meses;
+
+    // === Match flexible con DB: BASE + FUERZA + FORMA ===
+    const candidatos = window.DBmeds.skus.filter(sku=>{
+      const baseOK   = nombreRayen.includes(sku.base.toUpperCase());
+      const fuerzaOK = sku.raw?.FUERZA ? nombreRayen.includes(normNombre(sku.raw.FUERZA)) : true;
+      const formaJson = (sku.raw?.FORMA || "").toUpperCase();
+      const formaOK   = formaJson ? nombreRayen.includes(normNombre(formaJson)) : true;
+      return baseOK && fuerzaOK && formaOK;
+    });
+    const match = candidatos[0];
+    if(!match){
+      console.log("❌ No se encontró en base:", nombreRayenRaw);
+      continue; // si no hay match, no se incluye
+    }
+
+    // === Cantidad, Unidad y Frecuencia ===
+    const cantidad = extraerCantidad(posoLimpio);
+    const unidad   = unidadPorForma(match.raw?.FORMA || match.forma, posoLimpio);
+    const cada     = normalizarFrecuencia(posoLimpio);
+
+    // === Guardar con SKU oficial y nombre formateado de tu base ===
+const display = `${match.nombre} ${cantidad} ${unidad} ${cada}`.replace(/\s+/g,' ').trim();
+
+receta.meds.push({
+  id: crypto.randomUUID(),
+  sku: match.skuId,
+  base: match.base.toUpperCase(),
+  nombre: display,                       // ya incluye 1 COMP / 2 GTS / CADA ...
+  forma: (match.raw?.FORMA || match.forma || '').toString().toUpperCase(),
+  cantidad, unidad, cada,
+  posologia: "",                         // <- vacío para no duplicar
+  posologiaRayen: posoLimpio             // <- respaldo opcional
+});
+
+  }
+
+  // === Persistir en la ficha ===
+  FichasStore.update(activeId, f=>{
+    if(!f.meds.apsRecetas) f.meds.apsRecetas=[];
+    f.meds.apsRecetas.push(receta);
+  });
+  renderRecetas("apsRecetas","#aps-recetas");
+  computePRM();
+
+  // Cerrar modal
+  $modalRayen.style.display = 'none';
+  $rayenInput.value = '';
+  alert("✅ Receta importada correctamente desde Rayen");
+};
+
 </script>
 </body>
 </html>

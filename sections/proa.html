@@ -1,220 +1,38 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-  <meta charset="utf-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
   <title>QF PRO — PROA</title>
   <link rel="stylesheet" href="../css/styles.css"/>
 </head>
-<body class="page">
-<header class="top">
-  <a href="../index.html">← Inicio</a>
-  <h1>PROA</h1>
-</header>
+<body>
+<div class="app">
+  <aside class="sidebar">
+    <div class="brand"><strong>QF PRO</strong><br><span class="muted">PROA</span></div>
+    <nav style="margin-top:12px">
+      <a class="nav-item" href="../index.html">🏷️ Inicio</a>
+      <a class="nav-item" href="atencion.html">🧑‍⚕️ Atención farmacéutica</a>
+      <a class="nav-item" href="generador.html">📝 Generador de texto</a>
+      <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="herramientas.html">🧰 Herramientas</a>
+      <a class="nav-item active" href="proa.html">🧪 PROA</a>
+      <a class="nav-item" href="plantas.html">🌿 Plantas medicinales</a>
+      <a class="nav-item" href="protocolos.html">📑 Orientaciones técnicas</a>
+      <a class="nav-item" href="config.html">⚙️ Configuración</a>
+    </nav>
+  </aside>
 
-<main class="container">
-  <!-- Selector de modo -->
-  <div class="row" style="gap:8px">
-    <label>Modo:
-      <select id="modo">
-        <option value="libre">Libre</option>
-        <option value="ficha">Asociado a ficha…</option>
-      </select>
-    </label>
-    <select id="sel-ficha" style="display:none"></select>
+  <div class="main">
+    <div id="header"></div>
+    <main class="container">
+      <div class="card">Pronto: AWARE local, cálculo de DOT</div>
+    </main>
   </div>
-
-  <!-- AWaRe -->
-  <section class="card" style="margin-top:14px">
-    <h3>Clasificación AWaRe</h3>
-    <div class="muted">Agrega antibióticos y revisa el mix ACCESS/WATCH/RESERVE.</div>
-
-    <div class="row" style="gap:8px;margin-top:8px">
-      <label>Antibiótico:
-        <select id="sel-atb" style="min-width:220px"></select>
-      </label>
-      <button id="btn-add-atb">Agregar</button>
-      <button id="btn-clear-atb">Vaciar</button>
-    </div>
-
-    <ul id="atb-list" class="list" style="margin-top:10px"></ul>
-
-    <div class="grid" style="margin-top:10px">
-      <div class="kpi"><div class="muted">ACCESS</div><strong id="k-access">0</strong></div>
-      <div class="kpi"><div class="muted">WATCH</div><strong id="k-watch">0</strong></div>
-      <div class="kpi"><div class="muted">RESERVE</div><strong id="k-reserve">0</strong></div>
-      <div class="kpi"><div class="muted">% ACCESS</div><strong id="k-access-pct">0%</strong></div>
-    </div>
-
-    <div style="margin-top:10px">
-      <button id="btn-guardar-aware">Guardar resumen AWaRe</button>
-    </div>
-  </section>
-
-  <!-- DOT/1000 paciente-día -->
-  <section class="card" style="margin-top:14px">
-    <h3>DOT por 1000 paciente-día</h3>
-    <div class="row" style="gap:8px">
-      <label>DOT totales: <input id="dot" type="number" min="0" step="1" style="width:100px"></label>
-      <label>Paciente-día (denominador): <input id="pd" type="number" min="1" step="1" style="width:120px"></label>
-      <button id="btn-dot">Calcular</button>
-    </div>
-    <div id="dot-out" class="list" style="margin-top:10px"></div>
-  </section>
-
-  <!-- Adherencia simple a protocolo (demo) -->
-  <section class="card" style="margin-top:14px">
-    <h3>Adherencia a protocolo (demo)</h3>
-    <div class="row" style="gap:8px">
-      <label>Diagnóstico:
-        <select id="dx">
-          <option value="itu-no-complicada">ITU baja no complicada</option>
-          <option value="nac-leve">Neumonía adquirida en la comunidad (leve)</option>
-        </select>
-      </label>
-      <label>Antibiótico elegido:
-        <select id="abx-chosen"></select>
-      </label>
-      <button id="btn-check">Evaluar</button>
-    </div>
-    <div id="adh-out" class="list" style="margin-top:10px"></div>
-  </section>
-</main>
+</div>
 
 <script type="module">
-  import { FichasStore } from "../js/fichasStore.js";
-  import { loadAll } from "../js/medStore.js";
-
-  // Refs
-  const $modo = document.getElementById('modo');
-  const $self = document.getElementById('sel-ficha');
-  const $selAtb = document.getElementById('sel-atb');
-  const $btnAddAtb = document.getElementById('btn-add-atb');
-  const $btnClearAtb = document.getElementById('btn-clear-atb');
-  const $list = document.getElementById('atb-list');
-
-  const $ka = document.getElementById('k-access');
-  const $kw = document.getElementById('k-watch');
-  const $kr = document.getElementById('k-reserve');
-  const $kp = document.getElementById('k-access-pct');
-  const $btnSaveAware = document.getElementById('btn-guardar-aware');
-
-  const $dot = document.getElementById('dot');
-  const $pd  = document.getElementById('pd');
-  const $btnDot = document.getElementById('btn-dot');
-  const $dotOut = document.getElementById('dot-out');
-
-  const $dx = document.getElementById('dx');
-  const $abxChosen = document.getElementById('abx-chosen');
-  const $btnCheck = document.getElementById('btn-check');
-  const $adhOut = document.getElementById('adh-out');
-
-  let DB = null;
-  let atbSet = []; // lista de IDs de antibióticos añadidos
-
-  // Modo
-  function refreshFichas(){
-    $self.innerHTML = FichasStore.list().map(f=>`<option>${f.id}</option>`).join("");
-  }
-  $modo.onchange = ()=>{
-    const attach = ($modo.value === 'ficha');
-    $self.style.display = attach ? 'inline-block' : 'none';
-    if (attach) refreshFichas();
-  };
-
-  // Cargar medicamentos y poblar selects
-  loadAll().then(db=>{
-    DB = db;
-    const atbs = Object.values(DB.meds).filter(m => (m.etiquetas||[]).includes("Antibiótico") || m.aware);
-    // selector principal de antibióticos (AWaRe)
-    $selAtb.innerHTML = atbs.map(m=>`<option value="${m.id}">${m.nombre}</option>`).join("");
-    // selector para adherencia
-    $abxChosen.innerHTML = atbs.map(m=>`<option value="${m.id}">${m.nombre}</option>`).join("");
-  });
-
-  // Helpers
-  function awareOf(medId){
-    const m = DB?.meds?.[medId];
-    return m?.aware || 'UNKNOWN';
-  }
-  function renderAw(){
-    $list.innerHTML = atbSet.length
-      ? atbSet.map(id=>`<li class="row"><span>${DB.meds[id]?.nombre || id} · <span class="pill">${awareOf(id)}</span></span><button class="btn" data-rm="${id}">Quitar</button></li>`).join("")
-      : '<div class="muted">— sin antibióticos —</div>';
-    // binds quitar
-    $list.querySelectorAll('[data-rm]').forEach(b=>{
-      b.onclick = ()=>{ atbSet = atbSet.filter(x=>x!==b.dataset.rm); tally(); renderAw(); };
-    });
-  }
-  function tally(){
-    const counts = { ACCESS:0, WATCH:0, RESERVE:0, UNKNOWN:0 };
-    atbSet.forEach(id => { counts[awareOf(id)] = (counts[awareOf(id)]||0) + 1; });
-    const totalKnown = (counts.ACCESS + counts.WATCH + counts.RESERVE);
-    const pctAccess = totalKnown ? Math.round(100*counts.ACCESS/totalKnown) : 0;
-    $ka.textContent = counts.ACCESS;
-    $kw.textContent = counts.WATCH;
-    $kr.textContent = counts.RESERVE;
-    $kp.textContent = pctAccess + "%";
-  }
-
-  // AWaRe events
-  $btnAddAtb.onclick = ()=>{
-    const id = $selAtb.value;
-    if(!id) return;
-    if(!atbSet.includes(id)) atbSet.push(id);
-    tally(); renderAw();
-  };
-  $btnClearAtb.onclick = ()=>{ atbSet = []; tally(); renderAw(); };
-
-  $btnSaveAware.onclick = ()=>{
-    const summary = `AWaRe: ACCESS=${$ka.textContent}, WATCH=${$kw.textContent}, RESERVE=${$kr.textContent}, %ACCESS=${$kp.textContent}`;
-    if ($modo.value==='ficha' && $self.value){
-      FichasStore.update($self.value, f=>{
-        f.calculos.push({ tipo:"PROA/AWaRe", datosEntrada:{ atbSet }, resultado: summary, fecha: Date.now(), asociado:true });
-      });
-      alert("Guardado en ficha " + $self.value);
-    } else {
-      alert(summary);
-    }
-  };
-
-  // DOT/1000
-  $btnDot.onclick = ()=>{
-    const dot = parseFloat($dot.value);
-    const pd  = parseFloat($pd.value);
-    if(!dot || !pd){ alert("Completa DOT y paciente-día."); return; }
-    const rate = (dot / pd) * 1000;
-    const msg = `DOT/1000 paciente-día = ${rate.toFixed(1)}`;
-    $dotOut.innerHTML = `<div class="card">🧮 ${msg}</div>` + $dotOut.innerHTML;
-    if ($modo.value==='ficha' && $self.value){
-      FichasStore.update($self.value, f=>{
-        f.calculos.push({ tipo:"PROA/DOT1000", datosEntrada:{ dot, pd }, resultado: msg, fecha: Date.now(), asociado:true });
-      });
-    }
-  };
-
-  // Adherencia simple (demo)
-  const reglas = {
-    "itu-no-complicada": { recomendados: ["amoxicilina"], evitar: ["ciprofloxacino"] },
-    "nac-leve": { recomendados: ["amoxicilina"], evitar: [] }
-  };
-  $btnCheck.onclick = ()=>{
-    const dx = $dx.value;
-    const abx = $abxChosen.value;
-    const rec = reglas[dx]?.recomendados || [];
-    const ev  = reglas[dx]?.evitar || [];
-    let res = "";
-    if (rec.includes(abx)) res = "Adherente a protocolo";
-    else if (ev.includes(abx)) res = "No adherente (evitar según guía)";
-    else res = "Evaluación neutral (ver guía local)";
-    const line = `${DB.meds[abx]?.nombre || abx} → ${res}`;
-    $adhOut.innerHTML = `<div class="card">${line}</div>` + $adhOut.innerHTML;
-    if ($modo.value==='ficha' && $self.value){
-      FichasStore.update($self.value, f=>{
-        f.tests.push({ tipo:"PROA/Adherencia", resultado: line, fecha: Date.now(), asociado:true });
-      });
-    }
-  };
+  import { mountHeader } from "../js/header.js"; mountHeader();
 </script>
 </body>
 </html>
