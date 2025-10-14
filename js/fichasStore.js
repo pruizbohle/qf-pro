@@ -40,6 +40,7 @@ export const FichasStore = {
 
       age65: !!opts.age65,
       sexo: opts.sexo || "",             // "F" | "M" | ""
+      tipoAtencion: opts.tipoAtencion || "",
       datos: {
         acompana: "solo",                // "solo" | "acompanado"
         convive: "solo",                 // "solo" | "con"

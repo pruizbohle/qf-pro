@@ -26,6 +26,7 @@
     .fichas-panel{border-left:1px solid rgba(148,163,184,0.2);padding-left:16px}
     .fichas-lista{display:flex;flex-direction:column;gap:10px}
     .ficha-card{background:#101c33;border:1px solid rgba(148,163,184,.3);border-radius:8px;padding:10px 12px}
+    .ficha-card.active{border-color:#0b74d1;box-shadow:0 0 0 1px rgba(11,116,209,.3)}
     .trash{cursor:pointer;opacity:0.8}
     #header-paciente{font-weight:600;margin:6px 0 4px 0}
     [data-panel]{display:none}
@@ -37,16 +38,16 @@
   <aside class="sidebar">
     <div class="brand"><strong>QF PRO</strong><br><span class="muted">Atención</span></div>
     <nav style="margin-top:12px">
-      <a class="nav-item" href="../index.html">🏠 Inicio</a>
-      <a class="nav-item active" href="./atencion.html">🧪 Atención farmacéutica</a>
-      <a class="nav-item" href="./generador.html">🧾 Generador de texto</a>
-      <a class="nav-item" href="./vademecum.html">💊 Vademécum</a>
-      <a class="nav-item" href="./material.html">📚 Material de consulta</a>
-      <a class="nav-item" href="./herramientas.html">🛠️ Herramientas</a>
-      <a class="nav-item" href="./proa.html">🦠 PROA</a>
-      <a class="nav-item" href="./protocolos.html">📑 Protocolos</a>
-      <a class="nav-item" href="./plantas.html">🌿 Plantas</a>
-      <a class="nav-item" href="./config.html">⚙️ Configuración</a>
+      <a class="nav-item" href="../index.html">🏷️ Inicio</a>
+      <a class="nav-item active" href="atencion.html">🧑‍⚕️ Atención farmacéutica</a>
+      <a class="nav-item" href="generador.html">📝 Generador de texto</a>
+      <a class="nav-item" href="vademecum.html">💊 Vademécum</a>
+      <a class="nav-item" href="material.html">📚 Material de consulta</a>
+      <a class="nav-item" href="herramientas.html">🧰 Herramientas</a>
+      <a class="nav-item" href="proa.html">🧪 PROA</a>
+      <a class="nav-item" href="plantas.html">🌿 Plantas medicinales</a>
+      <a class="nav-item" href="protocolos.html">📑 Orientaciones técnicas</a>
+      <a class="nav-item" href="config.html">⚙️ Configuración</a>
     </nav>
   </aside>
 
@@ -218,11 +219,12 @@
 
 <!-- ====== SCRIPTS ====== -->
 <script type="module">
-  /* ============== Montar header global ============== */
-  try {
-    // Si usas módulos ES en header.js
-    import('../js/header.js').then(mod => mod?.mountHeader?.());
-  } catch(e) { /* fallback silencioso */ }
+  /* ============== Montar header global + store compartido ============== */
+  import { mountHeader } from "../js/header.js";
+  import { FichasStore } from "../js/fichasStore.js";
+
+  mountHeader();
+  window.FichasStore = FichasStore;
 
   /* ============== Utilidades básicas ============== */
   const $ = s => document.querySelector(s);
@@ -249,6 +251,7 @@ function noFichaState(){
     if(pnl) pnl.style.display = vis ? 'block' : 'none';
   });
   showTab('ficha');
+  renderAntecedentesFromStore();
 }
 
 /* ============== Tabs: helpers ============== */
@@ -310,41 +313,12 @@ function aplicarTabsPorTipo(tipo) {
   if($sexo) $sexo.addEventListener('change', updateChips);
   updateChips();
 
-  /* ============== Store persistente (localStorage) ============== */
-  // Si existe un FichasStore global previo, se respeta. Si no, definimos uno simple.
-  if(!window.FichasStore){
-    const KEY = 'qfpro_fichas';
-    const load = () => {
-      try{ return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch{ return []; }
-    };
-    const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
-    window.FichasStore = {
-      list(){ return load(); },
-      get(id){ return load().find(f => f.id===id) || null; },
-      create(f){
-        const all = load();
-        if(all.some(x => x.id===f.id)) throw new Error('Ya existe una ficha con ese identificador.');
-        all.push(f); save(all); return f.id;
-      },
-      update(id, updater){
-        const all = load(); const ix = all.findIndex(f => f.id===id);
-        if(ix<0) return;
-        const nf = {...all[ix]};
-        updater(nf);
-        all[ix] = nf; save(all);
-      },
-      remove(id){
-        const all = load().filter(f => f.id!==id); save(all);
-      }
-    };
-  }
-
 /* ============== Render lateral de fichas ============== */
 const listaFichas = document.querySelector('#lista-fichas');
 
 function renderLista() {
   // Obtener lista desde almacenamiento o vacía
-  const L = (window.FichasStore?.list?.() || []).sort((a, b) => new Date(b.lastActive) - new Date(a.lastActive));
+  const L = FichasStore.list().slice().sort((a, b) => (b.lastActive || 0) - (a.lastActive || 0));
 
   if (!listaFichas) return;
 
@@ -360,22 +334,25 @@ function renderLista() {
   // Genera cada ficha
   L.forEach(f => {
     const icon = f.sexo === 'F' ? '♀' : f.sexo === 'M' ? '♂' : '•';
-    const chip = f.edad >= 65 ? `<span class="chip" style="margin-left:6px;">≥65</span>` : '';
+    const chip = f.age65 ? `<span class="chip" style="margin-left:6px;">≥65</span>` : '';
     const fecha = f.lastActive ? new Date(f.lastActive).toLocaleString('es-CL') : '';
     
     // Crea la tarjeta
     const card = document.createElement('div');
     card.className = 'ficha-card';
+        if(f.id === window.activeId) card.classList.add('active');
     card.innerHTML = `
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <div><b>${f.id}</b> ${icon} ${chip}</div>
         <div style="display:flex;gap:6px;">
-          <button class="btn mini" onclick="abrirFicha('${f.id}')">Abrir</button>
-          <button class="btn mini warn" title="Eliminar ficha" onclick="eliminarFicha('${f.id}')">🗑️</button>
+          <button class="btn mini" data-open="${f.id}">Abrir</button>
+          <button class="btn mini warn" data-del="${f.id}" title="Eliminar ficha">🗑️</button>
         </div>
       </div>
       <div class="muted" style="font-size:12px;">${fecha}</div>
     `;
+        card.querySelector('[data-open]')?.addEventListener('click', () => openFicha(f.id));
+    card.querySelector('[data-del]')?.addEventListener('click', () => eliminarFicha(f.id));
     listaFichas.appendChild(card);
   });
 }
@@ -383,38 +360,26 @@ function renderLista() {
 /* ============== Eliminar ficha ============== */
 function eliminarFicha(id) {
   if (!confirm(`¿Eliminar ficha ${id}?`)) return;
-  if (window.FichasStore?.remove) {
-    window.FichasStore.eliminar(id);
-  } else {
-    // fallback si se usa Map local
-    if (typeof FichasStore === 'object' && FichasStore.delete) FichasStore.delete(id);
+  FichasStore.remove(id);
+  if(window.activeId === id){
+    window.activeId = null;
+    noFichaState();
   }
   renderLista();
 }
 
 
 /* ============== Título dinámico con datos del paciente ============== */
-const hdrPac = document.querySelector('#header-paciente');
-
   // Header paciente
 function updateHeaderPaciente(f){
   const hdrPac = document.querySelector('#header-paciente');
   if(!f || !hdrPac){ if(hdrPac){hdrPac.style.display='none';hdrPac.textContent='';} return; }
   const sexoStr = f.sexo === 'F' ? 'Femenino' : (f.sexo === 'M' ? 'Masculino' : '-');
-  const edadStr = (typeof f.edad === 'number' && f.edad >= 65) ? '≥65' : '';
-  hdrPac.textContent = `${f.iniciales || f.id} · ${sexoStr}${edadStr? ' · ' + edadStr : ''}`;
+  const edadStr = f.age65 ? '≥65' : '';
+  hdrPac.textContent = `${f.id} · ${sexoStr}${edadStr? ' · ' + edadStr : ''}`;
   hdrPac.style.display = 'block';
 
   }
-
-// usar SIEMPRE esta API:
-window.FichasStore = window.FichasStore || {
-  list(){ /* ... */ },
-  get(id){ /* ... */ },
-  create(f){ /* ... */ },
-  update(id, mut){ /* ... */ },
-  remove(id){ /* ... */ }
-};
 
   /* ============== Crear ficha (validación completa) ============== */
   const $ini = $('#ini');
@@ -445,7 +410,6 @@ window.FichasStore = window.FichasStore || {
   function crearFicha(){
     const iniciales = ($ini.value||'').trim().toUpperCase();
     const es65 = !!($mayor65 && $mayor65.checked);
-    const edadVal = es65 ? 65 : null;
     const sexoVal = $sexo.value;
 
     if(!iniciales){ alert('Debes ingresar las iniciales.'); return; }
@@ -453,39 +417,50 @@ window.FichasStore = window.FichasStore || {
     if(!tipoSeleccionado){ alert('Selecciona un tipo de atención.'); return; }
 
     const id = generarIdDesdeIniciales(iniciales);
-    if(!id){ alert('Iniciales inválidas. Usa letras A–Z.'); return; }
-
-    const ficha = {
-      id,
-      iniciales,
-      sexo: sexoVal,
-      edad: edadVal,
-      tipo: tipoSeleccionado,
-      createdAt: Date.now(),
-      lastActive: Date.now()
-    };
+       if(id.length !== 3){ alert('Iniciales inválidas. Usa 3 letras A–Z.'); return; }
 
     try{
-      window.FichasStore?.create(ficha);
+      FichasStore.create(id, { age65: es65, sexo: sexoVal, tipoAtencion: tipoSeleccionado });
     }catch(e){
-      // si ya existe, actualizamos y continuamos
-      window.FichasStore?.update(id, f => Object.assign(f, ficha));
+      if(!/Ya existe/.test(e.message)){ alert(e.message); return; }
     }
+
+        FichasStore.update(id, f => {
+      f.age65 = es65;
+      f.sexo = sexoVal;
+      f.tipoAtencion = tipoSeleccionado;
+    });
 
     renderLista();
     openFichaSafe(id);
+        if($ini) $ini.value = '';
   }
   $btnCrear.addEventListener('click', crearFicha);
 
   /* ============== Abrir ficha (flujo oficial) ============== */
   window.activeId = window.activeId || null;
   function openFicha(id){
-    const f = window.FichasStore?.get(id);
+    const f = FichasStore.get(id);
     if(!f) return;
     window.activeId = id;
-    window.FichasStore?.update(id, x => x.lastActive = Date.now());
-    updateHeaderPaciente(f);
-    aplicarTabsPorTipo(f.tipo);
+    FichasStore.update(id, () => {});
+    const nf = FichasStore.get(id);
+    updateHeaderPaciente(nf);
+    aplicarTabsPorTipo(nf?.tipoAtencion);
+    if($ini) $ini.value = nf?.id || '';
+    if($mayor65) $mayor65.checked = !!nf?.age65;
+    if($sexo) $sexo.value = nf?.sexo || '';
+    const tipoEntry = tiposBtns.find(t => t.label === nf?.tipoAtencion);
+    if(tipoEntry){
+      marcarTipo(tipoEntry.id);
+    }else{
+      tipoSeleccionado = null;
+      tiposBtns.forEach(t => {
+        const b = document.getElementById(t.id);
+        if(b){ b.classList.remove('active'); b.style.background = '#101c33'; }
+      });
+    }
+    renderAntecedentesFromStore();
     showTab('ante'); // SIEMPRE iniciar en ANTECEDENTES
     renderLista();
     updateChips(); // refrescar chips según edad/sexo
@@ -506,7 +481,7 @@ document.querySelector('#btn-conciliar')?.addEventListener('click', () => {
     return;
   }
 
-  window.FichasStore?.update(window.activeId, f => {
+  FichasStore.update(window.activeId, f => {
     f.conciliacion = { estado: 'conciliado', fecha: Date.now() };
   });
 
@@ -536,7 +511,7 @@ document.querySelector('#err-add')?.addEventListener('click', () => {
   }
 
   // Actualiza en FichasStore
-  window.FichasStore?.update(window.activeId, f => {
+   FichasStore.update(window.activeId, f => {
     f.meds = f.meds || {};
     f.meds.errores = f.meds.errores || [];
     f.meds.errores.push({ etapa, desc, ts: Date.now() });
@@ -569,25 +544,49 @@ if (antSuggest) {
 const antInput = document.querySelector('#ant-input');
 const antList = document.querySelector('#ant-list');
 
+function renderAntecedentesFromStore(){
+  if(!antList) return;
+  antList.innerHTML = '';
+  if(!window.activeId) return;
+  const f = FichasStore.get(window.activeId);
+  (f?.anamnesis?.antecedentes || []).forEach(val => {
+    const chip = document.createElement('span');
+    chip.className = 'chip';
+    chip.textContent = val;
+    const btn = document.createElement('span');
+    btn.className = 'trash';
+    btn.title = 'Quitar';
+    btn.textContent = '✕';
+    btn.dataset.remove = val;
+    btn.addEventListener('click', () => {
+      FichasStore.update(window.activeId, ff => {
+        ff.anamnesis = ff.anamnesis || { antecedentes: [] };
+        ff.anamnesis.antecedentes = (ff.anamnesis.antecedentes || []).filter(x => x !== val);
+      });
+      renderAntecedentesFromStore();
+    });
+    chip.appendChild(btn);
+    antList.appendChild(chip);
+  });
+}
+
 if (antInput && antList) {
   antInput.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
       const v = e.target.value.trim();
       if (!v) return;
 
-      // Crea visualmente la etiqueta chip
-      const tag = document.createElement('span');
-      tag.className = 'chip';
-      tag.textContent = v;
-      antList.appendChild(tag);
       e.target.value = '';
 
       // Guarda en ficha activa si existe
-      if (window.activeId && window.FichasStore?.update) {
-        window.FichasStore.update(window.activeId, f => {
-          f.antecedentes = f.antecedentes || [];
-          f.antecedentes.push(v);
+      if (window.activeId) {
+        FichasStore.update(window.activeId, f => {
+          f.anamnesis = f.anamnesis || { antecedentes: [] };
+          const arr = f.anamnesis.antecedentes || [];
+          if(!arr.includes(v)) arr.push(v);
+          f.anamnesis.antecedentes = arr;
         });
+                renderAntecedentesFromStore();
       }
     }
   });
@@ -596,6 +595,19 @@ if (antInput && antList) {
 /* ============== Inicializar pantalla ============== */
 // restaurar lista persistente
 renderLista();
+
+// Abrir ficha desde el hash si corresponde
+const hashId = (location.hash || '').replace('#', '').toUpperCase();
+if (hashId && FichasStore.get(hashId)) {
+  openFicha(hashId);
+}
+
+window.addEventListener('hashchange', () => {
+  const h = (location.hash || '').replace('#', '').toUpperCase();
+  if (h && FichasStore.get(h)) {
+    openFicha(h);
+  }
+});
 
 // Estado inicial sin ficha seleccionada
 if (!window.activeId) { noFichaState(); }
