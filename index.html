@@ -32,15 +32,8 @@
     <div id="header"></div>
 
     <main class="container">
-      <div class="row" style="gap:12px;align-items:center">
-        <label class="pick">Nueva ficha (iniciales 3 letras):
-          <input id="ini" maxlength="3" style="text-transform:uppercase;width:90px" placeholder="ABC">
-        </label>
-        <button id="btn-crear" class="btn">Crear</button>
-        <span class="muted">Límite 5 · Vigencia 3 días</span>
-      </div>
-
       <h2 style="margin-top:8px">Fichas activas</h2>
+            <div class="card muted" style="margin-top:12px">La creación y administración de fichas se realiza desde <strong>Atención farmacéutica</strong>.</div>
       <div id="fichas" class="fichas-wrap"></div>
     </main>
   </div>
@@ -51,8 +44,6 @@
   import { FichasStore } from "./js/fichasStore.js";
   mountHeader();
 
-  const $ini = document.getElementById('ini');
-  const $crear = document.getElementById('btn-crear');
   const $wrap = document.getElementById('fichas');
 
   const TTL_MS = 3*24*60*60*1000;
@@ -89,11 +80,6 @@
     L.forEach(f=> $wrap.appendChild(card(f)));
     if(!L.length) $wrap.innerHTML = '<div class="card muted">— Sin fichas —</div>';
   }
-
-  $crear.onclick = ()=>{
-    const ini = ($ini.value||'').toUpperCase().trim();
-    try{ FichasStore.create(ini); $ini.value=''; render(); }catch(e){ alert(e.message); }
-  };
 
   render(); setInterval(render, 60*1000); // refresca barras cada minuto
 </script>
