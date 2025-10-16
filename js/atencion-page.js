@@ -28,6 +28,26 @@ const FLOW = {
   "CON ENTREVISTA: AMPLIADA": ["ficha", "ante", "anam", "meds", "ea", "prm", "edu", "herr", "indi", "acu"],
 };
 
+const tiposBtns = [
+  { id: "tipo-sinconc", label: "SIN ENTREVISTA: CONCILIACIÓN" },
+  { id: "tipo-sinram", label: "SIN ENTREVISTA: RAM" },
+  { id: "tipo-conreg", label: "CON ENTREVISTA: REGULAR" },
+  { id: "tipo-conmais", label: "CON ENTREVISTA: AMPLIADA" },
+];
+
+const ANT_SUG = [
+  "HTA",
+  "DM2 IR",
+  "DM2 NIR",
+  "DLP",
+  "HIPOT4",
+  "ERC",
+  "POLIARTROSIS",
+  "OB",
+  "TR SUEÑO",
+  "TR DEPRESIVO",
+];
+
 const state = {
   activeId: null,
   tipoSeleccionado: null,
@@ -37,13 +57,26 @@ const state = {
   plantas: {},
 };
 
+const autosave = { el: null };
+
+const originalUpdate = FichasStore.update.bind(FichasStore);
+FichasStore.update = function (id, mutator) {
+  const updated = originalUpdate(id, mutator);
+  if (state.activeId === id) {
+    updateAutosaveIndicator(updated);
+  }
+  return updated;
+};
+
 /* ======= INICIALIZACIÓN ======= */
 init();
 
 async function init() {
   mountHeader();
+    setupAutosaveIndicator();
 
   setupTabs();
+    noFichaState();
   setupTipoAtencion();
   setupCrearFicha();
   setupAntecedentes();
@@ -58,7 +91,7 @@ async function init() {
   ]);
 
   renderLista();
-  noFichaState();
+  if (!state.activeId) noFichaState();  if (!state.activeId) noFichaState();
 
   const hashId = (location.hash || "").replace("#", "").toUpperCase();
   if (hashId && FichasStore.get(hashId)) {
@@ -146,11 +179,13 @@ function aplicarTabsPorTipo(tipo) {
 function noFichaState() {
   state.activeId = null;
   window.activeId = null;
+    updateAutosaveIndicator(null);
   const header = $("#header-paciente");
   if (header) {
     header.style.display = "block";
-    header.textContent = "Sin ficha seleccionada";
+    header.textContent = "Sin ficha abierta";
   }
+    marcarTipo(null);
   const keep = new Set(["ficha"]);
   ALL_TABS.forEach((t) => {
     const btn = document.querySelector(`.tab-btn[data-tab="${t}"]`);
@@ -176,14 +211,31 @@ function noFichaState() {
   });
 }
 
-/* ======= CREAR/ABRIR FICHAS ======= */
-const tiposBtns = [
-  { id: "tipo-sinconc", label: "SIN ENTREVISTA: CONCILIACIÓN" },
-  { id: "tipo-sinram", label: "SIN ENTREVISTA: RAM" },
-  { id: "tipo-conreg", label: "CON ENTREVISTA: REGULAR" },
-  { id: "tipo-conmais", label: "CON ENTREVISTA: AMPLIADA" },
-];
+function setupAutosaveIndicator() {
+  autosave.el = document.getElementById("autosave-indicator");
+  updateAutosaveIndicator(state.activeId ? FichasStore.get(state.activeId) : null);
+}
 
+function updateAutosaveIndicator(ficha) {
+  if (!autosave.el) return;
+  if (!ficha) {
+    autosave.el.textContent = "Autoguardado: —";
+    autosave.el.classList.add("muted");
+    autosave.el.classList.remove("autosave--active");
+    return;
+  }
+  const ts = ficha.lastActive || Date.now();
+  const time = new Date(ts).toLocaleTimeString("es-CL", {
+    hour: "2-digit",
+    minute: "2-digit",
+    second: "2-digit",
+  });
+  autosave.el.textContent = `Autoguardado: ${time}`;
+  autosave.el.classList.remove("muted");
+  autosave.el.classList.add("autosave--active");
+}
+
+/* ======= CREAR/ABRIR FICHAS ======= */
 function setupTipoAtencion() {
   tiposBtns.forEach((t) => {
     const btn = document.getElementById(t.id);
@@ -210,15 +262,41 @@ function marcarTipo(btnId) {
 
 function setupCrearFicha() {
   const ini = $("#ini");
+    const mayor65 = $("#mayor65");
+  const sexo = $("#sexo");
   const btn = $("#btn-crear");
   if (!ini || !btn) return;
+    ini.addEventListener("input", (e) => normalizarIniciales(e.target));
+  mayor65?.addEventListener("change", updateChips);
+  sexo?.addEventListener("change", updateChips);
+  updateChips();
   btn.addEventListener("click", () => crearFicha());
+}
+
+function normalizarIniciales(input) {
+  if (!input) return;
+  const clean = (input.value || "").toUpperCase().replace(/[^A-Z]/g, "").slice(0, 3);
+  if (input.value !== clean) {
+    input.value = clean;
+  }
+}
+
+function updateChips() {
+  const mayor65 = $("#mayor65");
+  const sexo = $("#sexo");
+  const chip65 = $("#chip-65");
+  const chipEmb = $("#chip-emb");
+  const es65 = !!mayor65?.checked;
+  const esF = sexo?.value === "F";
+  if (chip65) chip65.style.display = es65 ? "inline-flex" : "none";
+  if (chipEmb) chipEmb.style.display = esF && !es65 ? "inline-flex" : "none";
 }
 
 function crearFicha() {
   const ini = $("#ini");
   const mayor65 = $("#mayor65");
   const sexo = $("#sexo");
+    normalizarIniciales(ini);
   const iniciales = (ini?.value || "").trim().toUpperCase();
   const id = iniciales.replace(/[^A-Z]/g, "").slice(0, 3);
   if (!id || id.length !== 3) {
@@ -273,6 +351,7 @@ function openFicha(id) {
   window.activeId = id;
   FichasStore.update(id, () => {});
   const refreshed = FichasStore.get(id);
+  updateAutosaveIndicator(refreshed);
   updateHeaderPaciente(refreshed);
   aplicarTabsPorTipo(refreshed?.tipoAtencion);
   syncFormulario(refreshed);
@@ -289,15 +368,15 @@ function syncFormulario(ficha) {
   const ini = $("#ini");
   const mayor65 = $("#mayor65");
   const sexo = $("#sexo");
-  if (ini) ini.value = ficha?.id || "";
+ if (ini) {
+    ini.value = ficha?.id || "";
+    normalizarIniciales(ini);
+  }
   if (mayor65) mayor65.checked = !!ficha?.age65;
   if (sexo) sexo.value = ficha?.sexo || "";
-  const chip65 = $("#chip-65");
-  const chipEmb = $("#chip-emb");
-  if (chip65) chip65.style.display = ficha?.age65 ? "inline-flex" : "none";
-  if (chipEmb) chipEmb.style.display = ficha?.sexo === "F" && !ficha?.age65 ? "inline-flex" : "none";
+  updateChips();
   const tipoEntry = tiposBtns.find((t) => t.label === ficha?.tipoAtencion);
-  if (tipoEntry) marcarTipo(tipoEntry.id);
+ marcarTipo(tipoEntry ? tipoEntry.id : null);
 }
 
 function updateHeaderPaciente(ficha) {
@@ -367,18 +446,6 @@ function notify(title, message) {
 }
 
 /* ======= ANTECEDENTES ======= */
-const ANT_SUG = [
-  "HTA",
-  "DM2 IR",
-  "DM2 NIR",
-  "DLP",
-  "HIPOT4",
-  "ERC",
-  "POLIARTROSIS",
-  "OB",
-  "TR SUEÑO",
-  "TR DEPRESIVO",
-];
 
 function setupAntecedentes() {
   const datalist = $("#ant-suggest");

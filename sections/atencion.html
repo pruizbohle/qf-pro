@@ -72,7 +72,7 @@
   <!-- ======== MAIN ======== -->
   <main class="main">
     <!-- Header global montado por header.js -->
-    <div id="header"></div>
+    <div id="header" data-show-autosave="1"></div>
 
     <!-- Título dinámico de ficha activa (iniciales · sexo · edad) -->
     <div id="header-paciente" style="display:none;margin-left:8px;"></div>
@@ -108,7 +108,7 @@
             <div>
               <div class="row" style="margin-bottom:8px;">
                 <label>Iniciales:
-                  <input id="ini" maxlength="6" placeholder="ABC" style="width:90px; text-transform:uppercase;"/>
+                  <input id="ini" maxlength="3" placeholder="ABC" style="width:90px; text-transform:uppercase;" title="Ingresa 3 letras en mayúsculas"/>
                 </label>
 <label>≥65:
   <input id="mayor65" type="checkbox"/>

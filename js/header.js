@@ -2,13 +2,15 @@
 export function mountHeader(rootSelector="#header"){
   const host = document.querySelector(rootSelector);
   if(!host) return;
+    const showAutosave = /^(1|true)$/i.test(host.dataset.showAutosave || "");
   host.innerHTML = `
     <header class="app-header">
-      <div class="bar container">
+      <div class="bar container${showAutosave ? " bar--autosave" : ""}">
         <div class="brand">
           <strong>QF PRO</strong><br><span class="muted">Atención farmacéutica</span>
         </div>
         <div class="search"><input id="global-search" placeholder="Buscar medicamento, herramienta o criterio…"></div>
+                ${showAutosave ? '<div class="autosave" id="autosave-indicator" aria-live="polite">Autoguardado: —</div>' : ''}
         <div class="user" title="Usuario"></div>
       </div>
     </header>

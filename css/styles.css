@@ -15,6 +15,9 @@ body{margin:0;background:var(--bg);color:#dbeafe;font-family:ui-sans-serif,syste
 /* --- Header (estático, no sticky) --- */
 .app-header{border-bottom:1px solid var(--line);background:var(--bg)}
 .app-header .bar{display:grid;grid-template-columns:220px 1fr 40px;gap:16px;align-items:center;padding:12px 16px}
+.app-header .bar.bar--autosave{grid-template-columns:220px 1fr auto 40px}
+.autosave{font-size:.85rem;color:var(--muted);text-align:right;white-space:nowrap}
+.autosave.autosave--active{color:#dbeafe}
 .brand strong{font-weight:700}
 .brand .muted{color:var(--muted);font-size:.9rem}
 .search{background:var(--bg-2);border:1px solid var(--line);border-radius:14px;padding:10px 14px}
