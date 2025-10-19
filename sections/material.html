@@ -42,25 +42,132 @@
         <div class="row" style="margin-top:8px"><button id="go" class="btn">Buscar</button></div>
         <div id="out" class="list" style="margin-top:10px"></div>
       </div>
+      
+      <h2 id="tags" style="margin-top:24px">Etiquetas terapéuticas</h2>
+      <div id="tags-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px"></div>
+
+      <h2 id="flags" style="margin-top:24px">Alertas clínicas</h2>
+      <div id="flags-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:12px"></div>
     </main>
   </div>
 </div>
 
 <script type="module">
   import { mountHeader } from "../js/header.js";
+  import { loadAll } from "../js/medStore.js";
+
   mountHeader();
   const $q=document.getElementById('q'), $go=document.getElementById('go'), $out=document.getElementById('out');
+  const $tags=document.getElementById('tags-grid');
+  const $flags=document.getElementById('flags-grid');
   const params=new URLSearchParams(location.search); if(params.get('q')) $q.value=params.get('q');
 
   $go.onclick=()=>{
     const v=($q.value||'').toLowerCase();
     $out.innerHTML='';
     if(!v) return;
-    // Router mínimo: demostrativo
     if(v.includes('interacc')) $out.innerHTML='<div class="card">🔗 Te conviene ir a <a class="pill" href="vademecum.html#interacciones">Interacciones del vademécum</a></div>';
     else if(v.includes('beers')||v.includes('stopp')||v.includes('start')) $out.innerHTML='<div class="card">📎 Ver criterios en colecciones (demo)</div>';
     else $out.innerHTML='<div class="card">🔎 Consulta general — integraremos buscador avanzado</div>';
   };
+  
+  loadAll().then(db=>{
+    const meds=Object.values(db.meds||{});
+    renderTags(meds);
+    renderFlags(meds);
+  }).catch(err=>{
+    console.error('❌ No se pudo cargar medicamentos para material:', err);
+  });
+
+  function renderTags(meds){
+    if(!$tags) return;
+    const map=new Map();
+    meds.forEach(m=>{
+      (m.etiquetas||[]).forEach(tag=>{
+        const key=tag.trim();
+        if(!key) return;
+        if(!map.has(key)) map.set(key,[]);
+        map.get(key).push(m);
+      });
+    });
+    const cards=Array.from(map.entries())
+      .sort((a,b)=>b[1].length-a[1].length||a[0].localeCompare(b[0]))
+      .map(([tag,items])=>`
+        <div class="card">
+          <div class="row" style="justify-content:space-between;align-items:flex-start">
+            <div><b>${tag}</b></div>
+            <span class="pill">${items.length}</span>
+          </div>
+          <ul class="list" style="margin-top:8px">
+            ${items.map(m=>`<li><b>${m.nombre}</b><div class="muted" style="font-size:12px">${m.presentacion||''}</div></li>`).join('')}
+          </ul>
+        </div>
+      `)
+      .join('');
+    $tags.innerHTML=cards||'<div class="card muted">Sin etiquetas disponibles</div>';
+  }
+
+  function renderFlags(meds){
+    if(!$flags) return;
+    const defs=[
+      {
+        title:'Requiere ajuste renal',
+        items:meds.filter(m=>m.flags?.ajuste_renal?.requerido),
+        detail:m=>m.flags?.ajuste_renal?.detalle
+      },
+      {
+        title:'Contraindicado en ERC',
+        items:meds.filter(m=>m.flags?.contraindicado_renal?.activo),
+        detail:m=>m.flags?.contraindicado_renal?.detalle
+      },
+      {
+        title:'Potencialmente inapropiado (PPI)',
+        items:meds.filter(m=>m.flags?.ppi),
+        detail:()=> 'Revisar uso en adultos mayores/poblaciones sensibles.'
+      },
+      {
+        title:'START recomendado',
+        items:meds.filter(m=>m.flags?.start),
+        detail:()=> 'Considerar iniciar según criterios START.'
+      }
+    ];
+
+    const riesgoMap=new Map();
+    meds.forEach(m=>{
+      const riesgo=(m.flags?.embarazo?.riesgo||'N/A').toUpperCase();
+      if(riesgo==='N/A') return;
+      if(!riesgoMap.has(riesgo)) riesgoMap.set(riesgo,[]);
+      riesgoMap.get(riesgo).push(m);
+    });
+
+    const flagCards=defs.map(def=>`
+      <div class="card">
+        <div class="row" style="justify-content:space-between;align-items:flex-start">
+          <div><b>${def.title}</b></div>
+          <span class="pill">${def.items.length}</span>
+        </div>
+        ${def.items.length ? `
+          <ul class="list" style="margin-top:8px">
+            ${def.items.map(m=>`<li><b>${m.nombre}</b><div class="muted" style="font-size:12px">${def.detail(m)||''}</div></li>`).join('')}
+          </ul>` : `<div class="muted" style="margin-top:8px">Sin registros</div>`}
+      </div>
+    `).join('');
+
+    const embarazoCard = riesgoMap.size ? `
+      <div class="card">
+        <div><b>Embarazo</b></div>
+        <div class="muted" style="font-size:12px;margin-top:4px">Clasificación por categoría de riesgo</div>
+        <ul class="list" style="margin-top:8px">
+          ${Array.from(riesgoMap.entries())
+            .sort((a,b)=>a[0].localeCompare(b[0]))
+            .map(([riesgo,items])=>`<li><div class="row" style="justify-content:space-between"><span><b>Riesgo ${riesgo}</b></span><span class="pill">${items.length}</span></div><div class="muted" style="margin-top:4px">${items.map(m=>m.nombre).join(', ')}</div></li>`)
+            .join('')}
+        </ul>
+      </div>
+    ` : '';
+
+    $flags.innerHTML = (flagCards + embarazoCard) || '<div class="card muted">Sin alertas disponibles</div>';
+  }
 </script>
 </body>
 </html>

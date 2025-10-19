@@ -657,34 +657,93 @@ function mountSearchControls(container, kind, recId, listNode) {
   const add = container.querySelector(".seg-add");
   let picked = null;
 
+  const escapeHtml = (str = "") =>
+    str.replace(/[&<>"']/g, (ch) => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    }[ch] || ch));
+
+  const makeManualSku = (label) => {
+    const upper = (label || "").trim().toUpperCase();
+    return {
+      skuId: null,
+      base: upper,
+      nombre: upper,
+      presentacion: upper,
+      forma: "manual",
+      manual: true
+    };
+  };
+
+  const pickSku = (sku) => {
+    picked = sku;
+    renderQtyUI(picked, qty);
+    add.disabled = !picked;
+  };
+
   input?.addEventListener("input", () => {
-    const q = (input.value || "").trim().toUpperCase();
-    if (!q || q.length < 2) {
+    const raw = (input.value || "").trim();
+    const q = raw.toUpperCase();
+    if (!raw || raw.length < 2) {
       sugg.style.display = "none";
       sugg.innerHTML = "";
       picked = null;
       add.disabled = true;
       return;
     }
-    const pool = kind === "apsRecetas" ? state.medsDB?.skus?.filter((s) => s.aps) : state.medsDB?.skus || [];
+    const basePool = state.medsDB?.skus || [];
+    const pool = kind === "apsRecetas"
+      ? basePool.filter((s) => s.programas?.aps)
+      : basePool;
     const items = (pool || []).filter((s) => s.nombre.includes(q)).slice(0, 60);
     sugg.style.display = "block";
-    sugg.innerHTML = items.length
-      ? items.map((s) => `<div data-sku="${s.skuId}">${s.nombre}</div>`).join("")
-      : '<div class="muted">Sin resultados</div>';
+    const manualLabel = raw;
+    const manualOption = `<div data-manual="${encodeURIComponent(manualLabel)}"><b>Agregar</b> “${escapeHtml(manualLabel)}” (manual)</div>`;
+    const options = [manualOption];
+    if (items.length) {
+      options.push(items.map((s) => `<div data-sku="${s.skuId}">${escapeHtml(s.nombre)}</div>`).join(""));
+    } else {
+      options.push('<div class="muted">Sin resultados en base de datos</div>');
+    }
+    sugg.innerHTML = options.join("");
     sugg.querySelectorAll("[data-sku]").forEach((opt) => {
       opt.addEventListener("click", () => {
         sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
         opt.classList.add("picked");
-        picked = state.medsDB?.skuById?.[opt.dataset.sku] || null;
-        renderQtyUI(picked, qty);
-        add.disabled = !picked;
+        pickSku(state.medsDB?.skuById?.[opt.dataset.sku] || null);
+      });
+    });
+    sugg.querySelectorAll("[data-manual]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
+        opt.classList.add("picked");
+        pickSku(makeManualSku(decodeURIComponent(opt.dataset.manual || "")));
+        sugg.style.display = "none";
       });
     });
   });
 
+    input?.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" && !picked) {
+      ev.preventDefault();
+      const label = (input.value || "").trim();
+      if (label.length >= 2) {
+        pickSku(makeManualSku(label));
+        sugg.style.display = "none";
+      }
+    }
+  });
+
   add?.addEventListener("click", () => {
-    if (!state.activeId || !picked) return;
+    if (!state.activeId) return;
+    if (!picked) {
+      const label = (input.value || "").trim();
+      if (label.length < 2) return;
+      pickSku(makeManualSku(label));
+    }
     if (isDupInRecipe(kind, recId, picked.base)) {
       alert("Ese fármaco ya está en esta receta.");
       return;
@@ -784,10 +843,11 @@ function buildMedPayload(picked, qtyNode, posNode) {
 
 function isDupInRecipe(kind, recId, base) {
   if (!base) return false;
+  const needle = (base || "").toUpperCase();
   const ficha = FichasStore.get(state.activeId);
   const receta = findRec(ficha, kind, recId);
   if (!receta) return false;
-  return receta.meds.some((m) => (m.base || "") === base);
+  return receta.meds.some((m) => (m.base || "").toUpperCase() === needle);
 }
 
 function drawMedsList(kind, recId, listNode) {

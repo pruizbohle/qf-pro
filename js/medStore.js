@@ -3,63 +3,77 @@
 
 export async function loadAll() {
   try {
-    const meds = await fetch("../data/medicamentos.json").then(r => r.json());
+    const meds = await fetch("../data/medicamentos.json").then((r) => r.json());
 
     if (!Array.isArray(meds)) {
       console.error("❌ medicamentos.json no es un array:", meds);
-      return { skus: [], skuById: {}, byBase: {} };
+      return { skus: [], skuById: {}, byBase: {}, meds: {} };
     }
 
     const skus = [];
     const skuById = {};
     const byBase = {};
+    const medsMap = {};
 
-    meds.forEach(m => {
-      const nombre = [m.BASE_NAME, m.FUERZA, m.FORMA]
-        .filter(Boolean)
-        .join(" ")
-        .toUpperCase();
+    meds.forEach((m) => {
+      const base = (m.base_name || "").trim();
+      const fuerza = (m.fuerza || "").trim();
+      const forma = (m.forma || "").trim();
+      const nombreSku = [base, fuerza, forma].filter(Boolean).join(" ").toUpperCase();
+      const presentacion = [fuerza, forma].filter(Boolean).join(" ").toUpperCase()
+
+      const programas = {
+        aps: Boolean(m.programas?.aps),
+        secundario: Boolean(m.programas?.secundario),
+        cronico: Boolean(m.programas?.cronico)
+      };
 
       const sku = {
-        skuId: m.ID,
-        base: (m.BASE_NAME || "").toLowerCase(),
-        nombre,
-        presentacion: `${m.FUERZA || ""} ${m.FORMA || ""}`.toUpperCase(),
-        forma: normalizarForma(m.FORMA),
-
-        // 👇 claves de nivel superior para filtros rápidos
-        aps: m.APS === "SI",
-        secundario: m.SECUNDARIO === "SI",
-
-        // 👇 banderas completas para PRM/criterios
+        skuId: m.id,
+        base: base.toLowerCase(),
+        nombre: nombreSku,
+        presentacion,
+        forma: normalizarForma(forma),
+        programas,
+        tags: m.tags || [],
         flags: {
-          aps: m.APS === "SI",
-          beers: m.BEERS === "SI",
-          stopp: m.STOPP === "SI",
-          start: m.START === "SI",
-          nefr: m.NEFR === "SI",
-          embarazo: m.PREG && m.PREG !== "NO" ? m.PREG : null
+          start: Boolean(m.flags?.start),
+          ppi: Boolean(m.flags?.ppi),
+          ajusteRenal: Boolean(m.flags?.ajuste_renal?.requerido),
+          contraindicadoRenal: Boolean(m.flags?.contraindicado_renal?.activo),
+          embarazo: m.flags?.embarazo?.riesgo || null
         },
         raw: m
       };
-
       skus.push(sku);
       skuById[sku.skuId] = sku;
 
       if (!byBase[sku.base]) byBase[sku.base] = [];
       byBase[sku.base].push(sku);
+      
+      medsMap[m.id] = {
+        id: m.id,
+        nombre: [base, fuerza, forma].filter(Boolean).join(" ").trim() || m.id,
+        presentacion,
+        base,
+        etiquetas: m.tags || [],
+        aware: m.aware || null,
+        programas,
+        flags: m.flags || {},
+        ram: m.ram?.efectos || [],
+        raw: m
+      };
     });
 
-    const DB = { skus, skuById, byBase };
+    const DB = { skus, skuById, byBase, meds: medsMap };
 
-    // Debug en consola
     console.log("✅ Medicamentos cargados:", skus.length);
     window.DBmeds = DB;
 
     return DB;
   } catch (e) {
     console.error("❌ Error cargando medicamentos.json:", e);
-    return { skus: [], skuById: {}, byBase: {} };
+    return { skus: [], skuById: {}, byBase: {}, meds: {} };
   }
 }
 

@@ -1,2306 +1,2446 @@
 [
-    {
-        "ID":"ac_val_200mg",
-        "BASE_NAME":"ACIDO VALPROICO",
-        "FUERZA":"200 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"MODULADOR GABA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"X",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+  {
+    "id": "ac_val_200mg",
+    "base_name": "ACIDO VALPROICO",
+    "fuerza": "200 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"ac_val_500mg",
-        "BASE_NAME":"ACIDO VALPROICO",
-        "FUERZA":"500 MG",
-        "FORMA":"COMPRIMIDO LP",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"MODULADOR GABA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"X",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "MODULADOR GABA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"alp_05mg",
-        "BASE_NAME":"ALPRAZOLAM",
-        "FUERZA":"0,5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"ami_200mg",
-        "BASE_NAME":"AMIODARONA",
-        "FUERZA":"200 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIANGINOSOS",
-        "CLASS_3":"ANTIARRITMICO CLASE III",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "ac_val_500mg",
+    "base_name": "ACIDO VALPROICO",
+    "fuerza": "500 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"ami_25mg",
-        "BASE_NAME":"AMITRIPTILINA",
-        "FUERZA":"25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"TRICICLICO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "MODULADOR GABA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"aml_10mg",
-        "BASE_NAME":"AMLODIPINO",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BLOQUEADOR CALCIO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"aml_5mg",
-        "BASE_NAME":"AMLODIPINO",
-        "FUERZA":"5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BLOQUEADOR CALCIO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "alp_05mg",
+    "base_name": "ALPRAZOLAM",
+    "fuerza": "0,5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"ate_100mg",
-        "BASE_NAME":"ATENOLOL",
-        "FUERZA":"100 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": true,
+      "start": false
     },
-    {
-        "ID":"ate_50mg",
-        "BASE_NAME":"ATENOLOL",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"ato_20mg",
-        "BASE_NAME":"ATORVASTATINA",
-        "FUERZA":"20 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOLIPEMIANTES",
-        "CLASS_3":"ESTATINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"X",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "ami_200mg",
+    "base_name": "AMIODARONA",
+    "fuerza": "200 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"ato_40mg",
-        "BASE_NAME":"ATORVASTATINA",
-        "FUERZA":"40 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOLIPEMIANTES",
-        "CLASS_3":"ESTATINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"X",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "tags": [
+      "ANTIANGINOSOS",
+      "ANTIARRITMICO CLASE III"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"ato_80mg",
-        "BASE_NAME":"ATORVASTATINA",
-        "FUERZA":"80 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOLIPEMIANTES",
-        "CLASS_3":"ESTATINA",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"X",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"bis_25mg",
-        "BASE_NAME":"BISOPROLOL",
-        "FUERZA":"2,5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "ami_25mg",
+    "base_name": "AMITRIPTILINA",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"bis_5mg",
-        "BASE_NAME":"BISOPROLOL",
-        "FUERZA":"5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "TRICICLICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
     },
-    {
-        "ID":"cap_25mg",
-        "BASE_NAME":"CAPTOPRIL",
-        "FUERZA":"25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"IECA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"car_200mg",
-        "BASE_NAME":"CARBAMAZEPINA",
-        "FUERZA":"200 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES NA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "aml_10mg",
+    "base_name": "AMLODIPINO",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"car_400mg",
-        "BASE_NAME":"CARBAMAZEPINA",
-        "FUERZA":"400 MG",
-        "FORMA":"COMPRIMIDO LP",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES NA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BLOQUEADOR CALCIO",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"car_125mg",
-        "BASE_NAME":"CARVEDILOL",
-        "FUERZA":"12,5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Edema",
+          "prevalencia": "10%"
+        }
+      ]
     },
-    {
-        "ID":"car_25mg",
-        "BASE_NAME":"CARVEDILOL",
-        "FUERZA":"25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "aml_5mg",
+    "base_name": "AMLODIPINO",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"car_625mg",
-        "BASE_NAME":"CARVEDILOL",
-        "FUERZA":"6,25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"BETABLOQUEADOR",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BLOQUEADOR CALCIO",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"clo_05mg",
-        "BASE_NAME":"CLONAZEPAM",
-        "FUERZA":"0,5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Edema",
+          "prevalencia": "10%"
+        }
+      ]
     },
-    {
-        "ID":"clo_2mg",
-        "BASE_NAME":"CLONAZEPAM",
-        "FUERZA":"2 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "ate_100mg",
+    "base_name": "ATENOLOL",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"dab_110mg",
-        "BASE_NAME":"DABIGATRAN",
-        "FUERZA":"110 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SANGRE, LIQUIDOS Y ELECTROLITOS",
-        "CLASS_2":"ANTICOAGULANTES ORALES",
-        "CLASS_3":"INHIBIDOR TROMBINA",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"dap_5mg",
-        "BASE_NAME":"DAPAGLIFLOZINA",
-        "FUERZA":"5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"SGLT2",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":null,
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"dap_10mg",
-        "BASE_NAME":"DAPAGLIFOZINA",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"SGLT2",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "ate_50mg",
+    "base_name": "ATENOLOL",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"dia_10mg",
-        "BASE_NAME":"DIAZEPAM",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"dig_025mg",
-        "BASE_NAME":"DIGOXINA",
-        "FUERZA":"0,25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA CARDIOVASCULAR",
-        "CLASS_2":"CARDIOTONICOS",
-        "CLASS_3":"DIGITALICO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<60",
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"don_10mg",
-        "BASE_NAME":"DONEPEZILO",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEMENCIALES",
-        "CLASS_3":"INHIBIDOR ACHE",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "ato_20mg",
+    "base_name": "ATORVASTATINA",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"emp_10mg",
-        "BASE_NAME":"EMPAGLIFLOZINA",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"SGLT2",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "ESTATINA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"ena_10mg",
-        "BASE_NAME":"ENALAPRIL",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"IECA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"esc_10mg",
-        "BASE_NAME":"ESCITALOPRAM",
-        "FUERZA":"10 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "ato_40mg",
+    "base_name": "ATORVASTATINA",
+    "fuerza": "40 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"esc_20mg",
-        "BASE_NAME":"ESCITALOPRAM",
-        "FUERZA":"20 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "ESTATINA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"esp_25mg",
-        "BASE_NAME":"ESPIRONOLACTONA",
-        "FUERZA":"25 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO GENITOURINARIO",
-        "CLASS_2":"DIURETICOS",
-        "CLASS_3":"AHORRADOR K",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<30",
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"flu_20mg",
-        "BASE_NAME":"FLUOXETINA",
-        "FUERZA":"20 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "ato_80mg",
+    "base_name": "ATORVASTATINA",
+    "fuerza": "80 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"flu_20mg",
-        "BASE_NAME":"FLUOXETINA",
-        "FUERZA":"20 MG",
-        "FORMA":"CAPSULA",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "ESTATINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"fur_40mg",
-        "BASE_NAME":"FUROSEMIDA",
-        "FUERZA":"40 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO GENITOURINARIO",
-        "CLASS_2":"DIURETICOS",
-        "CLASS_3":"DE ASA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"gab_300mg",
-        "BASE_NAME":"GABAPENTINA",
-        "FUERZA":"300 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES CA",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<60",
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "bis_25mg",
+    "base_name": "BISOPROLOL",
+    "fuerza": "2,5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"gem_300mg",
-        "BASE_NAME":"GEMFIBROZILO",
-        "FUERZA":"300 MG",
-        "FORMA":"CAPSULA",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOLIPEMIANTES",
-        "CLASS_3":"FIBRATO",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"gem_600mg",
-        "BASE_NAME":"GEMFIBROZILO",
-        "FUERZA":"600 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOLIPEMIANTES",
-        "CLASS_3":"FIBRATO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"gli_5mg",
-        "BASE_NAME":"GLIBENCLAMIDA",
-        "FUERZA":"5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"SULFONILUREA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "bis_5mg",
+    "base_name": "BISOPROLOL",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"hid_50mg",
-        "BASE_NAME":"HIDROCLOROTIAZIDA",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO GENITOURINARIO",
-        "CLASS_2":"DIURETICOS",
-        "CLASS_3":"TIAZIDICO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"B",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"hid_triamterene",
-        "BASE_NAME":"HIDROCLOROTIAZIDA + TRIAMTERENE",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO GENITOURINARIO",
-        "CLASS_2":"DIURETICOS",
-        "CLASS_3":"TIAZIDICO",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"ins_cristalina",
-        "BASE_NAME":"INSULINA CRISTALINA",
-        "FUERZA":"100 UI\/ML",
-        "FORMA":"UNIDAD",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"INSULINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"CARDIOVASCULAR",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "cap_25mg",
+    "base_name": "CAPTOPRIL",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"ins_retardada",
-        "BASE_NAME":"INSULINA RETARDADA",
-        "FUERZA":"100 UI\/ML",
-        "FORMA":"UNIDAD",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"INSULINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"CARDIOVASCULAR",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "IECA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"lam_100mg",
-        "BASE_NAME":"LAMOTRIGINA",
-        "FUERZA":"100 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES NA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"lam_50mg",
-        "BASE_NAME":"LAMOTRIGINA",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES NA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "car_200mg",
+    "base_name": "CARBAMAZEPINA",
+    "fuerza": "200 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"lev_1000mg",
-        "BASE_NAME":"LEVETIRACETAM",
-        "FUERZA":"1000 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"MODULADOR PROTEINA A2",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES NA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
     },
-    {
-        "ID":"lev_500mg",
-        "BASE_NAME":"LEVETIRACETAM",
-        "FUERZA":"500 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"MODULADOR PROTEINA A3",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"EPILEPSIA NO REFRACTARIA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"lev_benserazida",
-        "BASE_NAME":"LEVODOPA\/BENSERAZIDA",
-        "FUERZA":"200\/50",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIPARKINSONIANOS",
-        "CLASS_3":"PRECURSOR DOPAMINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"SI",
-        "CRIT_PM":"PARKINSON",
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "car_400mg",
+    "base_name": "CARBAMAZEPINA",
+    "fuerza": "400 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"lev_carbidopa",
-        "BASE_NAME":"LEVODOPA\/CARBIDOPA",
-        "FUERZA":"250\/25",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIPARKINSONIANOS",
-        "CLASS_3":"PRECURSOR DOPAMINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"SI",
-        "CRIT_PM":"PARKINSON",
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES NA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
     },
-    {
-        "ID":"lev_100mcg",
-        "BASE_NAME":"LEVOTIROXINA",
-        "FUERZA":"100 MCG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"HORMONAS SINTETICAS",
-        "CLASS_2":"TIROIDEAS",
-        "CLASS_3":"TIROXINA SINTETICA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"HIPOTIROIDISMO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"A",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"lev_50mcg",
-        "BASE_NAME":"LEVOTIROXINA",
-        "FUERZA":"50 MCG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"HORMONAS SINTETICAS",
-        "CLASS_2":"TIROIDEAS",
-        "CLASS_3":"TIROXINA SINTETICA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"HIPOTIROIDISMO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"A",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "car_125mg",
+    "base_name": "CARVEDILOL",
+    "fuerza": "12,5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"lor_1mg",
-        "BASE_NAME":"LORAZEPAM",
-        "FUERZA":"1 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"lor_2mg",
-        "BASE_NAME":"LORAZEPAM",
-        "FUERZA":"2 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANSIOLITICOS Y SEDANTES",
-        "CLASS_3":"BENZODIAZEPINA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"los_50mg",
-        "BASE_NAME":"LOSARTAN",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO CARDIOVASCULAR",
-        "CLASS_2":"ANTIHIPERTENSIVOS",
-        "CLASS_3":"ARA2",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"D",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "car_25mg",
+    "base_name": "CARVEDILOL",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"met_1000mg",
-        "BASE_NAME":"METFORMINA",
-        "FUERZA":"1000 MG",
-        "FORMA":"COMPRIMIDO LP",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"BIGUANIDA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"met_850mg",
-        "BASE_NAME":"METFORMINA",
-        "FUERZA":"850 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"MEDICAMENTOS ENDOCRINOLOGICOS",
-        "CLASS_2":"HIPOGLICEMIANTES",
-        "CLASS_3":"BIGUANIDA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"SI",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<45",
-        "CNEFR":"SI",
-        "CRIT_CNEFR":"<30",
-        "PREG":"SI",
-        "CRIT_PREG":"B",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"pre_75mg_cm",
-        "BASE_NAME":"PREGABALINA",
-        "FUERZA":"75 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES CA",
-        "APS":"NO",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"NO",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "aware": null
+  },
+  {
+    "id": "car_625mg",
+    "base_name": "CARVEDILOL",
+    "fuerza": "6,25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"pre_75mg_cp",
-        "BASE_NAME":"PREGABALINA",
-        "FUERZA":"75 MG",
-        "FORMA":"CAPSULA",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTICONVULSIVANTES",
-        "CLASS_3":"BLOQUEADOR CANALES CA",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"NO",
-        "CRIT_PREG":null,
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BETABLOQUEADOR",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
     },
-    {
-        "ID":"ser_100mg",
-        "BASE_NAME":"SERTRALINA",
-        "FUERZA":"100 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"NO",
-        "CF":"SI",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"ser_50mg",
-        "BASE_NAME":"SERTRALINA",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"ANTIDEPRESIVOS",
-        "CLASS_3":"ISRS",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"SI"
+    "aware": null
+  },
+  {
+    "id": "clo_05mg",
+    "base_name": "CLONAZEPAM",
+    "fuerza": "0,5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
     },
-    {
-        "ID":"tra_100mg",
-        "BASE_NAME":"TRAMADOL",
-        "FUERZA":"100 MG\/ML",
-        "FORMA":"GOTAS",
-        "CLASS_1":"APARATO LOCOMOTOR",
-        "CLASS_2":"ANALGESICOS",
-        "CLASS_3":"OPIOIDE",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<30",
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"NO",
-        "STOPP":"NO",
-        "START":"NO"
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
     },
-    {
-        "ID":"tra_50mg",
-        "BASE_NAME":"TRAMADOL",
-        "FUERZA":"50 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"APARATO LOCOMOTOR",
-        "CLASS_2":"ANALGESICOS",
-        "CLASS_3":"OPIOIDE",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"SI",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"ARTROSIS LEVE Y MODERADA DE CADERA",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"SI",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"SI",
-        "CRIT_NEFR":"<30",
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
+    "ram": {
+      "efectos": []
     },
-    {
-        "ID":"zop_75mg",
-        "BASE_NAME":"ZOPICLONA",
-        "FUERZA":"7,5 MG",
-        "FORMA":"COMPRIMIDO",
-        "CLASS_1":"SISTEMA NERVIOSO",
-        "CLASS_2":"HIPNOTICOS",
-        "CLASS_3":"DROGA Z",
-        "APS":"SI",
-        "A2S":"SI",
-        "AES":"SI",
-        "AM":"SI",
-        "CONT":"NO",
-        "SSA":"SI",
-        "CF":"NO",
-        "CRIT_CF":null,
-        "FOFAR":"NO",
-        "PM":"NO",
-        "CRIT_PM":null,
-        "PRAPS":"NO",
-        "CRIT_PRAPS":null,
-        "GES":"NO",
-        "CRIT_GES":null,
-        "CRÓNICO":"SI",
-        "NEFR":"NO",
-        "CRIT_NEFR":null,
-        "CNEFR":"NO",
-        "CRIT_CNEFR":null,
-        "PREG":"SI",
-        "CRIT_PREG":"C",
-        "AWARE":"NO",
-        "CRIT_AWARE":null,
-        "BEERS":"SI",
-        "STOPP":"SI",
-        "START":"NO"
-    }
+    "aware": null
+  },
+  {
+    "id": "clo_2mg",
+    "base_name": "CLONAZEPAM",
+    "fuerza": "2 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dab_110mg",
+    "base_name": "DABIGATRAN",
+    "fuerza": "110 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICOAGULANTES ORALES",
+      "INHIBIDOR TROMBINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dap_5mg",
+    "base_name": "DAPAGLIFLOZINA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "SGLT2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dap_10mg",
+    "base_name": "DAPAGLIFOZINA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "SGLT2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dia_10mg",
+    "base_name": "DIAZEPAM",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dig_025mg",
+    "base_name": "DIGOXINA",
+    "fuerza": "0,25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CARDIOTONICOS",
+      "DIGITALICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "don_10mg",
+    "base_name": "DONEPEZILO",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEMENCIALES",
+      "INHIBIDOR ACHE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "emp_10mg",
+    "base_name": "EMPAGLIFLOZINA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "SGLT2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ena_10mg",
+    "base_name": "ENALAPRIL",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "IECA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "esc_10mg",
+    "base_name": "ESCITALOPRAM",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "esc_20mg",
+    "base_name": "ESCITALOPRAM",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "esp_25mg",
+    "base_name": "ESPIRONOLACTONA",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "DIURETICOS",
+      "AHORRADOR K",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "flu_20mg_cm",
+    "base_name": "FLUOXETINA",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "flu_20mg_cp",
+    "base_name": "FLUOXETINA",
+    "fuerza": "20 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "fur_40mg",
+    "base_name": "FUROSEMIDA",
+    "fuerza": "40 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "DIURETICOS",
+      "DE ASA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "gab_300mg",
+    "base_name": "GABAPENTINA",
+    "fuerza": "300 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES CA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "gem_300mg",
+    "base_name": "GEMFIBROZILO",
+    "fuerza": "300 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "FIBRATO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "gem_600mg",
+    "base_name": "GEMFIBROZILO",
+    "fuerza": "600 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "FIBRATO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "gli_5mg",
+    "base_name": "GLIBENCLAMIDA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "SULFONILUREA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Hipoglicemia",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "hid_50mg",
+    "base_name": "HIDROCLOROTIAZIDA",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "DIURETICOS",
+      "TIAZIDICO",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "hid_triamterene",
+    "base_name": "HIDROCLOROTIAZIDA + TRIAMTERENE",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "DIURETICOS",
+      "TIAZIDICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ins_cristalina",
+    "base_name": "INSULINA CRISTALINA",
+    "fuerza": "100 UI/ML",
+    "forma": "UI",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "INSULINA",
+      "CARDIOVASCULAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ins_lenta",
+    "base_name": "INSULINA RETARDADA",
+    "fuerza": "100 UI/ML",
+    "forma": "UI",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "INSULINA",
+      "CARDIOVASCULAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lam_100mg",
+    "base_name": "LAMOTRIGINA",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES NA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lam_50mg",
+    "base_name": "LAMOTRIGINA",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES NA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_1000mg",
+    "base_name": "LEVETIRACETAM",
+    "fuerza": "1000 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "MODULADOR PROTEINA A2",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_500mg",
+    "base_name": "LEVETIRACETAM",
+    "fuerza": "500 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "MODULADOR PROTEINA A3",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_ben",
+    "base_name": "LEVODOPA/BENSERAZIDA",
+    "fuerza": "200/50",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPARKINSONIANOS",
+      "PRECURSOR DOPAMINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_car",
+    "base_name": "LEVODOPA/CARBIDOPA",
+    "fuerza": "250/25",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPARKINSONIANOS",
+      "PRECURSOR DOPAMINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_100mcg",
+    "base_name": "LEVOTIROXINA",
+    "fuerza": "100 MCG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "TIROIDEAS",
+      "TIROXINA SINTETICA",
+      "HIPOTIROIDISMO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "A",
+        "detalle": "Categoría A en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_50mcg",
+    "base_name": "LEVOTIROXINA",
+    "fuerza": "50 MCG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "TIROIDEAS",
+      "TIROXINA SINTETICA",
+      "HIPOTIROIDISMO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "A",
+        "detalle": "Categoría A en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lor_1mg",
+    "base_name": "LORAZEPAM",
+    "fuerza": "1 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lor_2mg",
+    "base_name": "LORAZEPAM",
+    "fuerza": "2 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANSIOLITICOS Y SEDANTES",
+      "BENZODIAZEPINA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "los_50mg",
+    "base_name": "LOSARTAN",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "ARA2",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "met_1000mg",
+    "base_name": "METFORMINA",
+    "fuerza": "1000 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "BIGUANIDA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "met_850mg",
+    "base_name": "METFORMINA",
+    "fuerza": "850 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "BIGUANIDA",
+      "FOFAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<45",
+        "detalle": "Requiere ajuste si TFG <45 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": true,
+        "umbral": "<30",
+        "detalle": "Contraindicado si TFG <30 mL/min."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nausea",
+          "prevalencia": "10%-20%"
+        },
+        {
+          "nombre": "Diarrea",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Dolor abdominal",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pre_75mg_cm",
+    "base_name": "PREGABALINA",
+    "fuerza": "75 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES CA",
+      "CONTROLADO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "pre_75mg_cp",
+    "base_name": "PREGABALINA",
+    "fuerza": "75 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVANTES",
+      "BLOQUEADOR CANALES CA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ser_100mg",
+    "base_name": "SERTRALINA",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ser_50mg",
+    "base_name": "SERTRALINA",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "tra_100mg",
+    "base_name": "TRAMADOL",
+    "fuerza": "100 MG/ML",
+    "forma": "GOTAS",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANALGESICOS",
+      "OPIOIDE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nausea",
+          "prevalencia": "20%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "tra_50mg",
+    "base_name": "TRAMADOL",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANALGESICOS",
+      "OPIOIDE",
+      "CONTROLADO",
+      "ARTROSIS LEVE Y MODERADA DE CADERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nausea",
+          "prevalencia": "20%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "zop_75mg",
+    "base_name": "ZOPICLONA",
+    "fuerza": "7,5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPNOTICOS",
+      "DROGA Z"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  }
 ]
