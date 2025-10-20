@@ -388,8 +388,19 @@ function updateHeaderPaciente(ficha) {
     return;
   }
   const sexoTxt = ficha.sexo === "F" ? "Femenino" : ficha.sexo === "M" ? "Masculino" : "-";
-  const edadTxt = ficha.age65 ? "· ≥65" : "";
-  header.textContent = `${ficha.id} · ${sexoTxt} ${edadTxt}`.trim();
+  const tipoRaw = ficha.tipoAtencion;
+  let tipoEtiqueta = "—";
+  if (typeof tipoRaw === "string" && tipoRaw.trim()) {
+    const partes = tipoRaw.split(":");
+    const posibleEtiqueta = partes[partes.length - 1]?.trim();
+    tipoEtiqueta = posibleEtiqueta || tipoRaw.trim() || "—";
+  }
+  const secciones = [ficha.id || "-", sexoTxt];
+  if (ficha.age65) {
+    secciones.push("≥65");
+  }
+  secciones.push(tipoEtiqueta);
+  header.textContent = secciones.filter(Boolean).join(" · ");
   header.style.display = "block";
 }
 
@@ -572,13 +583,38 @@ function renderErrores() {
 }
 
 /* ======= MEDICAMENTOS ======= */
+function esSinEntrevista(tipo) {
+  return typeof tipo === "string" && tipo.toUpperCase().startsWith("SIN ENTREVISTA");
+}
+
+function toggleMedSub(selector, visible) {
+  const node = $(selector);
+  if (!node) return;
+  node.style.display = visible ? "flex" : "none";
+  if (!visible) {
+    node.setAttribute("aria-hidden", "true");
+  } else {
+    node.removeAttribute("aria-hidden");
+  }
+}
+
 function renderMedicamentos() {
   if (!state.activeId) return;
+  const ficha = FichasStore.get(state.activeId);
+  const sinEntrevista = esSinEntrevista(ficha?.tipoAtencion || "");
+
+  toggleMedSub("#med-extra", !sinEntrevista);
+  toggleMedSub("#med-automed", !sinEntrevista);
+  toggleMedSub("#med-plantas", !sinEntrevista);
+
   renderRecetas("apsRecetas", "#aps-recetas");
   renderRecetas("secRecetas", "#sec-recetas");
-  renderExtra();
-  renderAutomed();
-  renderPlantas();
+
+  if (!sinEntrevista) {
+    renderExtra();
+    renderAutomed();
+    renderPlantas();
+  }
 }
 
 function renderRecetas(kind, selector) {
