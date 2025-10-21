@@ -222,6 +222,7 @@ function noFichaState() {
     const el = document.querySelector(sel);
     if (el) el.innerHTML = html;
   });
+  renderAntecedentes();
 }
 
 function setupAutosaveIndicator() {
@@ -280,8 +281,14 @@ function setupCrearFicha() {
   const btn = $("#btn-crear");
   if (!ini || !btn) return;
     ini.addEventListener("input", (e) => normalizarIniciales(e.target));
-  mayor65?.addEventListener("change", updateChips);
-  sexo?.addEventListener("change", updateChips);
+  mayor65?.addEventListener("change", () => {
+    updateChips();
+    syncAge65WithFicha();
+  });
+  sexo?.addEventListener("change", () => {
+    updateChips();
+    syncSexoWithFicha();
+  });
   updateChips();
   btn.addEventListener("click", () => crearFicha());
 }
@@ -299,10 +306,48 @@ function updateChips() {
   const sexo = $("#sexo");
   const chip65 = $("#chip-65");
   const chipEmb = $("#chip-emb");
+  const wrapEmb = $("#wrap-embarazo");
   const es65 = !!mayor65?.checked;
   const esF = sexo?.value === "F";
   if (chip65) chip65.style.display = es65 ? "inline-flex" : "none";
   if (chipEmb) chipEmb.style.display = esF && !es65 ? "inline-flex" : "none";
+    if (wrapEmb) {
+    const visible = esF && !es65;
+    wrapEmb.style.display = visible ? "inline-flex" : "none";
+    if (!visible) {
+      const chk = $("#ant-embarazo");
+      if (chk && chk.checked) {
+        chk.checked = false;
+        setAntecedenteFlag("embarazo", false);
+      }
+    }
+  }
+}
+
+function syncAge65WithFicha() {
+  if (!state.activeId) return;
+  const mayor65 = $("#mayor65");
+  const es65 = !!mayor65?.checked;
+  FichasStore.update(state.activeId, (f) => {
+    f.age65 = es65;
+  });
+  const ficha = FichasStore.get(state.activeId);
+  updateHeaderPaciente(ficha);
+  renderLista();
+  computePRM();
+}
+
+function syncSexoWithFicha() {
+  if (!state.activeId) return;
+  const sexo = $("#sexo");
+  const value = sexo?.value || "";
+  FichasStore.update(state.activeId, (f) => {
+    f.sexo = value;
+  });
+  const ficha = FichasStore.get(state.activeId);
+  updateHeaderPaciente(ficha);
+  renderLista();
+  computePRM();
 }
 
 function crearFicha() {
@@ -471,6 +516,15 @@ function notify(title, message) {
 
 /* ======= ANTECEDENTES ======= */
 
+function setAntecedenteFlag(key, value) {
+  if (!state.activeId) return;
+  FichasStore.update(state.activeId, (f) => {
+    f.anamnesis = f.anamnesis || {};
+    f.anamnesis.flags = { ...(f.anamnesis.flags || {}) };
+    f.anamnesis.flags[key] = value;
+  });
+}
+
 function setupAntecedentes() {
   const datalist = $("#ant-suggest");
   if (datalist) {
@@ -491,14 +545,49 @@ function setupAntecedentes() {
     renderAntecedentes();
     computePRM();
   });
+  
+  const antIam = $("#ant-iamacv");
+  const antErc = $("#ant-erc");
+  const antEmb = $("#ant-embarazo");
+
+  antIam?.addEventListener("change", (e) => {
+    if (!state.activeId) return;
+    setAntecedenteFlag("antIAMACV", !!e.target.checked);
+    renderAntecedentes();
+  });
+
+  antErc?.addEventListener("change", (e) => {
+    if (!state.activeId) return;
+    setAntecedenteFlag("erc", !!e.target.checked);
+    renderAntecedentes();
+    computePRM();
+  });
+
+  antEmb?.addEventListener("change", (e) => {
+    if (!state.activeId) return;
+    setAntecedenteFlag("embarazo", !!e.target.checked);
+    renderAntecedentes();
+  });
 }
 
 function renderAntecedentes() {
   const host = $("#ant-list");
   if (!host) return;
+  const antIam = $("#ant-iamacv");
+  const antErc = $("#ant-erc");
+  const antEmb = $("#ant-embarazo");
   host.innerHTML = "";
-  if (!state.activeId) return;
+    if (!state.activeId) {
+    if (antIam) antIam.checked = false;
+    if (antErc) antErc.checked = false;
+    if (antEmb) antEmb.checked = false;
+    return;
+  }
   const ficha = FichasStore.get(state.activeId);
+  const flags = ficha?.anamnesis?.flags || {};
+  if (antIam) antIam.checked = !!flags.antIAMACV;
+  if (antErc) antErc.checked = !!flags.erc;
+  if (antEmb) antEmb.checked = !!flags.embarazo;
   (ficha?.anamnesis?.antecedentes || []).forEach((val) => {
     const chip = document.createElement("span");
     chip.className = "chip";
@@ -1397,6 +1486,7 @@ function computePRM() {
     return;
   }
   const ficha = FichasStore.get(state.activeId);
+  const anteFlags = ficha?.anamnesis?.flags || {};
   const meds = getAllMeds(ficha);
   const bases = Array.from(new Set(meds.map((m) => (m.base || "").toUpperCase()).filter(Boolean)));
   const resumen = [];
@@ -1440,6 +1530,27 @@ function computePRM() {
       });
       if (listado.length) {
         resumen.push({ titulo: "Alertas PPI (≥65)", detalle: listado.join("<br>") });
+      }
+    }
+  }
+
+    if (anteFlags.erc) {
+    const renales = meds.filter((m) => m.flags?.ajusteRenal);
+    if (renales.length) {
+      const listado = [];
+      const vistos = new Set();
+      renales.forEach((m) => {
+        const clave = m.base || m.nombre || "";
+        if (!clave || vistos.has(clave)) return;
+        vistos.add(clave);
+        const etiqueta = (m.nombre || m.base || "").toUpperCase();
+        const origen = m.origen ? ` (${m.origen})` : "";
+        const detalle = m.flags?.ajusteRenalDetalle;
+        const nota = detalle ? ` — ${detalle}` : " — revisar ajuste renal";
+        listado.push(`• ${etiqueta}${origen}${nota}`);
+      });
+      if (listado.length) {
+        resumen.push({ titulo: "Ajuste renal (ERC)", detalle: listado.join("<br>") });
       }
     }
   }

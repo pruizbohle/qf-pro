@@ -1502,8 +1502,8 @@
         "riesgo": "N/A",
         "detalle": "Sin información específica para embarazo."
       },
-      "ppi": false,
-      "start": true
+      "ppi": true,
+      "start": false
     },
     "ram": {
       "efectos": [

@@ -55,6 +55,11 @@ export const FichasStore = {
 
       anamnesis: {
         antecedentes: [],                // ej: ["HTA","DM2_IR"]
+        flags: {                         // flags rápidos para checkboxes en antecedentes
+          antIAMACV: false,
+          erc: false,
+          embarazo: false
+        },
         motivo: [],                      // ["adh","educ","ea"]
         textoLibre: "",
         terapia: {

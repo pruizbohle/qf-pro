@@ -40,6 +40,7 @@ export async function loadAll() {
           start: Boolean(m.flags?.start),
           ppi: Boolean(m.flags?.ppi),
           ajusteRenal: Boolean(m.flags?.ajuste_renal?.requerido),
+          ajusteRenalDetalle: m.flags?.ajuste_renal?.detalle || null,
           contraindicadoRenal: Boolean(m.flags?.contraindicado_renal?.activo),
           embarazo: m.flags?.embarazo?.riesgo || null
         },
