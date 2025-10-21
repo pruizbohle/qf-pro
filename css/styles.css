@@ -120,3 +120,85 @@ input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbe
 /* margen paciente */
 
 .tabs-row{ margin-left:8px; /* además #header-paciente tiene margin-left:8px */ }
+
+/* Recetas APS vs secundario */
+.recipe-host{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+}
+
+.recipe-card-aps,
+.recipe-card-sec{
+  position:relative;
+  border-radius:12px;
+  border-width:1px;
+  border-style:solid;
+  padding:10px;
+  box-shadow:0 0 0 1px rgba(15,23,42,.4) inset;
+}
+
+.recipe-card-aps{
+  border-color:rgba(56,189,248,.6);
+  background:linear-gradient(135deg,rgba(56,189,248,.16),rgba(14,165,233,.08));
+}
+
+.recipe-card-sec{
+  border-color:rgba(248,113,113,.55);
+  background:linear-gradient(135deg,rgba(248,113,113,.18),rgba(244,114,182,.08));
+}
+
+.recipe-card-aps::before,
+.recipe-card-sec::before{
+  position:absolute;
+  top:-12px;
+  right:12px;
+  padding:2px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:#0b1120;
+  background:#e2e8f0;
+  box-shadow:0 2px 6px rgba(15,23,42,.3);
+}
+
+.recipe-card-aps::before{content:"APS";}
+.recipe-card-sec::before{content:"SEC";}
+
+.recipe-aps > .muted-card,
+.recipe-sec > .muted-card{
+  position:relative;
+  border-radius:12px;
+  padding:12px;
+}
+
+.recipe-aps > .muted-card{
+  border:1px solid rgba(56,189,248,.35);
+  background:rgba(14,165,233,.08);
+}
+
+.recipe-sec > .muted-card{
+  border:1px solid rgba(248,113,113,.35);
+  background:rgba(244,114,182,.08);
+}
+
+.recipe-aps > .muted-card::before,
+.recipe-sec > .muted-card::before{
+  position:absolute;
+  top:-12px;
+  right:12px;
+  padding:2px 10px;
+  border-radius:999px;
+  font-size:12px;
+  font-weight:600;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  color:#0b1120;
+  background:#e2e8f0;
+  box-shadow:0 2px 6px rgba(15,23,42,.3);
+}
+
+.recipe-aps > .muted-card::before{content:"APS";}
+.recipe-sec > .muted-card::before{content:"SEC";}

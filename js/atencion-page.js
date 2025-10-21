@@ -631,6 +631,12 @@ function renderRecetas(kind, selector) {
     const tpl = document.getElementById("recipe-tpl");
     if (!tpl) return;
     const node = tpl.content.firstElementChild.cloneNode(true);
+        const kindClassMap = {
+      apsRecetas: "recipe-card-aps",
+      secRecetas: "recipe-card-sec"
+    };
+    const kindClass = kindClassMap[kind];
+    if (kindClass) node.classList.add(kindClass);
     const fecha = node.querySelector(".rec-fecha");
     const meses = node.querySelector(".rec-meses");
     const del = node.querySelector(".rec-del");
@@ -712,6 +718,15 @@ function mountSearchControls(container, kind, recId, listNode) {
       forma: "manual",
       manual: true
     };
+  };
+
+    const closeSuggestions = () => {
+    if (!sugg) return;
+    sugg.querySelectorAll(".picked").forEach((n) => n.classList.remove("picked"));
+    sugg.style.display = "none";
+    if (input && typeof input.blur === "function") {
+      input.blur();
+    }
   };
 
   const pickSku = (sku) => {
