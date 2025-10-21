@@ -173,12 +173,14 @@
           <template id="sku-controls-tpl">
             <div class="qty-row">
               <div class="seg-qty"></div>
-              <select class="seg-pos" style="min-width:160px">
-                <option>CADA 24 HORAS</option>
-                <option>CADA 12 HORAS</option>
-                <option>CADA 8 HORAS</option>
-                <option>SOS</option>
-              </select>
+              <label class="seg-pos-label">Posología
+                <select class="seg-pos" style="min-width:200px">
+                  <option>CADA 24 HORAS</option>
+                  <option>CADA 12 HORAS</option>
+                  <option>CADA 8 HORAS</option>
+                  <option>SOS</option>
+                </select>
+              </label>
               <button class="btn seg-add" disabled>Agregar</button>
             </div>
           </template>
@@ -252,10 +254,8 @@
 
           <!-- ======= CONCILIACIÓN ======= -->
           <h3 style="margin-top:16px">2️⃣ Conciliación</h3>
+          <p class="muted">Las duplicidades entre APS, A2S, extrasistema y automedicación se detectan automáticamente.</p>
           <ul id="conciliacion-list" class="list"></ul>
-          <div class="row-end" style="margin-top:8px">
-            <button id="btn-conciliar" class="btn">Marcar conciliación</button>
-          </div>
 
           <!-- ======= ERRORES ======= -->
           <h3 style="margin-top:16px">3️⃣ Error de medicación</h3>

@@ -19,7 +19,20 @@ const uuid = () =>
     ? crypto.randomUUID()
     : "R" + Math.random().toString(36).slice(2, 9).toUpperCase();
 
-/* ======= ESTADO GLOBAL ======= */
+const escapeHtml = (str = "") =>
+  str.replace(/[&<>"']/g, (ch) =>
+    (
+      {
+        "&": "&amp;",
+        "<": "&lt;",
+        ">": "&gt;",
+        '"': "&quot;",
+        "'": "&#39;",
+      }
+    )[ch] || ch
+  );
+
+    /* ======= ESTADO GLOBAL ======= */
 const ALL_TABS = ["ficha", "ante", "anam", "meds", "ea", "prm", "edu", "herr", "indi", "acu"];
 const FLOW = {
   "SIN ENTREVISTA: CONCILIACIÓN": ["ficha", "ante", "meds", "prm", "herr", "indi"],
@@ -195,7 +208,7 @@ function noFichaState() {
     if (panel) panel.style.display = visible ? "block" : "none";
   });
   const resetMap = [
-    ["#conciliacion-list", '<li class="muted-card">— sin ficha —</li>'],
+    ["#conciliacion-list", '<li class="muted-card">— sin datos —</li>'],
     ["#errores-list", '<li class="muted-card">— sin ficha —</li>'],
     ["#aps-recetas", '<div class="muted-card">— sin ficha —</div>'],
     ["#sec-recetas", '<div class="muted-card">— sin ficha —</div>'],
@@ -509,17 +522,7 @@ function renderAntecedentes() {
 
 /* ======= CONCILIACIÓN / ERRORES ======= */
 function setupConciliacion() {
-  $("#btn-conciliar")?.addEventListener("click", () => {
-    if (!state.activeId) {
-      alert("Abre una ficha primero.");
-      return;
-    }
-    FichasStore.update(state.activeId, (f) => {
-      f.conciliacion = { estado: "conciliado", fecha: Date.now() };
-    });
-    renderLista();
-    renderConciliacion();
-  });
+  renderConciliacion();
 }
 
 function renderConciliacion() {
@@ -531,11 +534,34 @@ function renderConciliacion() {
     return;
   }
   const ficha = FichasStore.get(state.activeId);
-  if (ficha?.conciliacion?.estado === "conciliado") {
-    list.innerHTML = `<li class="muted-card"><strong>Conciliado</strong><div class="muted">${fmt(ficha.conciliacion.fecha)}</div></li>`;
-  } else {
-    list.innerHTML = '<li class="muted-card">— pendiente —</li>';
+  const meds = getAllMeds(ficha);
+  const duplicados = detectarDuplicados(meds);
+  if (!duplicados.length) {
+    list.innerHTML = '<li class="muted-card">— sin duplicidades detectadas —</li>';
+    return;
   }
+    const ordenados = duplicados.slice().sort((a, b) => a.base.localeCompare(b.base));
+  list.innerHTML = ordenados
+    .map((dup) => {
+      const detalle = [];
+      const usados = new Set();
+      dup.meds.forEach((m) => {
+        const key = `${m.origen || ""}:${m.recetaId || m.id || ""}`;
+        if (usados.has(key)) return;
+        usados.add(key);
+        const nombre = (m.nombre || dup.base || "").toUpperCase();
+        const origen = m.origen || "Receta";
+        detalle.push(
+          `<div class="conciliacion-med"><span>${escapeHtml(nombre)}</span><span class="muted">${escapeHtml(origen)}</span></div>`
+        );
+      });
+      return `
+        <li class="warn-card">
+          <strong>${escapeHtml(dup.base)}</strong>
+          <div class="conciliacion-medlist">${detalle.join("")}</div>
+        </li>`;
+    })
+    .join("");
 }
 
 function setupErrores() {
@@ -670,6 +696,7 @@ function renderRecetas(kind, selector) {
         renderLista();
         renderMedicamentos();
         computePRM();
+        renderConciliacion();
       });
     }
     if (segBox) mountSearchControls(segBox, kind, rec.id, list);
@@ -698,68 +725,50 @@ function mountSearchControls(container, kind, recId, listNode) {
   const pos = container.querySelector(".seg-pos");
   const add = container.querySelector(".seg-add");
   let picked = null;
+  let lastResults = [];
 
-  const escapeHtml = (str = "") =>
-    str.replace(/[&<>"']/g, (ch) => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    }[ch] || ch));
-
-  const makeManualSku = (label) => {
-    const upper = (label || "").trim().toUpperCase();
-    return {
-      skuId: null,
-      base: upper,
-      nombre: upper,
-      presentacion: upper,
-      forma: "manual",
-      manual: true
-    };
-  };
-
-    const closeSuggestions = () => {
+  const closeSuggestions = () => {
     if (!sugg) return;
     sugg.querySelectorAll(".picked").forEach((n) => n.classList.remove("picked"));
     sugg.style.display = "none";
+    sugg.innerHTML = "";
     if (input && typeof input.blur === "function") {
       input.blur();
     }
   };
 
   const pickSku = (sku) => {
+    if (!sku) return;
     picked = sku;
     renderQtyUI(picked, qty);
     add.disabled = !picked;
+    closeSuggestions();
+    pos?.focus();
   };
 
   input?.addEventListener("input", () => {
     const raw = (input.value || "").trim();
     const q = raw.toUpperCase();
     if (!raw || raw.length < 2) {
-      sugg.style.display = "none";
-      sugg.innerHTML = "";
+      closeSuggestions();
       picked = null;
       add.disabled = true;
+       lastResults = [];
       return;
     }
     const basePool = state.medsDB?.skus || [];
-    const pool = kind === "apsRecetas"
-      ? basePool.filter((s) => s.programas?.aps)
-      : basePool;
-    const items = (pool || []).filter((s) => s.nombre.includes(q)).slice(0, 60);
-    sugg.style.display = "block";
-    const manualLabel = raw;
-    const manualOption = `<div data-manual="${encodeURIComponent(manualLabel)}"><b>Agregar</b> “${escapeHtml(manualLabel)}” (manual)</div>`;
-    const options = [manualOption];
-    if (items.length) {
-      options.push(items.map((s) => `<div data-sku="${s.skuId}">${escapeHtml(s.nombre)}</div>`).join(""));
-    } else {
-      options.push('<div class="muted">Sin resultados en base de datos</div>');
+    let pool = basePool;
+    if (kind === "apsRecetas") {
+      pool = basePool.filter((s) => s.programas?.aps);
+    } else if (kind === "secRecetas") {
+      pool = basePool.filter((s) => s.programas?.secundario);
     }
-    sugg.innerHTML = options.join("");
+    const items = (pool || []).filter((s) => s.nombre.includes(q)).slice(0, 60);
+    lastResults = items;
+    sugg.style.display = "block";
+    sugg.innerHTML = items.length
+      ? items.map((s) => `<div data-sku="${s.skuId}">${escapeHtml(s.nombre)}</div>`).join("")
+      : '<div class="muted">Sin resultados en base de datos</div>';
     sugg.querySelectorAll("[data-sku]").forEach((opt) => {
       opt.addEventListener("click", () => {
         sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
@@ -767,34 +776,17 @@ function mountSearchControls(container, kind, recId, listNode) {
         pickSku(state.medsDB?.skuById?.[opt.dataset.sku] || null);
       });
     });
-    sugg.querySelectorAll("[data-manual]").forEach((opt) => {
-      opt.addEventListener("click", () => {
-        sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
-        opt.classList.add("picked");
-        pickSku(makeManualSku(decodeURIComponent(opt.dataset.manual || "")));
-        sugg.style.display = "none";
-      });
-    });
   });
 
-    input?.addEventListener("keydown", (ev) => {
-    if (ev.key === "Enter" && !picked) {
+  input?.addEventListener("keydown", (ev) => {
+    if (ev.key === "Enter" && !picked && lastResults[0]) {
       ev.preventDefault();
-      const label = (input.value || "").trim();
-      if (label.length >= 2) {
-        pickSku(makeManualSku(label));
-        sugg.style.display = "none";
-      }
+      pickSku(lastResults[0]);
     }
   });
 
   add?.addEventListener("click", () => {
-    if (!state.activeId) return;
-    if (!picked) {
-      const label = (input.value || "").trim();
-      if (label.length < 2) return;
-      pickSku(makeManualSku(label));
-    }
+    if (!state.activeId || !picked) return;
     if (isDupInRecipe(kind, recId, picked.base)) {
       alert("Ese fármaco ya está en esta receta.");
       return;
@@ -806,12 +798,13 @@ function mountSearchControls(container, kind, recId, listNode) {
     });
     renderLista();
     input.value = "";
-    sugg.innerHTML = "";
-    sugg.style.display = "none";
+    lastResults = [];
     picked = null;
     add.disabled = true;
+    closeSuggestions();
     drawMedsList(kind, recId, listNode);
     computePRM();
+    renderConciliacion();
   });
 }
 
@@ -862,6 +855,7 @@ function buildMedPayload(picked, qtyNode, posNode) {
     presentacion: picked.presentacion,
     forma,
     posologia: (posNode?.value || "").toUpperCase(),
+    flags: { ...(picked.flags || {}) },
   };
   if (forma === "insulina") {
     return {
@@ -899,6 +893,14 @@ function isDupInRecipe(kind, recId, base) {
   const receta = findRec(ficha, kind, recId);
   if (!receta) return false;
   return receta.meds.some((m) => (m.base || "").toUpperCase() === needle);
+}
+
+function isDupSimple(key, base) {
+  if (!state.activeId || !base) return false;
+  const ficha = FichasStore.get(state.activeId);
+  const arr = ficha?.meds?.[key] || [];
+  const needle = (base || "").toUpperCase();
+  return arr.some((m) => (m.base || "").toUpperCase() === needle);
 }
 
 function drawMedsList(kind, recId, listNode) {
@@ -952,6 +954,7 @@ function bindListButtons(node, kind, recId) {
       renderLista();
       drawMedsList(kind, recId, node);
       computePRM();
+      renderConciliacion();
     });
   });
   node.querySelectorAll("[data-ea]").forEach((btn) => {
@@ -1048,6 +1051,7 @@ function mountStandaloneSearch(host, key) {
     add.disabled = true;
     host.drawList?.();
     computePRM();
+    renderConciliacion();
   });
 
   host.drawList = () => {
@@ -1077,6 +1081,7 @@ function bindStandaloneButtons(listNode, key) {
       listNode.remove();
       document.querySelector(`#${key === "extra" ? "extra-box" : key === "automed" ? "auto-box" : "pl-box"}`).drawList?.();
       computePRM();
+      renderConciliacion();
     });
   });
   listNode.querySelectorAll("[data-ea]").forEach((btn) => {
@@ -1110,14 +1115,18 @@ function renderAutomed() {
       }
       const texto = (line.value || "").trim();
       if (!texto) return;
+      const upper = texto.toUpperCase();
+      const base = (upper.split(/\s+/)[0] || "").toUpperCase();
       FichasStore.update(state.activeId, (f) => {
         f.meds = f.meds || {};
         f.meds.automed = f.meds.automed || [];
-        f.meds.automed.push({ texto, fecha: Date.now() });
+        f.meds.automed.push({ id: uuid(), texto: upper, nombre: upper, base, fecha: Date.now() });
       });
       renderLista();
       line.value = "";
       renderAutomed();
+      computePRM();
+      renderConciliacion();
     };
   }
   if (!list) return;
@@ -1131,7 +1140,7 @@ function renderAutomed() {
     .map(
       (x, i) => `
         <li class="row" style="justify-content:space-between;gap:12px;align-items:center">
-          <span>${x.texto.toUpperCase()}</span>
+          <span>${x.texto}</span>
           <button class="btn mini warn" data-remove-auto="${i}">Quitar</button>
         </li>`
     )
@@ -1144,6 +1153,8 @@ function renderAutomed() {
       });
       renderLista();
       renderAutomed();
+      computePRM();
+      renderConciliacion();
     });
   });
 }
@@ -1289,6 +1300,7 @@ function importarRayen(raw) {
   renderLista();
   renderMedicamentos();
   computePRM();
+  renderConciliacion();
 }
 
 function normalizarNombre(s = "") {
@@ -1308,6 +1320,7 @@ function buildPayloadFromImport(sku, posologia) {
     presentacion: sku.presentacion,
     forma: sku.forma,
     posologia: (posologia || "").toUpperCase(),
+    flags: { ...(sku.flags || {}) },
   };
   const cantidadMatch = posologia.match(/(\d+)/);
   const cantidad = cantidadMatch ? cantidadMatch[1] : "1";
@@ -1321,14 +1334,61 @@ function buildPayloadFromImport(sku, posologia) {
 function getAllMeds(ficha) {
   if (!ficha) return [];
   const meds = [];
-  const pushRec = (arr = []) => {
-    arr.forEach((rec) => (rec.meds || []).forEach((m) => meds.push(m)));
+  const pushRec = (arr = [], origen, sourceKey) => {
+    (arr || []).forEach((rec) => {
+      (rec.meds || []).forEach((m) => {
+        meds.push({
+          ...m,
+          base: (m.base || "").toUpperCase(),
+          nombre: m.nombre || "",
+          origen,
+          sourceKey,
+          recetaId: rec.id,
+        });
+      });
+    });
   };
-  pushRec(ficha.meds?.apsRecetas);
-  pushRec(ficha.meds?.secRecetas);
-  (ficha.meds?.extra || []).forEach((m) => meds.push(m));
-  (ficha.meds?.automed || []).forEach((m) => meds.push({ nombre: m.texto, base: m.texto.split(" ")[0] }));
+  pushRec(ficha.meds?.apsRecetas, "APS", "apsRecetas");
+  pushRec(ficha.meds?.secRecetas, "A2S", "secRecetas");
+  (ficha.meds?.extra || []).forEach((m) => {
+    meds.push({
+      ...m,
+      base: (m.base || "").toUpperCase(),
+      nombre: m.nombre || "",
+      origen: "Extrasistema",
+      sourceKey: "extra",
+    });
+  });
+  (ficha.meds?.automed || []).forEach((m) => {
+    const texto = (m.nombre || m.texto || "").trim();
+    meds.push({
+      ...m,
+      base: (m.base || texto.split(/\s+/)[0] || "").toUpperCase(),
+      nombre: texto || m.base || "",
+      origen: "Automedicación",
+      sourceKey: "automed",
+    });
+  });
   return meds;
+}
+
+function detectarDuplicados(meds) {
+  const mapa = new Map();
+  meds.forEach((med) => {
+    const base = (med.base || "").toUpperCase();
+    if (!base) return;
+    if (!mapa.has(base)) mapa.set(base, []);
+    mapa.get(base).push(med);
+  });
+  const duplicados = [];
+  mapa.forEach((arr, base) => {
+    if (arr.length < 2) return;
+    const claves = new Set(arr.map((m) => `${m.sourceKey || ""}:${m.recetaId || m.id || ""}`));
+    if (claves.size <= 1) return;
+    const origenes = Array.from(new Set(arr.map((m) => m.origen || "Receta")));
+    duplicados.push({ base, meds: arr, origenes });
+  });
+  return duplicados;
 }
 
 function computePRM() {
@@ -1338,8 +1398,23 @@ function computePRM() {
   }
   const ficha = FichasStore.get(state.activeId);
   const meds = getAllMeds(ficha);
-  const bases = meds.map((m) => (m.base || "").toUpperCase()).filter(Boolean);
+  const bases = Array.from(new Set(meds.map((m) => (m.base || "").toUpperCase()).filter(Boolean)));
   const resumen = [];
+  
+  const duplicados = detectarDuplicados(meds);
+  if (duplicados.length) {
+    resumen.push({
+      titulo: "Duplicidades detectadas",
+      detalle:
+        duplicados
+          .map((dup) => {
+            const origenes = dup.origenes.join(" · ");
+            return `• ${dup.base}${origenes ? ` — ${origenes}` : ""}`;
+          })
+          .join("<br>") || "Revisar duplicidades",
+    });
+  }
+
   if (ficha.age65 && state.criterios) {
     const criterios = evaluarCriterios({ perfil: { edad: 70 }, meds: bases, criterios: state.criterios });
     if (criterios.length) {
@@ -1349,6 +1424,26 @@ function computePRM() {
       });
     }
   }
+  
+  if (ficha.age65) {
+    const ppiMeds = meds.filter((m) => m.flags?.ppi);
+    if (ppiMeds.length) {
+      const listado = [];
+      const vistos = new Set();
+      ppiMeds.forEach((m) => {
+        const clave = m.base || m.nombre || "";
+        if (!clave || vistos.has(clave)) return;
+        vistos.add(clave);
+        const etiqueta = (m.nombre || m.base || "").toUpperCase();
+        const origen = m.origen ? ` (${m.origen})` : "";
+        listado.push(`• ${etiqueta}${origen}`);
+      });
+      if (listado.length) {
+        resumen.push({ titulo: "Alertas PPI (≥65)", detalle: listado.join("<br>") });
+      }
+    }
+  }
+
   if (state.interacciones) {
     const inter = evaluarInteracciones({ meds: bases, interacciones: state.interacciones });
     if (inter.length) {

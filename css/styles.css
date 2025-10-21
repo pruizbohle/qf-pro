@@ -200,5 +200,50 @@ input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbe
   box-shadow:0 2px 6px rgba(15,23,42,.3);
 }
 
+.qty-row{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  align-items:flex-end;
+}
+
+.seg-pos-label{
+  display:flex;
+  flex-direction:column;
+  gap:4px;
+  font-size:.85rem;
+  color:var(--muted);
+}
+
+.seg-pos-label select{
+  margin-top:4px;
+}
+
+.warn-card{
+  border:1px solid rgba(248,113,113,.4);
+  background:rgba(248,113,113,.16);
+  border-radius:12px;
+  padding:12px;
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+}
+
+.warn-card strong{
+  color:#fecaca;
+}
+
+.conciliacion-medlist{
+  display:grid;
+  gap:4px;
+}
+
+.conciliacion-med{
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  font-size:.9rem;
+}
+
 .recipe-aps > .muted-card::before{content:"APS";}
 .recipe-sec > .muted-card::before{content:"SEC";}
