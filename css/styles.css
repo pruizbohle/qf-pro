@@ -207,16 +207,9 @@ input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbe
   align-items:flex-end;
 }
 
-.seg-pos-label{
+.seg-pos-wrap{
   display:flex;
-  flex-direction:column;
-  gap:4px;
-  font-size:.85rem;
-  color:var(--muted);
-}
-
-.seg-pos-label select{
-  margin-top:4px;
+  align-items:flex-end
 }
 
 .warn-card{

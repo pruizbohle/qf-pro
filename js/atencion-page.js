@@ -821,9 +821,6 @@ function mountSearchControls(container, kind, recId, listNode) {
     sugg.querySelectorAll(".picked").forEach((n) => n.classList.remove("picked"));
     sugg.style.display = "none";
     sugg.innerHTML = "";
-    if (input && typeof input.blur === "function") {
-      input.blur();
-    }
   };
 
   const pickSku = (sku) => {
@@ -831,6 +828,9 @@ function mountSearchControls(container, kind, recId, listNode) {
     picked = sku;
     renderQtyUI(picked, qty);
     add.disabled = !picked;
+    if (input && sku?.nombre) {
+      input.value = sku.nombre;
+    }
     closeSuggestions();
     pos?.focus();
   };
@@ -1020,12 +1020,8 @@ function liMed(item, kind, recId, idx) {
   const posTxt = !yaPos && item.posologia ? ` ${item.posologia}` : "";
   return `
     <li class="row" style="justify-content:space-between;gap:12px;align-items:flex-start">
-      <div>
-        <div><strong>${item.nombre}</strong>${cantidad}${posTxt}</div>
-        <div class="muted" style="font-size:12px;">${item.presentacion || ""}</div>
-      </div>
+      <div><strong>${item.nombre}</strong>${cantidad}${posTxt}</div>
       <div class="row" style="gap:6px;flex-wrap:wrap;justify-content:flex-end">
-        <button class="btn mini" data-ea="${kind}:${recId}:${idx}">EA</button>
         <button class="btn mini warn" data-del="${kind}:${recId}:${idx}">Quitar</button>
       </div>
     </li>`;
@@ -1044,30 +1040,6 @@ function bindListButtons(node, kind, recId) {
       drawMedsList(kind, recId, node);
       computePRM();
       renderConciliacion();
-    });
-  });
-  node.querySelectorAll("[data-ea]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const parts = btn.dataset.ea.split(":");
-      const idx = parseInt(parts[2], 10);
-      const ficha = FichasStore.get(state.activeId);
-      const r = findRec(ficha, kind, recId);
-      const med = r?.meds?.[idx];
-      if (!med) return;
-      const efecto = prompt(`Describe la reacción adversa para ${med.nombre}`);
-      if (!efecto) return;
-      FichasStore.update(state.activeId, (f) => {
-        f.eventosAdversos = f.eventosAdversos || [];
-        f.eventosAdversos.push({
-          medSku: med.sku,
-          base: med.base,
-          medNombre: med.nombre,
-          efecto,
-          fecha: Date.now(),
-        });
-      });
-      renderEA();
-      showTab("ea");
     });
   });
 }
@@ -1113,9 +1085,17 @@ function mountStandaloneSearch(host, key) {
       opt.addEventListener("click", () => {
         sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
         opt.classList.add("picked");
-        picked = state.medsDB?.skuById?.[opt.dataset.sku] || null;
+        const sku = state.medsDB?.skuById?.[opt.dataset.sku] || null;
+        picked = sku;
         renderQtyUI(picked, qty);
         add.disabled = !picked;
+                if (input && sku?.nombre) {
+          input.value = sku.nombre;
+        }
+        if (sugg) {
+          sugg.style.display = "none";
+          sugg.innerHTML = "";
+        }
       });
     });
   });
@@ -1171,23 +1151,6 @@ function bindStandaloneButtons(listNode, key) {
       document.querySelector(`#${key === "extra" ? "extra-box" : key === "automed" ? "auto-box" : "pl-box"}`).drawList?.();
       computePRM();
       renderConciliacion();
-    });
-  });
-  listNode.querySelectorAll("[data-ea]").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      const idx = parseInt(btn.dataset.ea.split(":")[2], 10);
-      const ficha = FichasStore.get(state.activeId);
-      const arr = ficha?.meds?.[key] || [];
-      const med = arr[idx];
-      if (!med) return;
-      const efecto = prompt(`Describe la reacción adversa para ${med.nombre}`);
-      if (!efecto) return;
-      FichasStore.update(state.activeId, (f) => {
-        f.eventosAdversos = f.eventosAdversos || [];
-        f.eventosAdversos.push({ medSku: med.sku, base: med.base, medNombre: med.nombre, efecto, fecha: Date.now() });
-      });
-      renderEA();
-      showTab("ea");
     });
   });
 }

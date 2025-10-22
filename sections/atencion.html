@@ -173,14 +173,14 @@
           <template id="sku-controls-tpl">
             <div class="qty-row">
               <div class="seg-qty"></div>
-              <label class="seg-pos-label">Posología
-                <select class="seg-pos" style="min-width:200px">
+              <div class="seg-pos-wrap">
+                <select class="seg-pos" style="min-width:200px" aria-label="Posología">
                   <option>CADA 24 HORAS</option>
                   <option>CADA 12 HORAS</option>
                   <option>CADA 8 HORAS</option>
                   <option>SOS</option>
                 </select>
-              </label>
+              </div>
               <button class="btn seg-add" disabled>Agregar</button>
             </div>
           </template>
