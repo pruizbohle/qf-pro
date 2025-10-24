@@ -1331,18 +1331,31 @@ function importarRayen(raw) {
     fechaISO = `${yyyy}-${mm}-${dd}`;
     startIdx = 1;
   }
-  const receta = { id: uuid(), fechaISO, meses: 12, meds: [] };
+  const receta = { id: uuid(), fechaISO, meds: [] };
+  let recetaDuracion = null;
   for (let i = startIdx; i < lines.length; i++) {
     const row = lines[i];
     const m = row.match(/^\(\d+\)\s+(.+?):\s+(.+)$/);
     if (!m) continue;
     const nombre = normalizarNombre(m[1]);
     const posoRaw = m[2];
-    const candidatos = (state.medsDB?.skus || []).filter((sku) => nombre.includes(sku.base.toUpperCase()));
-    const picked = candidatos[0];
+    const detalle = parseRayenPosologia(posoRaw);
+    const candidatos = findRayenCandidates(nombre);
+    const picked = pickBestSku(candidatos, nombre, detalle);
     if (!picked) continue;
-    const payload = buildPayloadFromImport(picked, posoRaw);
+    if (typeof detalle.duracionMeses === "number" && !Number.isNaN(detalle.duracionMeses)) {
+      recetaDuracion =
+        recetaDuracion === null
+          ? detalle.duracionMeses
+          : Math.max(recetaDuracion, detalle.duracionMeses);
+    }
+    const payload = buildPayloadFromImport(picked, detalle);
     receta.meds.push(payload);
+  }
+    if (!receta.meds.length) return;
+  if (recetaDuracion !== null) {
+    const meses = Math.max(1, Math.round(recetaDuracion));
+    receta.meses = meses;
   }
   FichasStore.update(state.activeId, (f) => {
     f.meds = f.meds || {};
@@ -1363,7 +1376,7 @@ function normalizarNombre(s = "") {
     .trim();
 }
 
-function buildPayloadFromImport(sku, posologia) {
+function buildPayloadFromImport(sku, detalle = {}) {
   const basePayload = {
     id: uuid(),
     sku: sku.skuId,
@@ -1371,15 +1384,275 @@ function buildPayloadFromImport(sku, posologia) {
     nombre: sku.nombre,
     presentacion: sku.presentacion,
     forma: sku.forma,
-    posologia: (posologia || "").toUpperCase(),
+    posologia: (detalle.posologia || "").toUpperCase(),
     flags: { ...(sku.flags || {}) },
   };
-  const cantidadMatch = posologia.match(/(\d+)/);
-  const cantidad = cantidadMatch ? cantidadMatch[1] : "1";
   if (sku.forma === "insulina") {
-    return { ...basePayload, uiAm: cantidad, uiPm: "0", unidad: "UI" };
+  return {
+      ...basePayload,
+      uiAm: detalle.uiAm || detalle.cantidad || "0",
+      uiPm: detalle.uiPm || "0",
+      unidad: "UI",
+    };
   }
-  return { ...basePayload, cantidad, unidad: "UNIDAD" };
+  const cantidad = detalle.cantidad || "1";
+  const unidad = inferUnidadFromSku(sku.forma, detalle.unidadToken);
+  return { ...basePayload, cantidad, unidad };
+}
+
+function findRayenCandidates(nombreNormalizado) {
+  const upper = nombreNormalizado || "";
+  const skus = state.medsDB?.skus || [];
+  return skus.filter((sku) => upper.includes((sku.base || "").toUpperCase()));
+}
+
+function pickBestSku(candidatos, nombreNormalizado, detalle) {
+  if (!Array.isArray(candidatos) || !candidatos.length) return null;
+  const tokens = nombreNormalizado.split(" ").filter(Boolean);
+  const formaHint = detectFormaHint(nombreNormalizado);
+  const strengths = extractStrengthTokens(nombreNormalizado);
+  let pool = candidatos.slice();
+  if (formaHint) {
+    const byForma = pool.filter((sku) => sku.forma === formaHint);
+    if (byForma.length) pool = byForma;
+  }
+  if (strengths.length) {
+    const byStrength = pool.filter((sku) =>
+      strengths.every((str) => presentacionMatchesStrength(sku.presentacion, str))
+    );
+    if (byStrength.length) pool = byStrength;
+  }
+  const normalizedNombre = normalizarNombre(nombreNormalizado);
+  const exact = pool.find((sku) => normalizarNombre(sku.nombre || "") === normalizedNombre);
+  if (exact) return exact;
+  const scored = pool
+    .map((sku) => ({
+      sku,
+      score: computeSkuScore(sku, tokens, strengths, formaHint, detalle),
+    }))
+    .sort((a, b) => b.score - a.score);
+  return (scored[0] && scored[0].sku) || pool[0] || null;
+}
+
+function computeSkuScore(sku, tokens, strengths, formaHint, detalle) {
+  let score = 0;
+  const presentacion = (sku.presentacion || "").toUpperCase();
+  const nombre = (sku.nombre || "").toUpperCase();
+  if (formaHint && sku.forma === formaHint) score += 10;
+  tokens.forEach((tok) => {
+    if (tok.length < 3) return;
+    if (nombre.includes(tok)) score += 2;
+    if (presentacion.includes(tok)) score += 1;
+  });
+  strengths.forEach((str) => {
+    if (presentacionMatchesStrength(presentacion, str)) score += 5;
+  });
+  if (detalle?.unidadToken) {
+    const unidad = detalle.unidadToken;
+    const baseUnidad = unidad.replace(/\(S\)/g, "").replace(/S$/, "");
+    if (presentacion.includes(unidad)) score += 1;
+    else if (baseUnidad && presentacion.includes(baseUnidad)) score += 1;
+  }
+  return score;
+}
+
+function detectFormaHint(nombreNormalizado = "") {
+  if (!nombreNormalizado) return null;
+  if (nombreNormalizado.includes("INHAL")) return "inhalador";
+  if (nombreNormalizado.includes("INSUL")) return "insulina";
+  if (nombreNormalizado.includes("SUSPENSION")) return "suspension";
+  if (nombreNormalizado.includes("CAPSULA")) return "capsula";
+  if (nombreNormalizado.includes("COMPRIMID")) return "comprimido";
+  return null;
+}
+
+function extractStrengthTokens(nombreNormalizado = "") {
+  const tokens = [];
+  const regex = /(\d+(?:[.,]\d+)?)\s*(MG|MCG|UG|G|ML|UI|IU|MUI|MMOL|MEQ|%)/gi;
+  let match;
+  while ((match = regex.exec(nombreNormalizado))) {
+    const valueRaw = match[1] || "";
+    const unitRaw = match[2] || "";
+    const unit = normalizeStrengthUnit(unitRaw);
+    if (!unit) continue;
+    const value = valueRaw.replace(/,/g, ".").replace(/^0+(\d)/, "$1");
+    tokens.push({ value, unit });
+  }
+  return tokens;
+}
+
+function normalizeStrengthUnit(unit = "") {
+  const up = unit.toUpperCase().replace(/[º°]/g, "");
+  if (up === "UG") return "MCG";
+  if (up === "IU") return "UI";
+  return up;
+}
+
+function presentacionMatchesStrength(presentacion = "", strength) {
+  if (!presentacion || !strength) return false;
+  const baseUnit = strength.unit;
+  const baseValue = strength.value;
+  const candidates = new Set();
+  const unitsToCheck = [baseUnit];
+  if (baseUnit === "MCG") unitsToCheck.push("UG", "µG");
+  if (baseUnit === "UI") unitsToCheck.push("IU");
+  unitsToCheck.forEach((unit) => {
+    const variants = [baseValue];
+    if (baseValue.includes(".")) variants.push(baseValue.replace(/\./g, ","));
+    if (baseValue.includes(",")) variants.push(baseValue.replace(/,/g, "."));
+    variants.forEach((val) => {
+      candidates.add(`${val} ${unit}`);
+      candidates.add(`${val}${unit}`);
+    });
+  });
+  return Array.from(candidates).some((c) => presentacion.includes(c));
+}
+
+function convertDurationToMonths(valueRaw, unitRaw) {
+  if (valueRaw === undefined || valueRaw === null || !unitRaw) return null;
+  const num = parseFloat(String(valueRaw).replace(/,/g, "."));
+  if (Number.isNaN(num)) return null;
+  const normalizedUnit = unitRaw
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase();
+  if (normalizedUnit.startsWith("MES")) {
+    return num;
+  }
+  if (normalizedUnit.startsWith("SEM")) {
+    return (num * 7) / 30;
+  }
+  if (normalizedUnit.startsWith("DIA")) {
+    return num / 30;
+  }
+  return null;
+}
+
+function parseRayenPosologia(posologiaRaw = "") {
+  const original = posologiaRaw || "";
+  let upper = original.toUpperCase();
+  let durationValue = null;
+  let durationText = null;
+  const durationRegex =
+    /(DURACI[ÓO]N[:\s-]*)?(?:POR\s+)?(\d+(?:[.,]\d+)?)\s*(MES(?:ES)?|SEMANAS?|SEM|D[IÍ]AS?)(?:\s+DE\s+TRATAMIENTO)?/gi;
+  upper = upper.replace(durationRegex, (_, _label, amountRaw, unitRaw) => {
+    const months = convertDurationToMonths(amountRaw, unitRaw);
+    if (months !== null && !Number.isNaN(months)) {
+      durationValue = months;
+      const clean = trimDecimal(months);
+      const plural = Math.abs(months - 1) < 1e-9 ? "" : "ES";
+      durationText = `${clean} MES${plural}`;
+    }
+    return " ";
+  });
+  upper = upper.replace(/DE\s+LA\s+RECETA\b.*$/i, "");
+  upper = upper.replace(/RECETA\s+N[º°\.]*\s*\d+.*$/i, "");
+  upper = upper.replace(/N[º°\.]*\s*\d+/gi, "");
+  upper = upper.replace(/\s+/g, " ").trim();
+  let cantidad = null;
+  let unidadToken = null;
+  let resto = upper;
+  const tokens = resto.split(" ").filter(Boolean);
+  if (tokens.length) {
+    const qtyToken = tokens[0];
+    const parsedQty = parseCantidadToken(qtyToken);
+    if (parsedQty !== null) {
+      cantidad = parsedQty;
+      tokens.shift();
+      if (tokens.length) {
+        const maybeUnidad = normalizeUnidadToken(tokens[0]);
+        if (maybeUnidad) {
+          unidadToken = maybeUnidad;
+          tokens.shift();
+        }
+      }
+      resto = tokens.join(" ");
+    }
+  }
+  resto = resto
+    .replace(/^[,.;:-]+/, "")
+    .replace(/[,.;:-]+$/, "")
+    .replace(/\s+/g, " ")
+    .trim();
+  return {
+    posologia: resto.toUpperCase(),
+    cantidad,
+    unidadToken,
+    duracionMeses: durationValue,
+    duracionTexto: durationText,
+  };
+}
+
+function parseCantidadToken(token = "") {
+  if (!token) return null;
+  const clean = token.replace(/\s+/g, "");
+  if (/^\d+\/\d+$/.test(clean)) {
+    const [num, den] = clean.split("/").map((x) => parseFloat(x.replace(/,/g, ".")));
+    if (!den || Number.isNaN(num) || Number.isNaN(den)) return null;
+    const value = num / den;
+    return trimDecimal(value);
+  }
+  const normalized = clean.replace(/,/g, ".");
+  if (/^\d+(?:\.\d+)?$/.test(normalized)) {
+    return trimDecimal(parseFloat(normalized));
+  }
+  return null;
+}
+
+function trimDecimal(value) {
+  if (value === null || value === undefined) return null;
+  let str = String(value);
+  if (typeof value === "number") {
+    str = value.toFixed(3);
+  }
+  str = str.replace(/0+$/, "").replace(/\.$/, "");
+  return str || "0";
+}
+
+function normalizeUnidadToken(token = "") {
+  if (!token) return null;
+  const clean = token.replace(/[()\.]/g, "").toUpperCase();
+  const map = {
+    COMPRIMIDO: "COMPRIMIDO(S)",
+    COMPRIMIDOS: "COMPRIMIDO(S)",
+    CAPSULA: "CAPSULA(S)",
+    CAPSULAS: "CAPSULA(S)",
+    UNIDAD: "UNIDAD",
+    UNIDADES: "UNIDAD",
+    TABLETA: "TABLETA(S)",
+    TABLETAS: "TABLETA(S)",
+    GOTA: "GOTA(S)",
+    GOTAS: "GOTA(S)",
+    ML: "ML",
+    CC: "ML",
+    UI: "UI",
+    IU: "UI",
+    SOBRES: "SOBRE(S)",
+    SOBRE: "SOBRE(S)",
+    AMP: "AMPOLLA(S)",
+    AMPOLLA: "AMPOLLA(S)",
+    AMPOLLAS: "AMPOLLA(S)",
+    PARCHE: "PARCHE(S)",
+    PARCHES: "PARCHE(S)",
+  };
+  return map[clean] || null;
+}
+
+function inferUnidadFromSku(forma, unidadToken) {
+  switch (forma) {
+    case "insulina":
+      return "UI";
+    case "suspension":
+      return "ML";
+    case "inhalador":
+      return "PUFF";
+    case "capsula":
+      return "CAPSULA(S)";
+    case "comprimido":
+      return "COMPRIMIDO(S)";
+    default:
+      return unidadToken || "UNIDAD";
+  }
 }
 
 /* ======= PRM ======= */
