@@ -2442,5 +2442,2373 @@
       "efectos": []
     },
     "aware": null
+      },
+  {
+    "id": "aas_100mg",
+    "base_name": "ACIDO ACETILSALICILICO",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIAGREGANTES PLAQUETARIOS",
+      "INHIBIDOR IRREVERSIBLE COX-1"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Dispepsia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Hematoma",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Sangrado GI",
+          "prevalencia": "1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "aas_500mg",
+    "base_name": "ACIDO ACETILSALICILICO",
+    "fuerza": "500 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIAGREGANTES PLAQUETARIOS",
+      "INHIBIDOR IRREVERSIBLE COX-2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Dispepsia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Hematoma",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Sangrado GI",
+          "prevalencia": "1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ac_val_250mg",
+    "base_name": "ACIDO VALPROICO",
+    "fuerza": "250 MG/5 ML",
+    "forma": "SOLUCION ORAL",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVOS",
+      "MODULADOR GABA",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Aumento de peso",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Temblor",
+          "prevalencia": "14%"
+        },
+        {
+          "nombre": "Elevacion transaminasas",
+          "prevalencia": "15%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "alo_100mg",
+    "base_name": "ALOPURINOL",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIGOTOSOS",
+      "INHIBIDOR XANTINA OXIDASA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Exantema",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Prurito",
+          "prevalencia": "1%"
+        },
+        {
+          "nombre": "Eleva transaminasas",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "alo_300mg",
+    "base_name": "ALOPURINOL",
+    "fuerza": "300 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIGOTOSOS",
+      "INHIBIDOR XANTINA OXIDASA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Exantema",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Prurito",
+          "prevalencia": "1%"
+        },
+        {
+          "nombre": "Eleva transaminasas",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ari_10mg",
+    "base_name": "ARIPRIPRAZOL",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "ATIPICO (PARCIAL D2)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Acatisia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "10%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "bro_20mcg",
+    "base_name": "BROMURO DE IPRATROPIO",
+    "fuerza": "20 MCG/DOSIS",
+    "forma": "INHALADOR",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "BRONCODILATADORES",
+      "ANTIMUSCARINICO (SAMA)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "TOS",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "bud_200mcg",
+    "base_name": "BUDESONIDA",
+    "fuerza": "200 MCG/DOSIS",
+    "forma": "INHALADOR",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CORTICOIDES INHALADOS (ICS)",
+      "GLUCOCORTICOIDE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "cel_200mg",
+    "base_name": "CELECOXIB",
+    "fuerza": "200 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "AINES",
+      "COX-2 SELECTIVO",
+      "ARTROSIS LEVE Y MODERADA DE CADERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": true,
+        "umbral": "<30",
+        "detalle": "Contraindicado si TFG <30 mL/min."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Dispepsia",
+          "prevalencia": "8%"
+        },
+        {
+          "nombre": "Edema",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Hipertension",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "clp_75mg",
+    "base_name": "CLOPIDOGREL",
+    "fuerza": "75 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIAGREGANTES PLAQUETARIOS",
+      "INHIBIDOR P2Y12"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sangrado",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Hematoma",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Diarrea",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "clo_4mg",
+    "base_name": "CLORFENAMINA",
+    "fuerza": "4 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHISTAMINICOS H1 (1A GEN)",
+      "ALQUILAMINA (ANTICOLINERGICO)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "15%"
+        },
+        {
+          "nombre": "Retencion urinaria",
+          "prevalencia": "Raro"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "des_5mg",
+    "base_name": "DESLORATADINA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHISTAMINICOS H1 (2A GEN)",
+      "DERIVADO DE LORATADINA",
+      "IRA/ERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "4%"
+        },
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "3%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "dom_10mg",
+    "base_name": "DOMPERIDONA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "PROCINETICOS/ANTINAUSEOSOS",
+      "ANTAGONISTA D2 PERIFERICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Hiperprolactinemia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Prol. QT",
+          "prevalencia": "Raro"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "dul_30mg",
+    "base_name": "DULOXETINA",
+    "fuerza": "30 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": true,
+        "umbral": "<30",
+        "detalle": "Contraindicado si TFG <30 mL/min."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Insomnio",
+          "prevalencia": "9%"
+        },
+        {
+          "nombre": "Hiperhidrosis",
+          "prevalencia": "6%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "fam_40mg",
+    "base_name": "FAMOTIDINA",
+    "fuerza": "40 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIULCEROSOS",
+      "ANTAGONISTA H2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<50",
+        "detalle": "Requiere ajuste si TFG <50 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Diarrea",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "fen_100mg",
+    "base_name": "FENITOINA",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVOS",
+      "HIDANTOINA (BLOQ. CANALES DE NA+)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nistagmo",
+          "prevalencia": "15%"
+        },
+        {
+          "nombre": "Ataxia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Erupcion cutanea",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "flu_sal_250",
+    "base_name": "FLUTICASONA/SALMETEROL",
+    "fuerza": "250/25",
+    "forma": "INHALADOR",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CORTICOIDE + BETA2 (LARGO)",
+      "ICS/LABA",
+      "IRA/ERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Disfonia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Candidiasis oral",
+          "prevalencia": "1%"
+        },
+        {
+          "nombre": "Temblor",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "flu_sal_125",
+    "base_name": "FLUTICASONA/SALMETEROL",
+    "fuerza": "125/25",
+    "forma": "INHALADOR",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CORTICOIDE + BETA2 (LARGO)",
+      "ICS/LABA",
+      "IRA/ERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Disfonia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Candidiasis oral",
+          "prevalencia": "1%"
+        },
+        {
+          "nombre": "Temblor",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "hal_1mg",
+    "base_name": "HALOPERIDOL",
+    "fuerza": "1 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "TIPICO (BUTIROFENONA)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Extrapiramidales",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Sedacion",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "QT prolongado",
+          "prevalencia": "<1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "hal_5mg",
+    "base_name": "HALOPERIDOL",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "TIPICO (BUTIROFENONA)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Extrapiramidales",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Sedacion",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "QT prolongado",
+          "prevalencia": "<1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "hdz_50mg",
+    "base_name": "HIDRALAZINA",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "VASODILATADOR ARTERIOLAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Taquicardia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Sind. lupus-like",
+          "prevalencia": "<1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "iso_10mg",
+    "base_name": "ISOSORBIDE",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIANGINOSOS",
+      "NITRATO ORGANICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Hipotension",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Rubor",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "lev_100mg",
+    "base_name": "LEVETIRACETAM",
+    "fuerza": "100 MG/ML",
+    "forma": "SOLUCION ORAL",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVOS",
+      "LEVETIRACETAM",
+      "EPILEPSIA NO REFRACTARIA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<80",
+        "detalle": "Requiere ajuste si TFG <80 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "15%"
+        },
+        {
+          "nombre": "Irritabilidad",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Astenia",
+          "prevalencia": "7%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "lor_10mg",
+    "base_name": "LORATADINA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHISTAMINICOS H1 (2A GEN)",
+      "PIPERIDINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "mel_250mg",
+    "base_name": "METILDOPA",
+    "fuerza": "250 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "AGONISTA ALFA-2 CENTRAL"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "3%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "mtl_10mg",
+    "base_name": "METILFENIDATO",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "PSICOESTIMULANTES",
+      "DERIVADO ANFETAMINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Insomnio",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Anorexia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Taquicardia",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "nif_20mg",
+    "base_name": "NIFEDIPINO",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIHIPERTENSIVOS",
+      "BLOQUEADOR CALCIO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Edema periferico",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Rubor",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ome_20mg",
+    "base_name": "OMEPRAZOL",
+    "fuerza": "20 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIULCEROSOS",
+      "IBP"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Diarrea",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Dolor abdominal",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pct_500mg",
+    "base_name": "PARACETAMOL",
+    "fuerza": "500 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANALGESICOS",
+      "PARACETAMOL"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Categoría B en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Elev. transaminasas",
+          "prevalencia": "<1%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "par_20mg",
+    "base_name": "PAROXETINA",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Disfuncion sexual",
+          "prevalencia": "15%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "10%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pra_025mg",
+    "base_name": "PRAMIPREXOL",
+    "fuerza": "0,25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPARKINSONIANOS",
+      "AGONISTA DOPAMINERGICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Hipotension",
+          "prevalencia": "3%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "para_1mg",
+    "base_name": "PRAMIPREXOL",
+    "fuerza": "1 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPARKINSONIANOS",
+      "AGONISTA DOPAMINERGICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<60",
+        "detalle": "Requiere ajuste si TFG <60 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Hipotension",
+          "prevalencia": "3%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pre_5mg",
+    "base_name": "PREDNISONA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CORTICOIDES SISTEMICOS",
+      "GLUCOCORTICOIDE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Hiperglicemia",
+          "prevalencia": "Común"
+        },
+        {
+          "nombre": "Insomnio",
+          "prevalencia": "Común"
+        },
+        {
+          "nombre": "Aumento apetito",
+          "prevalencia": "Común"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pre_20mg",
+    "base_name": "PREDNISONA",
+    "fuerza": "20 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "CORTICOIDES SISTEMICOS",
+      "GLUCOCORTICOIDE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Hiperglicemia",
+          "prevalencia": "Común"
+        },
+        {
+          "nombre": "Insomnio",
+          "prevalencia": "Común"
+        },
+        {
+          "nombre": "Aumento apetito",
+          "prevalencia": "Común"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pri_250mg",
+    "base_name": "PRIMIDONA",
+    "fuerza": "250 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTICONVULSIVOS",
+      "BARBITURICO (PROFARMACO)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "D",
+        "detalle": "Categoría D en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sedacion",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Ataxia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Nistagmo",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "pro_40mg",
+    "base_name": "PROPRANOLOL",
+    "fuerza": "40 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "BETABLOQUEADORES",
+      "NO SELECTIVO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Bradicardia",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Fatiga",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Broncoespasmo",
+          "prevalencia": "Raro"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "que_25mg",
+    "base_name": "QUETIAPINA",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "ATIPICO (D2/5HT2)",
+      "PARKINSON"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Aumento de peso",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "que_100mg",
+    "base_name": "QUETIAPINA",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "ATIPICO (D2/5HT2)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Aumento de peso",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ris_1mg",
+    "base_name": "RISPERIDONA",
+    "fuerza": "1 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "ATIPICO (D2/5HT2)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sint. extrapiramidales",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Hiperprolactinemia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Aumento de peso",
+          "prevalencia": "8%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ris_3mg",
+    "base_name": "RISPERIDONA",
+    "fuerza": "3 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPSICOTICOS",
+      "ATIPICO (D2/5HT2)"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sint. extrapiramidales",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Hiperprolactinemia",
+          "prevalencia": "10%"
+        },
+        {
+          "nombre": "Aumento de peso",
+          "prevalencia": "8%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "sal_100mcg",
+    "base_name": "SALBUTAMOL",
+    "fuerza": "100 MCG/DOSIS",
+    "forma": "INHALADOR",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "BRONCODILATADORES",
+      "BETA2 AGONISTA CORTA (SABA)",
+      "IRA/ERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Temblor",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Taquicardia",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "tam_04mg",
+    "base_name": "TAMSULOSINA",
+    "fuerza": "0,4 MG",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ALFA-BLOQUEANTES",
+      "SELECTIVO ALFA1A"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Mareos",
+          "prevalencia": "8%"
+        },
+        {
+          "nombre": "Eyaculacion anormal",
+          "prevalencia": "8%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "trz_25mg",
+    "base_name": "TRAZODONA",
+    "fuerza": "25 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "INHIBIDOR RECAPTACION 5HT/ANTAGONISTA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sedacion",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "trz_100mg",
+    "base_name": "TRAZODONA",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "INHIBIDOR RECAPTACION 5HT/ANTAGONISTA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Sedacion",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Hipotension ortostatica",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "5%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "tri_2mg",
+    "base_name": "TRIHEXIFENIDILO",
+    "fuerza": "2 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIPARKINSONIANOS",
+      "ANTICOLINERGICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Boca seca",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Confusion",
+          "prevalencia": "3%"
+        },
+        {
+          "nombre": "Retencion urinaria",
+          "prevalencia": "2%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ven_150mg",
+    "base_name": "VENLAFAXINA",
+    "fuerza": "150 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Hipertension",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Sudoracion",
+          "prevalencia": "10%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "ven_75mg",
+    "base_name": "VENLAFAXINA",
+    "fuerza": "75 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Hipertension",
+          "prevalencia": "2%"
+        },
+        {
+          "nombre": "Sudoracion",
+          "prevalencia": "10%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "vil_50mg",
+    "base_name": "VILDAGLIPTINA",
+    "fuerza": "50 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOGLICEMIANTES",
+      "INHIBIDOR DPP-4",
+      "CARDIOVASCULAR"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<50",
+        "detalle": "Requiere ajuste si TFG <50 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Nasofaringitis",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Elev. transaminasas",
+          "prevalencia": "<1%"
+        }
+      ]
+    },
+    "aware": null
   }
 ]
