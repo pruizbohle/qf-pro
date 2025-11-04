@@ -1,46 +1,153 @@
 {
-  "pairs": [
+  "interacciones": [
     {
-      "a_base": "atorvastatina",
-      "b_base": "claritromicina",
-      "severidad": "Moderada",
-      "mecanismo": "Inhibición CYP3A4 → ↑ niveles de estatina",
-      "recomendacion": "Evitar si es posible o usar la menor dosis; considerar estatina no CYP3A4. Vigilar mialgias/CPK."
+      "grupo_1": {
+        "nombre": "ISRS",
+        "medicamentos": ["sertralina", "fluoxetina", "escitalopram", "paroxetina", "citalopram"]
+      },
+      "grupo_2": {
+        "nombre": "TRAMADOL",
+        "medicamentos": ["tramadol"]
+      },
+      "comentario": "ISRS + TRAMADOL, aumenta riesgo de síndrome serotoninérgico y convulsiones.",
+      "mecanismo": "Ambos potencian la neurotransmisión serotoninérgica → riesgo de exceso de serotonina (síndrome serotoninérgico)."
     },
     {
-      "a_base": "atorvastatina",
-      "b_base": "amlodipino",
-      "severidad": "Leve-Moderada",
-      "mecanismo": "Posible ↑ niveles de estatina",
-      "recomendacion": "Generalmente segura; vigilar síntomas musculares si dosis altas."
+      "grupo_1": {
+        "nombre": "ISRS",
+        "medicamentos": ["sertralina", "fluoxetina", "escitalopram", "paroxetina", "citalopram"]
+      },
+      "grupo_2": {
+        "nombre": "ANTIPSICÓTICOS",
+        "medicamentos": ["haloperidol", "risperidona", "quetiapina", "olanzapina", "clorpromazina"]
+      },
+      "comentario": "ISRS + ANTIPSICÓTICOS, aumenta riesgo de prolongación del intervalo QT.",
+      "mecanismo": "Efecto aditivo sobre la conducción cardíaca (prolongación QT) → riesgo de arritmias ventriculares."
     },
     {
-      "a_base": "enalapril",
-      "b_base": "espironolactona",
-      "severidad": "Moderada-Alta",
-      "mecanismo": "Riesgo de hiperpotasemia",
-      "recomendacion": "Usar con precaución; controlar K+ y función renal."
+      "grupo_1": {
+        "nombre": "BENZODIAZEPINAS",
+        "medicamentos": ["diazepam", "clonazepam", "lorazepam", "alprazolam"]
+      },
+      "grupo_2": {
+        "nombre": "OPIOIDES",
+        "medicamentos": ["tramadol", "codeína", "morfina"]
+      },
+      "comentario": "BENZODIAZEPINAS + OPIOIDES, aumenta riesgo de sedación y depresión respiratoria.",
+      "mecanismo": "Efecto depresor aditivo sobre el sistema nervioso central y centros respiratorios."
     },
     {
-      "a_base": "ibuprofeno",
-      "b_base": "enalapril",
-      "severidad": "Moderada",
-      "mecanismo": "AINE reduce efecto antihipertensivo y ↑ riesgo de IRA",
-      "recomendacion": "Usar el menor tiempo posible; considerar alternativa analgésica; monitorizar PA/creatinina."
+      "grupo_1": {
+        "nombre": "AINE",
+        "medicamentos": ["ibuprofeno", "naproxeno", "diclofenaco", "ketorolaco"]
+      },
+      "grupo_2": {
+        "nombre": "IECA / ARA II",
+        "medicamentos": ["enalapril", "losartan", "captopril"]
+      },
+      "comentario": "AINE + IECA o ARA II, reduce efecto antihipertensivo y aumenta riesgo de insuficiencia renal.",
+      "mecanismo": "AINE constriñe arteriola aferente y IECA/ARA II dilatan eferente → reducción de la presión de filtración glomerular."
     },
     {
-      "a_base": "ibuprofeno",
-      "b_base": "losartan",
-      "severidad": "Moderada",
-      "mecanismo": "AINE + ARA II → riesgo de IRA (especial si diurético concomitante)",
-      "recomendacion": "Evitar triple whammy (IECA/ARA II + diurético + AINE); hidratar y monitorizar función renal."
+      "grupo_1": {
+        "nombre": "AINE",
+        "medicamentos": ["ibuprofeno", "naproxeno", "diclofenaco", "ketorolaco"]
+      },
+      "grupo_2": {
+        "nombre": "DIURÉTICOS",
+        "medicamentos": ["furosemida", "hidroclorotiazida", "espironolactona"]
+      },
+      "comentario": "AINE + DIURÉTICOS, reduce efecto diurético y aumenta riesgo de insuficiencia renal aguda.",
+      "mecanismo": "AINE induce retención de sodio y agua y reduce flujo renal → antagoniza el efecto diurético."
     },
     {
-      "a_base": "ibuprofeno",
-      "b_base": "hidroclorotiazida",
-      "severidad": "Moderada",
-      "mecanismo": "AINE reduce efecto diurético/antihipertensivo",
-      "recomendacion": "Usar AINE a demanda el menor tiempo; vigilar PA y retención."
+      "triple": true,
+      "grupo_1": {
+        "nombre": "IECA / ARA II",
+        "medicamentos": ["enalapril", "losartan", "captopril"]
+      },
+      "grupo_2": {
+        "nombre": "DIURÉTICOS",
+        "medicamentos": ["furosemida", "hidroclorotiazida", "espironolactona"]
+      },
+      "grupo_3": {
+        "nombre": "AINE",
+        "medicamentos": ["ibuprofeno", "diclofenaco", "naproxeno", "ketorolaco"]
+      },
+      "comentario": "IECA o ARA II + diurético + AINE, aumenta marcadamente riesgo de insuficiencia renal aguda (triple whammy).",
+      "mecanismo": "IECA/ARA II dilatan eferente, diurético reduce volumen, AINE contrae aferente → caída crítica del filtrado glomerular."
+    },
+    {
+      "grupo_1": {
+        "nombre": "IECA / ARA II",
+        "medicamentos": ["enalapril", "losartan", "captopril"]
+      },
+      "grupo_2": {
+        "nombre": "ESPIRONOLACTONA",
+        "medicamentos": ["espironolactona"]
+      },
+      "comentario": "IECA o ARA II + ESPIRONOLACTONA, aumenta riesgo de hiperpotasemia.",
+      "mecanismo": "Ambos reducen excreción de potasio (inhibición RAAS y antagonismo de aldosterona)."
+    },
+    {
+      "grupo_1": {
+        "nombre": "ESTATINAS",
+        "medicamentos": ["atorvastatina", "simvastatina", "lovastatina"]
+      },
+      "grupo_2": {
+        "nombre": "MACRÓLIDOS",
+        "medicamentos": ["claritromicina", "eritromicina"]
+      },
+      "comentario": "ESTATINAS + MACRÓLIDOS, aumenta riesgo de miopatía o rabdomiólisis.",
+      "mecanismo": "Inhibición del CYP3A4 por macrólidos → acumulación de estatinas metabolizadas por esta vía."
+    },
+    {
+      "grupo_1": {
+        "nombre": "DIGOXINA",
+        "medicamentos": ["digoxina"]
+      },
+      "grupo_2": {
+        "nombre": "AMIODARONA",
+        "medicamentos": ["amiodarona"]
+      },
+      "comentario": "DIGOXINA + AMIODARONA, aumenta riesgo de toxicidad digitálica.",
+      "mecanismo": "Amiodarona reduce eliminación renal y aumenta niveles séricos de digoxina."
+    },
+    {
+      "grupo_1": {
+        "nombre": "ÁCIDO VALPROICO",
+        "medicamentos": ["acido valproico"]
+      },
+      "grupo_2": {
+        "nombre": "LAMOTRIGINA",
+        "medicamentos": ["lamotrigina"]
+      },
+      "comentario": "ÁCIDO VALPROICO + LAMOTRIGINA, aumenta riesgo de reacciones cutáneas graves (Stevens-Johnson).",
+      "mecanismo": "Valproato inhibe el metabolismo hepático de lamotrigina → niveles plasmáticos más altos y mayor riesgo de toxicidad dérmica."
+    },
+    {
+      "grupo_1": {
+        "nombre": "CLOPIDOGREL",
+        "medicamentos": ["clopidogrel"]
+      },
+      "grupo_2": {
+        "nombre": "OMEPRAZOL",
+        "medicamentos": ["omeprazol"]
+      },
+      "comentario": "CLOPIDOGREL + OMEPRAZOL, puede disminuir la eficacia antiplaquetaria de clopidogrel.",
+      "mecanismo": "Omeprazol inhibe CYP2C19, reduciendo la activación metabólica de clopidogrel."
+    },
+    {
+      "grupo_1": {
+        "nombre": "ANTIPSICÓTICOS",
+        "medicamentos": ["haloperidol", "risperidona", "quetiapina", "olanzapina"]
+      },
+      "grupo_2": {
+        "nombre": "LEVODOPA / BENSERAZIDA",
+        "medicamentos": ["levodopa", "carbidopa", "benserazida"]
+      },
+      "comentario": "ANTIPSICÓTICOS + LEVODOPA/BENSERAZIDA, antagonizan el efecto antiparkinsoniano.",
+      "mecanismo": "Bloqueo dopaminérgico de los receptores D2 → reduce la eficacia de la levodopa."
     }
   ]
 }
