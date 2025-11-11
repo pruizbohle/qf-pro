@@ -1286,6 +1286,39 @@ function renderEA() {
   out.appendChild(ul);
 }
 
+/* ======= IMPORTACIÓN SSASUR ======= */
+$("#btn-import-ssasur")?.addEventListener("click", () => {
+  const modal = $("#import-ssasur-modal");
+  if (modal) modal.style.display = "flex";
+});
+$("#ssasur-cancel")?.addEventListener("click", () => {
+  const modal = $("#import-ssasur-modal");
+  if (modal) modal.style.display = "none";
+  const area = $("#ssasur-input");
+  if (area) area.value = "";
+});
+$("#ssasur-process")?.addEventListener("click", () => {
+  if (!state.activeId) {
+    alert("Abre una ficha primero.");
+    return;
+  }
+  const area = $("#ssasur-input");
+  const txt = area ? area.value.trim() : "";
+  if (!txt) {
+    alert("Pega el texto de SSASUR para procesar.");
+    return;
+  }
+  if (!state.medsDB?.skus?.length) {
+    alert("La base de medicamentos no está disponible.");
+    return;
+  }
+  const ok = importarSSASUR(txt);
+  if (!ok) return;
+  const modal = $("#import-ssasur-modal");
+  if (modal) modal.style.display = "none";
+  if (area) area.value = "";
+});
+
 /* ======= IMPORTACIÓN RAYEN ======= */
 $("#btn-import-rayen")?.addEventListener("click", () => {
   const modal = $("#import-rayen-modal");
@@ -1316,6 +1349,24 @@ $("#rayen-process")?.addEventListener("click", () => {
   if (modal) modal.style.display = "none";
   $("#rayen-input").value = "";
 });
+
+function importarSSASUR(raw) {
+  const receta = parseSSASUR(raw);
+  if (!receta || !receta.meds.length) {
+    alert("No se encontraron medicamentos válidos en el texto pegado.");
+    return false;
+  }
+  FichasStore.update(state.activeId, (f) => {
+    f.meds = f.meds || {};
+    f.meds.secRecetas = f.meds.secRecetas || [];
+    f.meds.secRecetas.push(receta);
+  });
+  renderLista();
+  renderMedicamentos();
+  computePRM();
+  renderConciliacion();
+  return true;
+}
 
 function importarRayen(raw) {
   const lines = raw
@@ -1352,7 +1403,7 @@ function importarRayen(raw) {
     const payload = buildPayloadFromImport(picked, detalle);
     receta.meds.push(payload);
   }
-    if (!receta.meds.length) return;
+  if (!receta.meds.length) return;
   if (recetaDuracion !== null) {
     const meses = Math.max(1, Math.round(recetaDuracion));
     receta.meses = meses;
@@ -1366,6 +1417,135 @@ function importarRayen(raw) {
   renderMedicamentos();
   computePRM();
   renderConciliacion();
+}
+
+function parseSSASUR(raw) {
+  if (!raw) return null;
+  const lines = raw
+    .split(/\r?\n/)
+    .map((l) => l.trim())
+    .filter(Boolean);
+  if (!lines.length) return null;
+
+  let fechaISO = new Date().toISOString().slice(0, 10);
+  const fechaMatch = raw.match(/Fecha\s+Digitaci[óo]n\s+(\d{2})\/(\d{2})\/(\d{4})/i);
+  if (fechaMatch) {
+    const [, dd, mm, yyyy] = fechaMatch;
+    fechaISO = `${yyyy}-${mm}-${dd}`;
+  }
+
+  let mesesHeader = null;
+  const mesesMatch = raw.match(/Tipo\s+Atenci[óo]n[^\n]*\((\d+)(?:\s*\/\s*(\d+))?\)/i);
+  if (mesesMatch) {
+    const parsed = parseInt(mesesMatch[1], 10);
+    if (!Number.isNaN(parsed) && parsed > 0) mesesHeader = parsed;
+  }
+
+  const entries = [];
+  let inPaciente = false;
+  let inPrescripcion = false;
+  let current = null;
+
+  for (const lineRaw of lines) {
+    const upper = lineRaw.toUpperCase();
+    if (/^PACIENTE\b/.test(upper)) {
+      inPaciente = true;
+      continue;
+    }
+    if (inPaciente) {
+      if (/^PRESCRIPCI[ÓO]N\b/.test(upper)) {
+        inPaciente = false;
+        inPrescripcion = true;
+      }
+      continue;
+    }
+    if (!inPrescripcion) {
+      if (/^PRESCRIPCI[ÓO]N\b/.test(upper)) {
+        inPrescripcion = true;
+      }
+      continue;
+    }
+    if (/^PRODUCTO\b/i.test(lineRaw) || /^CANTIDAD\b/i.test(lineRaw)) continue;
+    if (/^\d+\.-/.test(lineRaw)) {
+      if (current) entries.push(current);
+      const producto = lineRaw.replace(/^\d+\.-\s*/, "").trim();
+      current = { producto, poso: [] };
+    } else if (current) {
+      current.poso.push(lineRaw);
+    }
+  }
+  if (current) entries.push(current);
+
+  const receta = { id: uuid(), fechaISO, meds: [] };
+  let recetaDuracion = null;
+
+  entries.forEach((entry) => {
+    const nombreLimpio = limpiarNombreSSASUR(entry.producto);
+    const nombreNormalizado = normalizarNombre(nombreLimpio);
+    if (!nombreNormalizado) return;
+    const posoRaw = (entry.poso || []).join(" ").replace(/\s+/g, " ").trim();
+    const detalle = parseSSASURPosologia(posoRaw);
+    const candidatos = findSSASURCandidates(nombreNormalizado);
+    const picked = pickBestSku(candidatos, nombreNormalizado, detalle);
+    if (!picked) return;
+    if (typeof detalle.duracionMeses === "number" && !Number.isNaN(detalle.duracionMeses)) {
+      recetaDuracion =
+        recetaDuracion === null
+          ? detalle.duracionMeses
+          : Math.max(recetaDuracion, detalle.duracionMeses);
+    }
+    const payload = buildPayloadFromImport(picked, detalle);
+    payload.posologia = (payload.posologia || "").replace(/\s+/g, " ").trim();
+    if (!payload.posologia) payload.posologia = "SEGÚN INDICACIÓN";
+    receta.meds.push(payload);
+  });
+
+  if (!receta.meds.length) return null;
+  if (mesesHeader !== null) {
+    receta.meses = Math.max(1, mesesHeader);
+  } else if (recetaDuracion !== null) {
+    receta.meses = Math.max(1, Math.round(recetaDuracion));
+  }
+  return receta;
+}
+
+function limpiarNombreSSASUR(producto = "") {
+  let out = (producto || "").replace(/\s+/g, " ").trim();
+  out = out.replace(/\s+\d+$/, "").trim();
+  out = out.replace(/[,.;:]+$/, "").trim();
+  return out;
+}
+
+function parseSSASURPosologia(raw = "") {
+  const texto = raw || "";
+  const obsMatch = texto.match(/OBSERVACI[ÓO]N:\s*(.+)$/i);
+  const observacion = obsMatch ? obsMatch[1].trim() : null;
+  let base = texto.replace(/OBSERVACI[ÓO]N:\s*.+$/i, "").replace(/,\s*$/, "").trim();
+  const detalle = parseRayenPosologia(base);
+  let posologia = (detalle.posologia || "").replace(/\bVIA\s+[A-ZÁÉÍÓÚÑ ]+\b/gi, "");
+  posologia = posologia.replace(/\s+/g, " ").trim();
+  if (!posologia && observacion) {
+    const obsUpper = observacion
+      .toUpperCase()
+      .replace(/SEG[UÚ]N/g, "SEGÚN")
+      .replace(/INDICACION/g, "INDICACIÓN");
+    posologia = obsUpper.replace(/[,.;:]+$/, "").trim();
+  }
+  if (!posologia && /SEG[UÚ]N/i.test(texto)) {
+    posologia = "SEGÚN INDICACIÓN";
+  }
+  posologia = posologia.replace(/[,.;:]+$/, "").trim();
+  detalle.posologia = posologia;
+  return detalle;
+}
+
+function findSSASURCandidates(nombreNormalizado) {
+  const upper = nombreNormalizado || "";
+  const skus = state.medsDB?.skus || [];
+  const secundarios = skus.filter((sku) => sku.programas?.secundario);
+  const pool = secundarios.filter((sku) => upper.includes((sku.base || "").toUpperCase()));
+  if (pool.length) return pool;
+  return findRayenCandidates(nombreNormalizado);
 }
 
 function normalizarNombre(s = "") {
