@@ -22,23 +22,51 @@ export function evaluarCriterios({ perfil, meds, criterios }){
   return out;
 }
 
-export function evaluarInteracciones({ meds, interacciones }){
-  const out = [];
-  const set = new Set(meds);
-  // Pares directos
-  for(const p of interacciones.pares||[]){
-    if(set.has(p.a) && set.has(p.b)) out.push({ tipo:"interaccion", ...p });
-  }
-  // Por clase
-  const mapa = interacciones.mapas_clases||{};
-  const tieneC = (c)=>meds.some(m=>(mapa[c]||[]).includes(m));
-  for(const r of interacciones.clases||[]){
-    if(tieneC(r.claseA) && tieneC(r.claseB)) out.push({ tipo:"interaccion_clase", ...r });
-  }
-  // Riesgos compuestos
-  for(const k of interacciones.riesgos_compuestos||[]){
-    const cuenta = (k.incluye_clases||[]).filter(c=>tieneC(c)).length;
-    if(cuenta>=2) out.push({ tipo:"riesgo_compuesto", severidad:"alta", ...k });
-  }
-  return out;
+const normalizeMed = (txt = "") =>
+  txt
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+
+export function evaluarInteracciones({ meds, interacciones }) {
+  const medsSet = new Set((meds || []).map((m) => normalizeMed(m)).filter(Boolean));
+  const registros = Array.isArray(interacciones)
+    ? interacciones
+    : interacciones?.interacciones || [];
+
+  const resultados = [];
+
+  registros.forEach((registro, idx) => {
+    const gruposRaw = [registro.grupo_1, registro.grupo_2, registro.grupo_3].filter(Boolean);
+    if (!gruposRaw.length) return;
+
+    const gruposEvaluados = gruposRaw.map((grupo, index) => {
+      const nombreGrupo = grupo?.nombre || `Grupo ${index + 1}`;
+      const listaGrupo = Array.isArray(grupo?.medicamentos) ? grupo.medicamentos : [];
+      const normalizados = listaGrupo.map((nombre) => normalizeMed(nombre)).filter(Boolean);
+      const encontrados = normalizados.filter((nombre) => medsSet.has(nombre));
+      const encontradosUnicos = Array.from(new Set(encontrados));
+      return {
+        nombre: nombreGrupo,
+        medicamentos: listaGrupo,
+        encontrados: encontradosUnicos,
+      };
+    });
+
+    const todosPresentes = gruposEvaluados.every((g) => g.encontrados.length > 0);
+    if (!todosPresentes) return;
+
+    resultados.push({
+      tipo: registro.triple ? "interaccion_triple" : "interaccion",
+      descripcion: registro.comentario || "Interacción detectada.",
+      comentario: registro.comentario || "",
+      mecanismo: registro.mecanismo || "",
+      triple: !!registro.triple,
+      grupos: gruposEvaluados,
+      idx,
+    });
+  });
+
+  return resultados;
 }

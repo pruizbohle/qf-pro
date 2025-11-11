@@ -1697,6 +1697,29 @@ function getAllMeds(ficha) {
   return meds;
 }
 
+const normalizeBaseKey = (txt = "") =>
+  txt
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+
+function buildBaseDisplayMap(meds = []) {
+  const map = new Map();
+  meds.forEach((med) => {
+    const baseKey = normalizeBaseKey(med.base || med.nombre || "");
+    if (!baseKey) return;
+    const etiqueta = (med.nombre || med.base || "").toUpperCase();
+    if (!map.has(baseKey)) map.set(baseKey, new Set());
+    map.get(baseKey).add(etiqueta);
+  });
+  const plainMap = new Map();
+  map.forEach((value, key) => {
+    plainMap.set(key, Array.from(value));
+  });
+  return plainMap;
+}
+
 function detectarDuplicados(meds) {
   const mapa = new Map();
   meds.forEach((med) => {
@@ -1726,6 +1749,8 @@ function computePRM() {
   const meds = getAllMeds(ficha);
   const bases = Array.from(new Set(meds.map((m) => (m.base || "").toUpperCase()).filter(Boolean)));
   const resumen = [];
+  const baseDisplayMap = buildBaseDisplayMap(meds);
+  let prmInteraccionesEntries = [];
   
   const duplicados = detectarDuplicados(meds);
   if (duplicados.length) {
@@ -1794,12 +1819,50 @@ function computePRM() {
   if (state.interacciones) {
     const inter = evaluarInteracciones({ meds: bases, interacciones: state.interacciones });
     if (inter.length) {
+            const detalles = inter
+        .map((ix) => {
+          const gruposDetallados = (ix.grupos || []).map((g) => {
+            const medsEncontrados = (g.encontrados || []).flatMap((baseNorm) => {
+              const lista = baseDisplayMap.get(baseNorm) || [];
+              return lista.length ? lista : [baseNorm];
+            });
+            const unicos = Array.from(new Set(medsEncontrados));
+            return {
+              nombre: g.nombre,
+              meds: unicos,
+            };
+          });
+          const etiquetaGrupos = gruposDetallados
+            .map((g) => {
+              if (!g) return "";
+              if (g.meds?.length) return `${g.nombre} (${g.meds.join(", ")})`;
+              return g.nombre;
+            })
+            .filter(Boolean)
+            .join(" + ");
+          const comentario = ix.descripcion || ix.comentario || "Interacción detectada.";
+          const texto = etiquetaGrupos ? `${etiquetaGrupos} — ${comentario}` : comentario;
+          return { texto, grupos: gruposDetallados };
+        })
+        .sort((a, b) => a.texto.localeCompare(b.texto, "es", { sensitivity: "base" }));
+
       resumen.push({
         titulo: "Interacciones potenciales",
-        detalle: inter.map((i) => `• ${i.descripcion || `${i.a} + ${i.b}`}`).join("<br>") || "Revisar interacciones",
+        detalle: detalles.map((d) => `• ${d.texto}`).join("<br>") || "Revisar interacciones",
       });
+      
+      const hoy = new Date().toISOString().slice(0, 10);
+      prmInteraccionesEntries = detalles.map((d) => ({
+        tipo: "Interacción medicamentosa",
+        detalle: d.texto,
+        fecha: hoy,
+        auto: true,
+        autoSource: "interaccion",
+      }));
     }
   }
+  
+  syncAutoPRMEntries("interaccion", prmInteraccionesEntries);
   const out = $("#prm-auto");
   if (!out) return;
   if (!resumen.length) {
@@ -1815,6 +1878,20 @@ function computePRM() {
         </div>`
     )
     .join("");
+}
+
+function syncAutoPRMEntries(source, entries = []) {
+  if (!state.activeId) return;
+  const safeEntries = Array.isArray(entries) ? entries : [];
+  FichasStore.update(state.activeId, (f) => {
+    const actuales = Array.isArray(f.prm) ? f.prm : [];
+    const restantes = actuales.filter((item) => item?.autoSource !== source);
+    const siguiente = [...restantes, ...safeEntries];
+    const iguales = JSON.stringify(actuales) === JSON.stringify(siguiente);
+    if (!iguales) {
+      f.prm = siguiente;
+    }
+  });
 }
 
 /* ======= BOTONES AGREGAR RECETAS ======= */

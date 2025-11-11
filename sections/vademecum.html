@@ -40,74 +40,148 @@
   import { loadAll } from "../js/medStore.js";
   mountHeader();
 
-  const $q=document.getElementById('q'), $go=document.getElementById('go'), $list=document.getElementById('list');
-  const params=new URLSearchParams(location.search); if(params.get('q')) $q.value=params.get('q');
+  const $q = document.getElementById("q");
+  const $go = document.getElementById("go");
+  const $list = document.getElementById("list");
+  const params = new URLSearchParams(location.search);
+  if (params.get("q")) $q.value = params.get("q");
 
-  let DB=null;
+  let DB = null;
+  let INTERACCIONES = [];
 
-  function render(items){
-    const inter = DB.interacciones?.pairs || [];
+  const normalizar = (txt = "") =>
+    txt
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .trim();
+
+  function participaEnInteraccion(med, interaccion) {
+    const baseMed = normalizar(med.base || med.nombre || med.id || "");
+    if (!baseMed) return false;
+    const grupos = [interaccion.grupo_1, interaccion.grupo_2, interaccion.grupo_3].filter(Boolean);
+    return grupos.some((grupo) =>
+      (grupo?.medicamentos || []).some((nombre) => normalizar(nombre) === baseMed)
+    );
+  }
+
+  function renderInteraccionDetalle(interaccion) {
+    const grupos = [interaccion.grupo_1, interaccion.grupo_2, interaccion.grupo_3].filter(Boolean);
+    const titulo = grupos.map((g) => g?.nombre || "Grupo").join(" + ");
+    const listado = grupos
+      .map((g) => {
+        const meds = (g?.medicamentos || []).map((m) => m.toUpperCase()).join(", ");
+        return `${g?.nombre || "Grupo"}: ${meds}`;
+      })
+      .filter(Boolean)
+      .join(" · ");
+    const comentario = interaccion.comentario ? `<div>${interaccion.comentario}</div>` : "";
+    const mecanismo = interaccion.mecanismo
+      ? `<div class="muted" style="margin-top:4px">${interaccion.mecanismo}</div>`
+      : "";
+    const gruposTexto = listado
+      ? `<div class="muted" style="margin-top:6px;font-size:12px;">Incluye: ${listado}</div>`
+      : "";
+    return `
+      <li class="card">
+        <div><b>${titulo}</b></div>
+        ${comentario}
+        ${mecanismo}
+        ${gruposTexto}
+      </li>`;
+  }
+
+  function render(items) {
     const beers = DB.criterios?.beers || [];
     const stopp = DB.criterios?.stopp || [];
 
-    $list.innerHTML = items.map(m=>{
-      // Interacciones que involucren este fármaco
-      const ix = inter.filter(p => p.a===m.id || p.b===m.id);
-      // Criterios que lo mencionen
-      const cb = beers.filter(c => (c.afecta||[]).includes(m.id));
-      const cs = stopp.filter(c => (c.afecta||[]).includes(m.id));
+    $list.innerHTML =
+      items
+        .map((m) => {
+          const ix = INTERACCIONES.filter((registro) => participaEnInteraccion(m, registro));
+          const cb = beers.filter((c) => (c.afecta || []).includes(m.id));
+          const cs = stopp.filter((c) => (c.afecta || []).includes(m.id));
 
-      return `
+          return `
       <div class="card">
         <div class="row" style="justify-content:space-between">
           <div>
             <b>${m.nombre}</b>
-            ${(m.aware?`<span class="pill">${m.aware}</span>`:'')}
+            ${(m.aware ? `<span class="pill">${m.aware}</span>` : "")}
           </div>
-          <div class="muted">${(m.etiquetas||[]).join(", ")}</div>
+          <div class="muted">${(m.etiquetas || []).join(", ")}</div>
         </div>
 
-        ${ix.length ? `
+        ${ix.length
+          ? `
           <div style="margin-top:8px">
             <div class="muted">Interacciones relevantes:</div>
             <ul class="list" style="margin-top:6px">
-              ${ix.map(p=>{
-                const otra = (p.a===m.id) ? p.b : p.a;
-                const nOtra = DB.meds[otra]?.nombre || otra;
-                return `<li class="card">
-                  <div><b>${nOtra}</b> — <span class="pill">${p.severidad}</span></div>
-                  <div class="muted">${p.mecanismo}</div>
-                  <div>${p.recomendacion}</div>
-                </li>`;
-              }).join("")}
+              ${ix.map((registro) => renderInteraccionDetalle(registro)).join("")}
             </ul>
-          </div>` : ``}
+          </div>`
+          : ""}
 
-        ${(cb.length||cs.length) ? `
+        ${(cb.length || cs.length)
+          ? `
           <div style="margin-top:8px">
             <div class="muted">Criterios STOPP/Beers:</div>
             <ul class="list" style="margin-top:6px">
-              ${cb.map(c=>`<li class="card"><b>Beers:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`).join("")}
-              ${cs.map(c=>`<li class="card"><b>STOPP:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`).join("")}
+              ${cb
+                .map(
+                  (c) =>
+                    `<li class="card"><b>Beers:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`
+                )
+                .join("")}
+              ${cs
+                .map(
+                  (c) =>
+                    `<li class="card"><b>STOPP:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`
+                )
+                .join("")}
             </ul>
-          </div>` : ``}
+          </div>`
+          : ""}
       </div>`;
-    }).join('') || '<div class="card muted">— sin resultados —</div>';
+        })
+        .join("") || '<div class="card muted">— sin resultados —</div>';
   }
 
-  loadAll().then(db=>{
-    DB=db;
-    const all=Object.values(DB.meds);
-    render(all);
-    if($q.value) $go.click();
-  });
+  async function init() {
+    try {
+      const [db, interData, criterios] = await Promise.all([
+        loadAll(),
+        fetch("../data/interacciones.json")
+          .then((r) => r.json())
+          .catch(() => ({ interacciones: [] })),
+        fetch("../data/criterios.json")
+          .then((r) => r.json())
+          .catch(() => null),
+      ]);
 
-  $go.onclick=()=>{
-    const txt=($q.value||'').toLowerCase();
-    const res=Object.values(DB.meds).filter(m=>
-      m.nombre.toLowerCase().includes(txt) ||
-      (m.etiquetas||[]).some(t=>t.toLowerCase().includes(txt)) ||
-      m.id.toLowerCase().includes(txt)
+      DB = db || { meds: {} };
+      if (criterios) DB.criterios = criterios;
+      INTERACCIONES = Array.isArray(interData)
+        ? interData
+        : interData?.interacciones || [];
+
+      const all = Object.values(DB.meds || {});
+      render(all);
+      if ($q.value) $go.click();
+    } catch (err) {
+      console.error("❌ Error inicializando vademécum:", err);
+    }
+  }
+
+  init();
+
+  $go.onclick = () => {
+    const txt = ($q.value || "").toLowerCase();
+    const res = Object.values(DB.meds || {}).filter(
+      (m) =>
+        m.nombre.toLowerCase().includes(txt) ||
+        (m.etiquetas || []).some((t) => t.toLowerCase().includes(txt)) ||
+        m.id.toLowerCase().includes(txt)
     );
     render(res);
   };
