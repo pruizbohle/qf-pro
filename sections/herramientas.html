@@ -327,52 +327,126 @@ mountHeader();
 
 /* ===== Navegación: grupos principales ===== */
 const mainBtns = document.querySelectorAll('#grp-main .btn-toggle');
-mainBtns.forEach(b => b.addEventListener('click', () => {
-  mainBtns.forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  document.querySelectorAll('.tool-group').forEach(div => div.classList.add('hidden'));
-  document.getElementById(b.dataset.target).classList.remove('hidden');
-}));
+function activateMainGroup(targetId){
+  if(!targetId) return;
+  mainBtns.forEach(btn => btn.classList.toggle('active', btn.dataset.target===targetId));
+  document.querySelectorAll('.tool-group').forEach(div => {
+    div.classList.toggle('hidden', div.id !== targetId);
+  });
+}
+mainBtns.forEach(b => b.addEventListener('click', () => activateMainGroup(b.dataset.target)));
 
 /* ===== Subpestañas: Adherencia ===== */
 const adhTabs = document.querySelectorAll('#adh-tabs .btn-toggle');
-adhTabs.forEach(b => b.addEventListener('click', () => {
-  adhTabs.forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  document.querySelectorAll('#adh .tool-card').forEach(c => c.classList.add('hidden'));
-  document.getElementById(b.dataset.sub).classList.remove('hidden');
-}));
+function activateAdhTab(subId){
+  if(!subId) return;
+  adhTabs.forEach(btn => btn.classList.toggle('active', btn.dataset.sub===subId));
+  document.querySelectorAll('#adh .tool-card').forEach(card => {
+    card.classList.toggle('hidden', card.id !== subId);
+  });
+}
+adhTabs.forEach(b => b.addEventListener('click', () => activateAdhTab(b.dataset.sub)));
 
 /* ===== Subpestañas: Calculadoras ===== */
 const calcTabs = document.querySelectorAll('#calc-tabs .btn-toggle');
-calcTabs.forEach(b => b.addEventListener('click', () => {
-  calcTabs.forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  document.querySelectorAll('#calc .tool-card').forEach(c => c.classList.add('hidden'));
-  document.getElementById(b.dataset.sub).classList.remove('hidden');
-}));
+function activateCalcTab(subId){
+  if(!subId) return;
+  calcTabs.forEach(btn => btn.classList.toggle('active', btn.dataset.sub===subId));
+  document.querySelectorAll('#calc .tool-card').forEach(card => {
+    card.classList.toggle('hidden', card.id !== subId);
+  });
+}
+calcTabs.forEach(b => b.addEventListener('click', () => activateCalcTab(b.dataset.sub)));
 
 /* ===== Subpestañas: Dosis pediátricas ===== */
 const pedTabs = document.querySelectorAll('#ped-tabs .btn-toggle');
-pedTabs.forEach(b => b.addEventListener('click', () => {
-  pedTabs.forEach(x => x.classList.remove('active'));
-  b.classList.add('active');
-  document.querySelectorAll('#calc-ped .tool-card-inner').forEach(c => c.classList.add('hidden'));
-  document.getElementById(b.dataset.sub).classList.remove('hidden');
-}));
+function activatePedTab(subId){
+  if(!subId) return;
+  pedTabs.forEach(btn => btn.classList.toggle('active', btn.dataset.sub===subId));
+  document.querySelectorAll('#calc-ped .tool-card-inner').forEach(card => {
+    card.classList.toggle('hidden', card.id !== subId);
+  });
+}
+pedTabs.forEach(b => b.addEventListener('click', () => activatePedTab(b.dataset.sub)));
 
 /* ===== Modo ficha ===== */
 const $modo=document.getElementById('modo'), $sel=document.getElementById('sel-ficha'), $out=document.getElementById('out');
-function refreshFichas(){ $sel.innerHTML=FichasStore.list().map(f=>`<option>${f.id}</option>`).join(""); }
-$modo.onchange=()=>{ $sel.style.display=$modo.value==='ficha'?'inline-block':'none'; if($modo.value==='ficha') refreshFichas(); };
+function refreshFichas(){
+  if(!$sel) return;
+  const lista = FichasStore.list();
+  const prev = $sel.value;
+  $sel.innerHTML = lista.map(f=>`<option value="${f.id}">${f.id}</option>`).join("");
+  if(prev && lista.some(f=>f.id===prev)){
+    $sel.value = prev;
+  }else if(!$sel.value && lista.length){
+    $sel.value = lista[0].id;
+  }
+}
+function toggleFichaSelect(visible){
+  if(!$sel) return;
+  $sel.style.display = visible ? 'inline-block' : 'none';
+  if(visible) refreshFichas();
+}
+$modo.addEventListener('change', ()=>{
+  toggleFichaSelect($modo.value==='ficha');
+});
+toggleFichaSelect($modo?.value==='ficha');
+
+const defaultMain = document.querySelector('#grp-main .btn-toggle.active')?.dataset.target || mainBtns[0]?.dataset.target;
+if(defaultMain) activateMainGroup(defaultMain);
+const defaultAdh = document.querySelector('#adh-tabs .btn-toggle.active')?.dataset.sub;
+if(defaultAdh) activateAdhTab(defaultAdh);
+const defaultCalc = document.querySelector('#calc-tabs .btn-toggle.active')?.dataset.sub;
+if(defaultCalc) activateCalcTab(defaultCalc);
+const defaultPed = document.querySelector('#ped-tabs .btn-toggle.active')?.dataset.sub;
+if(defaultPed) activatePedTab(defaultPed);
+
+function initFromQuery(){
+  const params = new URLSearchParams(window.location.search);
+  const group = params.get('group');
+  const tool = params.get('tool');
+  const ficha = params.get('ficha');
+  if(group) activateMainGroup(group);
+  if(tool){
+    if(tool.startsWith('adh-')) activateAdhTab(tool);
+    else if(tool.startsWith('calc-')) activateCalcTab(tool);
+    else if(tool.startsWith('ped-')) activatePedTab(tool);
+  }
+  if(ficha && $sel){
+    $modo.value = 'ficha';
+    toggleFichaSelect(true);
+    refreshFichas();
+    const opciones = Array.from($sel.options||[]);
+    const match = opciones.find(opt=>opt.value===ficha);
+    if(match){
+      $sel.value = ficha;
+    }else if(!$sel.value && opciones.length){
+      $sel.value = opciones[0].value;
+    }
+  }
+}
+
+initFromQuery();
 
 /* ===== Guardado ===== */
 function saveResult(kind, tipo, resultado){
   if($modo.value!=='ficha'||!$sel.value) return;
+  const upperTipo = (tipo||'').toUpperCase();
   if(kind==='calc'){
-    FichasStore.update($sel.value, f => f.calculos.push({ tipo, resultado, fecha: Date.now(), asociado:true }));
+    FichasStore.update($sel.value, f => {
+      f.calculos = Array.isArray(f.calculos) ? f.calculos : [];
+      f.calculos.push({ tipo, resultado, fecha: Date.now(), asociado:true });
+      if(upperTipo==='PDC'){
+        f.anamnesis = f.anamnesis || {};
+        f.anamnesis.adherencia = f.anamnesis?.adherencia || {};
+        f.anamnesis.adherencia.pdc = resultado;
+      }
+    });
   }else{
-    FichasStore.update($sel.value, f => f.tests.push({ tipo, resultado, fecha: Date.now(), asociado:true }));
+    FichasStore.update($sel.value, f => {
+      f.tests = Array.isArray(f.tests) ? f.tests : [];
+      f.tests.push({ tipo, resultado, fecha: Date.now(), asociado:true });
+    });
   }
   $out.innerHTML = `<div class="card">💾 Guardado en ficha ${$sel.value}: ${resultado}</div>` + $out.innerHTML;
 }

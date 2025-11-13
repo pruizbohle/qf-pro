@@ -223,6 +223,7 @@ function noFichaState() {
     if (el) el.innerHTML = html;
   });
   renderAntecedentes();
+  renderHerramientas();
 }
 
 function setupAutosaveIndicator() {
@@ -417,6 +418,7 @@ function openFicha(id) {
   renderAntecedentes();
   renderMedicamentos();
   renderConciliacion();
+  renderHerramientas();
   renderErrores();
   renderEA();
   computePRM();
@@ -549,6 +551,7 @@ function setupAntecedentes() {
   const antIam = $("#ant-iamacv");
   const antErc = $("#ant-erc");
   const antEmb = $("#ant-embarazo");
+  const antPdcBtn = $("#ant-pdc-btn");
 
   antIam?.addEventListener("change", (e) => {
     if (!state.activeId) return;
@@ -568,6 +571,19 @@ function setupAntecedentes() {
     setAntecedenteFlag("embarazo", !!e.target.checked);
     renderAntecedentes();
   });
+  
+  antPdcBtn?.addEventListener("click", () => {
+    if (!state.activeId) {
+      alert("Abre una ficha primero.");
+      return;
+    }
+    const params = new URLSearchParams({
+      group: "adh",
+      tool: "adh-pdc",
+      ficha: state.activeId,
+    });
+    window.location.href = `../sections/herramientas.html?${params.toString()}`;
+  });
 }
 
 function renderAntecedentes() {
@@ -576,11 +592,20 @@ function renderAntecedentes() {
   const antIam = $("#ant-iamacv");
   const antErc = $("#ant-erc");
   const antEmb = $("#ant-embarazo");
+  const antPdcPill = $("#ant-pdc-pill");
+  const antPdcEmpty = $("#ant-pdc-empty");
   host.innerHTML = "";
     if (!state.activeId) {
     if (antIam) antIam.checked = false;
     if (antErc) antErc.checked = false;
     if (antEmb) antEmb.checked = false;
+        if (antPdcPill) {
+      antPdcPill.textContent = "";
+      antPdcPill.style.display = "none";
+    }
+    if (antPdcEmpty) {
+      antPdcEmpty.style.display = "inline";
+    }
     return;
   }
   const ficha = FichasStore.get(state.activeId);
@@ -588,6 +613,14 @@ function renderAntecedentes() {
   if (antIam) antIam.checked = !!flags.antIAMACV;
   if (antErc) antErc.checked = !!flags.erc;
   if (antEmb) antEmb.checked = !!flags.embarazo;
+  const pdcTxt = ficha?.anamnesis?.adherencia?.pdc || "";
+  if (antPdcPill) {
+    antPdcPill.textContent = pdcTxt;
+    antPdcPill.style.display = pdcTxt ? "inline-flex" : "none";
+  }
+  if (antPdcEmpty) {
+    antPdcEmpty.style.display = pdcTxt ? "none" : "inline";
+  }
   (ficha?.anamnesis?.antecedentes || []).forEach((val) => {
     const chip = document.createElement("span");
     chip.className = "chip";
@@ -607,6 +640,44 @@ function renderAntecedentes() {
     chip.appendChild(close);
     host.appendChild(chip);
   });
+}
+
+function renderHerramientas() {
+  const host = $("#herr-out");
+  if (!host) return;
+  if (!state.activeId) {
+    host.innerHTML = '<div class="muted">— sin ficha —</div>';
+    return;
+  }
+  const ficha = FichasStore.get(state.activeId);
+  const tests = Array.isArray(ficha?.tests) ? ficha.tests : [];
+  const calculos = Array.isArray(ficha?.calculos) ? ficha.calculos : [];
+  const items = [
+    ...tests.map((item) => ({ ...item, kind: "Test" })),
+    ...calculos.map((item) => ({ ...item, kind: "Cálculo" })),
+  ].filter((item) => item && (item.resultado || item.tipo));
+  if (!items.length) {
+    host.innerHTML = '<div class="muted">— sin resultados aún —</div>';
+    return;
+  }
+  items.sort((a, b) => (b?.fecha || 0) - (a?.fecha || 0));
+  host.innerHTML = items
+    .map((item) => {
+      const tipo = escapeHtml(item?.tipo || item?.kind || "Herramienta");
+      const res = escapeHtml(item?.resultado || "");
+      const fecha = item?.fecha ? fmt(item.fecha) : null;
+      const badge = item?.kind ? item.kind : "";
+      const meta = fecha || badge
+        ? `<div class="muted" style="margin-top:4px">${[badge, fecha].filter(Boolean).join(" · ")}</div>`
+        : "";
+      return `
+        <div class="muted-card">
+          <strong>${tipo}</strong>
+          <div style="margin-top:6px">${res || ""}</div>
+          ${meta}
+        </div>`;
+    })
+    .join("");
 }
 
 /* ======= CONCILIACIÓN / ERRORES ======= */

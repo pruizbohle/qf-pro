@@ -60,6 +60,9 @@ export const FichasStore = {
           erc: false,
           embarazo: false
         },
+                adherencia: {
+          pdc: "",
+        },
         motivo: [],                      // ["adh","educ","ea"]
         textoLibre: "",
         terapia: {
