@@ -826,6 +826,7 @@ function renderRecetas(kind, selector) {
     const fecha = node.querySelector(".rec-fecha");
     const meses = node.querySelector(".rec-meses");
     const del = node.querySelector(".rec-del");
+    const originPill = node.querySelector(".rec-origin-pill");
     const segBox = node.querySelector(".seg-box");
     const list = node.querySelector(".seg-list");
     if (fecha) {
@@ -845,6 +846,16 @@ function renderRecetas(kind, selector) {
           if (r) r.meses = Math.max(1, parseInt(meses.value || "1", 10));
         });
       });
+    }
+        if (originPill) {
+      const label = kind === "secRecetas" ? rec.origenLabel || rec.origenEstablecimiento : null;
+      if (label) {
+        originPill.textContent = label;
+        originPill.style.display = "inline-flex";
+      } else {
+        originPill.style.display = "none";
+        originPill.textContent = "";
+      }
     }
     if (del) {
       del.addEventListener("click", () => {
@@ -1508,7 +1519,8 @@ function parseSSASUR(raw) {
   let mesesHeader = null;
   const mesesMatch = raw.match(/Tipo\s+Atenci[óo]n[^\n]*\((\d+)(?:\s*\/\s*(\d+))?\)/i);
   if (mesesMatch) {
-    const parsed = parseInt(mesesMatch[1], 10);
+    const rawValor = mesesMatch[2] || mesesMatch[1];
+    const parsed = parseInt(rawValor, 10);
     if (!Number.isNaN(parsed) && parsed > 0) mesesHeader = parsed;
   }
 
@@ -1548,6 +1560,8 @@ function parseSSASUR(raw) {
   if (current) entries.push(current);
 
   const receta = { id: uuid(), fechaISO, meds: [] };
+  const origenLabel = buildSSASUREstablecimientoLabel(raw);
+  if (origenLabel) receta.origenLabel = origenLabel;
   let recetaDuracion = null;
 
   entries.forEach((entry) => {
@@ -1578,6 +1592,26 @@ function parseSSASUR(raw) {
     receta.meses = Math.max(1, Math.round(recetaDuracion));
   }
   return receta;
+}
+
+function buildSSASUREstablecimientoLabel(raw = "") {
+  if (!raw) return null;
+  const match = raw.match(/Establecimiento\s+([^\n]+)/i);
+  if (!match) return null;
+  let value = (match[1] || "").replace(/^[:\-\s]+/, "").trim();
+  if (!value) return null;
+  value = value.replace(/\s+/g, " ").trim();
+  const upper = value.toUpperCase();
+  if (upper.includes("CAPLC")) {
+    return "Establecimiento COMPLEJO ASISTENCIAL PADRE LAS CASAS";
+  }
+  if (upper.includes("IMPERIAL HOSP")) {
+    return "Establecimiento IMPERIAL HOSP.";
+  }
+  if (upper.includes("TEMUCO HOSP")) {
+    return "Establecimiento TEMUCO HOSP.";
+  }
+  return `Establecimiento ${value}`.replace(/\s+/g, " ").trim();
 }
 
 function limpiarNombreSSASUR(producto = "") {
