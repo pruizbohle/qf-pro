@@ -1611,10 +1611,10 @@ function parseSSASURPosologia(raw = "") {
 }
 
 function findSSASURCandidates(nombreNormalizado) {
-  const upper = nombreNormalizado || "";
+  const upper = normalizarNombre(nombreNormalizado || "");
   const skus = state.medsDB?.skus || [];
   const secundarios = skus.filter((sku) => sku.programas?.secundario);
-  const pool = secundarios.filter((sku) => upper.includes((sku.base || "").toUpperCase()));
+  const pool = secundarios.filter((sku) => matchesNombreTokens(upper, sku));
   if (pool.length) return pool;
   return findRayenCandidates(nombreNormalizado);
 }
@@ -1622,9 +1622,15 @@ function findSSASURCandidates(nombreNormalizado) {
 function normalizarNombre(s = "") {
   return s
     .toUpperCase()
-    .replace(/[().,:]/g, " ")
+    .replace(/[().,:\/+\-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
+}
+
+function tokenizarNombre(s = "") {
+  return normalizarNombre(s)
+    .split(" ")
+    .filter((tok) => tok && tok.length > 2 && !/^\d+(?:\.\d+)?$/.test(tok));
 }
 
 function buildPayloadFromImport(sku, detalle = {}) {
@@ -1652,9 +1658,22 @@ function buildPayloadFromImport(sku, detalle = {}) {
 }
 
 function findRayenCandidates(nombreNormalizado) {
-  const upper = nombreNormalizado || "";
+  const upper = normalizarNombre(nombreNormalizado || "");
   const skus = state.medsDB?.skus || [];
-  return skus.filter((sku) => upper.includes((sku.base || "").toUpperCase()));
+  return skus.filter((sku) => matchesNombreTokens(upper, sku));
+}
+
+function matchesNombreTokens(upperNombre, sku) {
+  if (!upperNombre) return false;
+  const baseTokens = tokenizarNombre(sku.base || "");
+  if (baseTokens.length && baseTokens.every((tok) => upperNombre.includes(tok))) {
+    return true;
+  }
+  const nombreTokens = tokenizarNombre(sku.nombre || "");
+  if (nombreTokens.length && nombreTokens.every((tok) => upperNombre.includes(tok))) {
+    return true;
+  }
+  return false;
 }
 
 function pickBestSku(candidatos, nombreNormalizado, detalle) {
