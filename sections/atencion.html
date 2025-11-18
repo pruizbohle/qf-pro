@@ -148,10 +148,13 @@
         <!-- ====== PANELS DE CONTENIDO ====== -->
         <div id="panel-ante" data-panel class="card">
           <div class="seg-title">ANTECEDENTES</div>
-          <div class="row">
-            <input id="ant-input" list="ant-suggest" placeholder="Escribe un antecedente y presiona Enter…"/>
-            <datalist id="ant-suggest"></datalist>
-            <div id="ant-list" class="row" style="gap:6px"></div>
+          <div class="row" style="gap:8px;align-items:flex-start;flex-wrap:wrap;">
+            <div class="col" style="flex:1;min-width:260px;gap:6px;">
+              <input id="ant-input" list="ant-suggest" placeholder="Escribe un antecedente y presiona Enter…"/>
+              <datalist id="ant-suggest"></datalist>
+              <div id="ant-list" class="row" style="gap:6px"></div>
+            </div>
+            <button id="btn-import-dx-rayen" class="btn mini" style="align-self:center">Importar dx Rayen</button>
           </div>
           <div class="row" style="gap:12px;margin-top:8px">
             <label class="pick mini"><input type="checkbox" id="ant-iamacv"> ANT IAM/ACV</label>
@@ -345,6 +348,18 @@
     <div class="row-end" style="margin-top:12px">
       <button id="ssasur-cancel" class="btn mini" style="border-color:#ef4444;color:#ef4444;background:transparent">Cancelar</button>
       <button id="ssasur-process" class="btn">Procesar</button>
+    </div>
+  </div>
+</div>
+
+<div id="import-rayen-dx-modal" class="modal">
+  <div class="modal-card">
+    <h3>Importar diagnósticos desde Rayen</h3>
+    <p class="muted" style="margin-top:4px">Pega el listado de diagnósticos y se convertirán en los chips usados por la aplicación.</p>
+    <textarea id="rayen-dx-input" rows="10" style="width:100%;margin-top:12px;background:#0b1120;color:#e2e8f0;border:1px solid rgba(148,163,184,.35);border-radius:12px;padding:10px" placeholder="Pega aquí los diagnósticos copiados desde Rayen…"></textarea>
+    <div class="row-end" style="margin-top:12px">
+      <button id="rayen-dx-cancel" class="btn mini" style="border-color:#ef4444;color:#ef4444;background:transparent">Cancelar</button>
+      <button id="rayen-dx-process" class="btn">Procesar</button>
     </div>
   </div>
 </div>

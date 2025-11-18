@@ -52,13 +52,17 @@ const ANT_SUG = [
   "HTA",
   "DM2 IR",
   "DM2 NIR",
+  "ARTROSIS",
+  "AR",
   "DLP",
+  "IC",
   "HIPOT4",
   "ERC",
-  "POLIARTROSIS",
   "OB",
   "TR SUEÑO",
   "TR DEPRESIVO",
+  "TR ANSIOSO",
+  "TR MIXTO",
 ];
 
 const state = {
@@ -86,13 +90,14 @@ init();
 
 async function init() {
   mountHeader();
-    setupAutosaveIndicator();
+  setupAutosaveIndicator();
 
   setupTabs();
     noFichaState();
   setupTipoAtencion();
   setupCrearFicha();
   setupAntecedentes();
+  setupRayenDxImporter();
   setupConciliacion();
   setupErrores();
 
@@ -639,6 +644,105 @@ function renderAntecedentes() {
     });
     chip.appendChild(close);
     host.appendChild(chip);
+  });
+}
+
+const DX_PATTERNS = [
+  { regex: /HIPERTENSI/i, chip: "HTA" },
+  { regex: /DIABETES[^\n]*INSULINODEP/i, chip: "DM2 IR" },
+  { regex: /DIABETES[^\n]*(NO\s+INSULIN|NIR)/i, chip: "DM2 NIR" },
+  { regex: /DIABETES/i, chip: "DM2 NIR" },
+  { regex: /INSUFICIENCIA\s+CARDIAC/i, chip: "IC" },
+  { regex: /HIPOTIROID/i, chip: "HIPOT4" },
+  { regex: /DISLIPID|TRIGLICERID|COLESTER|HIPERTRIG/i, chip: "DLP" },
+  { regex: /ARTROSIS|GONARTROSIS|COXARTROSIS|OSTEOARTROSIS|POLIARTROSIS/i, chip: "ARTROSIS" },
+  { regex: /ARTRITIS\s+REUMATOID/i, chip: "AR" },
+  { regex: /SUEÑO|INSOMNIO/i, chip: "TR SUEÑO" },
+  { regex: /DEPRESI/i, chip: "TR DEPRESIVO" },
+  { regex: /ANSIEDAD|ANSIOS/i, chip: "TR ANSIOSO" },
+  { regex: /MIXT/i, chip: "TR MIXTO" },
+];
+
+function mapRayenDxToChip(diag = "") {
+  for (const { regex, chip } of DX_PATTERNS) {
+    if (regex.test(diag)) return chip;
+  }
+  return null;
+}
+
+function parseRayenDiagnosticos(raw = "") {
+  const lines = raw
+    .split("\n")
+    .map((l) => l.trim())
+    .filter(Boolean);
+  const chips = new Set();
+  let hasFA = false;
+  for (const line of lines) {
+    const clean = line.replace(/^\(?\d+\)?\s*/, "");
+    const diag = clean
+      .replace(/\([^)]*\)/g, " ")
+      .replace(/[.,;:]+/g, " ")
+      .replace(/\s+/g, " ")
+      .trim();
+    if (!diag) continue;
+    if (/FIBRILACION|ALETEO\s+AURIC|\bFA\b/i.test(diag)) {
+      hasFA = true;
+    }
+    const chip = mapRayenDxToChip(diag.toUpperCase());
+    if (chip) chips.add(chip);
+  }
+  if (hasFA && chips.has("IC")) {
+    chips.delete("IC");
+    chips.add("IC x FA");
+  }
+  return Array.from(chips);
+}
+
+function setupRayenDxImporter() {
+  const btn = $("#btn-import-dx-rayen");
+  const modal = $("#import-rayen-dx-modal");
+  const area = $("#rayen-dx-input");
+  const cancel = $("#rayen-dx-cancel");
+  const process = $("#rayen-dx-process");
+  btn?.addEventListener("click", () => {
+    if (!state.activeId) {
+      alert("Abre una ficha primero.");
+      return;
+    }
+    if (modal) modal.style.display = "flex";
+  });
+  cancel?.addEventListener("click", () => {
+    if (modal) modal.style.display = "none";
+    if (area) area.value = "";
+  });
+  process?.addEventListener("click", () => {
+    if (!state.activeId) {
+      alert("Abre una ficha primero.");
+      return;
+    }
+    const raw = area?.value.trim();
+    if (!raw) {
+      alert("Pega el listado de Rayen para procesar.");
+      return;
+    }
+    const chips = parseRayenDiagnosticos(raw);
+    if (!chips.length) {
+      alert("No se encontraron diagnósticos reconocibles en el texto pegado.");
+      return;
+    }
+    FichasStore.update(state.activeId, (f) => {
+      f.anamnesis = f.anamnesis || { antecedentes: [] };
+      const arr = f.anamnesis.antecedentes || [];
+      chips.forEach((chip) => {
+        if (!arr.includes(chip)) arr.push(chip);
+      });
+      f.anamnesis.antecedentes = arr;
+    });
+    renderAntecedentes();
+    computePRM();
+    if (modal) modal.style.display = "none";
+    if (area) area.value = "";
+    alert(`Diagnósticos importados: ${chips.join(", ")}`);
   });
 }
 
@@ -2070,16 +2174,6 @@ function computePRM() {
     });
   }
 
-  if (ficha.age65 && state.criterios) {
-    const criterios = evaluarCriterios({ perfil: { edad: 70 }, meds: bases, criterios: state.criterios });
-    if (criterios.length) {
-      resumen.push({
-        titulo: "Criterios clínicos",
-        detalle: criterios.map((c) => `• ${c.nombre || c.descripcion || "Criterio"}`).join("<br>") || "Revisar criterios",
-      });
-    }
-  }
-  
   if (ficha.age65) {
     const ppiMeds = meds.filter((m) => m.flags?.ppi);
     if (ppiMeds.length) {
