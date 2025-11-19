@@ -54,61 +54,108 @@
 
   const mapAnt = x => x; // ya vienen en bonito: HTA, DM2 IR, etc.
 
-  function paraAnam(f){
-    const sym = f.sexo==='F'?'♀️':(f.sexo==='M'?'♂️':'');
-    const datos = [];
-    datos.push(`Paciente ${sym||''}${f.age65?' (+65)':''}`.trim());
-    datos.push(`asiste ${f.datos.acompana}`);
-    if(f.datos.convive==='con' && f.datos.conQuien) datos.push(`vive con ${f.datos.conQuien}`); else datos.push(`vive ${f.datos.convive}`);
-    datos.push(`en sector ${f.datos.sector}`);
-    if(f.datos.jubilacion) datos.push(`jubilado ${f.datos.jubilacion}`);
-    if(f.datos.ocupacion) datos.push(`se desempeñó como ${f.datos.ocupacion}`);
-    if(f.datos.analfabeto) datos.push(`analfabeto`);
-    if(f.datos.dependienteSevero) datos.push(`dependiente severo`);
-    if(f.datos.ayudasTecnicas) datos.push(`usa ayudas técnicas`);
-    const lineaDatos = datos.filter(Boolean).join(", ") + ".";
+  const lineDiagnosticos = (f) => {
+    const diag = f.anamnesis.antecedentes?.length
+      ? f.anamnesis.antecedentes.map(mapAnt).join(", ")
+      : "sin registro";
+    return `- Usuario con diagnósticos de ${diag}.`;
+  };
 
-    const ant = f.anamnesis.antecedentes?.length ? `Antecedentes: ${f.anamnesis.antecedentes.map(mapAnt).join(", ")}.` : "";
-    const mot = f.anamnesis.motivo?.length ? `Motivo: ${f.anamnesis.motivo.map(m=> m==='adh'?'evaluación de adherencia':(m==='educ'?'educación':'evaluación de reacción adversa')).join(", ")}.` : "";
+  const lineAntecedentesRelevantes = (f) => {
+    const flags = f.anamnesis.flags || {};
+    const lista = [];
+    if (flags.antIAMACV) lista.push("IAM/ACV");
+    if (flags.erc) lista.push("ERC");
+    if (!lista.length) return "";
+    return `- Usuario con antecedentes de ${lista.join(", ")}.`;
+  };
 
-    const t=f.anamnesis.terapia||{};
-    const t1 = `Respecto a la terapia: ${t.carga==='muchos'?'cree que toma muchos':'toma una cantidad apropiada'} medicamentos; ${t.abandono==='deja'?'deja':'no deja'} de tomarlos si se siente bien/mal.`;
-    const t2 = `${t.patologiaPrior?`Lo que más le preocupa es ${t.patologiaPrior}. `:""}${t.medicamentoPrior?`Prioriza ${t.medicamentoPrior}. `:""}`.trim();
-    const t3 = `Conocimiento: nombres ${trad(t.conoceNombres)}, posología ${trad2(t.conocePosologia)}, indicaciones ${trad2(t.conoceIndicaciones)}.`;
+  const linePDC = (f) => {
+    const pdc = f.anamnesis.adherencia?.pdc || "sin registro";
+    return `- Adherencia según PDC: ${pdc}.`;
+  };
 
-    const notas = f.anamnesis.textoLibre ? `Notas: ${f.anamnesis.textoLibre}` : "";
-
-    return [lineaDatos, ant, mot, t1, t2, t3, notas].filter(Boolean).join("\n");
-  }
-  function trad(v){ return v==='conoce'?'conoce':(v==='algunos'?'conoce algunos':'no conoce'); }
-  function trad2(v){ return v==='conoce'?'conoce':(v==='moderado'?'conoce moderadamente':'no conoce'); }
-
-  function paraMeds(f){
-    const seg = (name, arr)=> arr?.length ? `${name}: ${arr.map(x=>`${x.nombre}${x.presentacion?' '+x.presentacion:''}${x.posologia?' · '+x.posologia:''}`).join("; ")}.` : "";
-    const s1=seg("APS", f.meds.aps), s2=seg("Secundario", f.meds.secundario), s3=seg("Extrasistema", f.meds.extra);
-    const s4 = f.meds.automed?.length ? `Automedicación: ${f.meds.automed.map(x=>x.texto).join("; ")}.` : "";
-    const s5 = f.meds.plantas?.length ? `Plantas: ${f.meds.plantas.map(x=>x.nombre).join("; ")}.` : "";
-    return [s1,s2,s3,s4,s5].filter(Boolean).join("\n");
+  function paraAntecedentes(f) {
+    const lines = [
+      "ANTECEDENTES",
+      lineDiagnosticos(f),
+      lineAntecedentesRelevantes(f),
+      linePDC(f),
+    ].filter(Boolean);
+    return lines.join("\n");
   }
 
-  function paraPRM(f){
-    if(!f.prm?.length) return "PRM: No se identifican o no se observan.";
-    return "PRM:\n" + f.prm.map(x=>`- ${x.tipo}: ${x.detalle.replace(/<br>/g,"; ")}`).join("\n");
+  const formatearCantidad = (item) => {
+    const nombreUpper = (item.nombre || "").toUpperCase();
+    const yaPos = /\b(CADA|SOS)\b/.test(nombreUpper);
+    if (yaPos) return "";
+    if ((item.forma || "").toLowerCase() === "insulina") {
+      return ` ${item.uiAm || 0} UI AM - ${item.uiPm || 0} UI PM`;
+    }
+    if (item.cantidad) return ` ${item.cantidad} ${item.unidad || ""}`;
+    return "";
+  };
+
+  const formatearMed = (item) => {
+    const nombre = (item.nombre || item.base || "").trim();
+    const cantidad = formatearCantidad(item);
+    const posologia = item.posologia ? ` ${item.posologia}` : "";
+    return `${nombre}${cantidad}${posologia}`.trim();
+  };
+
+  const lineaRecetas = (label, recetas = []) => {
+    const meds = recetas.flatMap((r) => r?.meds || []);
+    if (!meds.length) return "";
+    return `- ${label}: ${meds.map(formatearMed).join("; ")}.`;
+  };
+
+  function paraMeds(f) {
+    const aps = lineaRecetas("APS", f.meds?.apsRecetas || []);
+    const sec = lineaRecetas("Secundario", f.meds?.secRecetas || []);
+    const cuerpo = [aps, sec].filter(Boolean);
+    if (!cuerpo.length) return "";
+    return ["MEDICACION", ...cuerpo].join("\n");
   }
-  function paraEA(f){
-    return f.eventosAdversos?.length ? "Reacciones adversas: " + f.eventosAdversos.map(e=>`${e.medNombre}: ${e.efecto}`).join("; ") + "." : "";
+  
+  function paraPRM(f) {
+    const prm = Array.isArray(f.prm) ? f.prm : [];
+    if (!prm.length) return "PRM\nNo se identifican o no se observan.";
+
+    const cat = { dup: [], ppi: [], inter: [], otros: [] };
+    prm.forEach((p) => {
+      const tipo = (p.tipo || "").toUpperCase();
+      const detalle = (p.detalle || "").replace(/<br>/g, "; ").trim();
+      const texto = detalle || p.tipo || "PRM";
+      if (/DUPLIC/.test(tipo)) cat.dup.push(texto);
+      else if (/PPI/.test(tipo)) cat.ppi.push(texto);
+      else if (/INTERAC/.test(tipo)) cat.inter.push(texto);
+      else cat.otros.push(texto);
+    });
+
+    const lines = ["PRM"];
+    const add = (titulo, arr) => {
+      if (!arr.length) return;
+      lines.push(titulo, ...arr.map((t) => `- ${t}`));
+    };
+    add("DUPLICIDADES", cat.dup);
+    add("CRITERIOS PPI", cat.ppi);
+    add("INTERACCIONES", cat.inter);
+    add("OTROS", cat.otros);
+
+    if (lines.length === 1) return "PRM\nNo se identifican o no se observan.";
+    return lines.join("\n");
   }
-  function paraOtros(f){
-    const tests = f.tests?.length ? `Tests: ${f.tests.map(t=>`${t.tipo}=${t.resultado}`).join("; ")}.` : "";
-    const calc = f.calculos?.length ? `Cálculos: ${f.calculos.map(c=>`${c.tipo}=${c.resultado}`).join("; ")}.` : "";
-    const obs  = f.notas ? `Observaciones: ${f.notas}` : "";
-    return [tests,calc,obs].filter(Boolean).join("\n");
+
+  function paraComentarios(f) {
+    const lista = [f.notas, f.anamnesis?.textoLibre].filter(Boolean);
+    if (!lista.length) return "";
+    return ["COMENTARIOS", ...lista.map((t) => `- ${t}`)].join("\n");
   }
 
   $btn.onclick=()=>{
     const id=$sel.value; if(!id) return;
     const f=FichasStore.get(id); if(!f) return;
-    const lines=[paraAnam(f), paraMeds(f), paraPRM(f), paraEA(f), paraOtros(f)].filter(Boolean).join("\n\n");
+    const lines=[paraAntecedentes(f), paraMeds(f), paraPRM(f), paraComentarios(f)].filter(Boolean).join("\n\n");
     $txt.value = lines;
   };
 
