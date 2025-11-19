@@ -1,5 +1,385 @@
 [
   {
+    "id": "ac_fol04mg",
+    "base_name": "ACIDO FOLICO",
+    "fuerza": "0,4 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ELECTROLITOS",
+      "ANTIANEMICOS",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ac_fol1mg",
+    "base_name": "ACIDO FOLICO",
+    "fuerza": "1 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ELECTROLITOS",
+      "ANTIANEMICOS",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ac_fol5mg",
+    "base_name": "ACIDO FOLICO",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ELECTROLITOS",
+      "ANTIANEMICOS",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "cic_10mg",
+    "base_name": "CICLOBENZAPRINA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "APARATO LOCOMOTOR",
+      "ANTIESPASTICO",
+      "RELAJANTE MUSCULAR CENTRAL"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ca_vitd_comp",
+    "base_name": "CALCIO + VITAMINA D",
+    "fuerza": "",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "VITAMINAS Y NUTRIENTES",
+      "ELECTROLITO TERAPIA",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "fe_comp",
+    "base_name": "COMPLEJO HIERRO",
+    "fuerza": "",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ELECTROLITOS",
+      "ELECTROLITO TERAPIA",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "lag_art",
+    "base_name": "LAGRIMAS ARTIFICIALES",
+    "fuerza": "",
+    "forma": "GOTAS",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "OTORRINO Y OFTALMOLOGICOS",
+      "OFTALMOLOGICOS",
+      "GOTA OFTALMICA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dut_tam",
+    "base_name": "DUTASTERIDA/TAMSULOSINA",
+    "fuerza": "0,5/0,4",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA GENITOURINARIO",
+      "ALFA-BLOQUEANTES",
+      "SELECTIVO ALFA1A"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "fe_gts",
+    "base_name": "COMPLEJO HIERRO",
+    "fuerza": "",
+    "forma": "GOTAS",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ELECTROLITOS",
+      "ELECTROLITO TERAPIA",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "val_160mg",
+    "base_name": "VALSARTAN",
+    "fuerza": "160 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA CARDIOVASCULAR",
+      "ANTIHIPERTENSIVOS",
+      "ARA2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
     "id": "ac_val_200mg",
     "base_name": "ACIDO VALPROICO",
     "fuerza": "200 MG",

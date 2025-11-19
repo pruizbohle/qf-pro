@@ -755,9 +755,8 @@ function calcularPDC(){
   const periodoObservacion = Math.max(1, 180 - diasHospitalizacion);
   const pdc = diasCubiertos / periodoObservacion;
 
-  const pct = (pdc*100);
-  const clas = pct>=80 ? 'Adecuada' : (pct>=50 ? 'Parcial' : 'Baja');
-  const txt = `PDC: ${pct.toFixed(1)}% (${clas})`;
+  const clas = pdc>=0.8 ? 'Adecuada' : (pdc>=0.5 ? 'Parcial' : 'Baja');
+  const txt = `PDC: ${pdc.toFixed(2)} (${clas})`;
 
   document.getElementById('resultado').textContent = txt;
 

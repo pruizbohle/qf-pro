@@ -63,6 +63,9 @@ const ANT_SUG = [
   "TR DEPRESIVO",
   "TR ANSIOSO",
   "TR MIXTO",
+  "ASMA",
+  "EPOC",
+  "HBP",
 ];
 
 const state = {
@@ -658,6 +661,9 @@ const DX_PATTERNS = [
   { regex: /ARTROSIS|GONARTROSIS|COXARTROSIS|OSTEOARTROSIS|POLIARTROSIS/i, chip: "ARTROSIS" },
   { regex: /ARTRITIS\s+REUMATOID/i, chip: "AR" },
   { regex: /SUEÑO|INSOMNIO/i, chip: "TR SUEÑO" },
+  { regex: /ASMA/i, chip: "ASMA" },
+  { regex: /EPOC|ENFERMEDAD\s+PULMONAR\s+OBSTRUCTIVA\s+CRONICA/i, chip: "EPOC" },
+  { regex: /HBP|HIPERPLASIA\s+BENIGNA\s+PROSTAT/i, chip: "HBP" },
   { regex: /DEPRESI/i, chip: "TR DEPRESIVO" },
   { regex: /ANSIEDAD|ANSIOS/i, chip: "TR ANSIOSO" },
   { regex: /MIXT/i, chip: "TR MIXTO" },
