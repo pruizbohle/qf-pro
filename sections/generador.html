@@ -42,47 +42,90 @@
 <script type="module">
   import { mountHeader } from "../js/header.js";
   import { FichasStore } from "../js/fichasStore.js";
+  import { evaluarInteracciones } from "../js/rulesEngine.js";
+
   mountHeader();
 
-  const $sel=document.getElementById('sel-ficha'), $txt=document.getElementById('texto'), $btn=document.getElementById('btn-compilar');
+  const $sel = document.getElementById("sel-ficha");
+  const $txt = document.getElementById("texto");
+  const $btn = document.getElementById("btn-compilar");
 
-  function loadFichas(){
-    const L=FichasStore.list();
-    $sel.innerHTML = `<option value="">— Selecciona —</option>` + L.map(f=>`<option value="${f.id}">${f.id}</option>`).join("");
-    const h=(location.hash||'').replace('#','').toUpperCase(); if(h) $sel.value=h;
+  const dataState = {
+    interacciones: null,
+    criterios: null,
+    ppiMap: new Map(),
+  };
+
+  const dataReady = loadCatalogos();
+
+  async function loadCatalogos() {
+    await Promise.all([loadInteracciones(), loadCriterios()]);
   }
 
-  const mapAnt = x => x; // ya vienen en bonito: HTA, DM2 IR, etc.
+    async function loadInteracciones() {
+    try {
+      const data = await fetch("../data/interacciones.json").then((r) => r.json());
+      dataState.interacciones = data;
+    } catch (err) {
+      console.error("❌ No fue posible cargar interacciones.json", err);
+      dataState.interacciones = null;
+    }
+  }
+
+  async function loadCriterios() {
+    try {
+      const data = await fetch("../data/criterios.json").then((r) => r.json());
+      dataState.criterios = data;
+      dataState.ppiMap = buildPpiMap(data);
+    } catch (err) {
+      console.error("❌ No fue posible cargar criterios.json", err);
+      dataState.criterios = null;
+      dataState.ppiMap = new Map();
+    }
+  }
+
+  function loadFichas() {
+    const listado = FichasStore.list();
+    $sel.innerHTML = `<option value="">— Selecciona —</option>` + listado.map((f) => `<option value="${f.id}">${f.id}</option>`).join("");
+    const hash = (location.hash || "").replace("#", "").toUpperCase();
+    if (hash) $sel.value = hash;
+  }
+
+  const mapAnt = (x) => x;
+
+  const normalizeBaseKey = (txt = "") =>
+    txt
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .trim();
 
   const lineDiagnosticos = (f) => {
-    const diag = f.anamnesis.antecedentes?.length
-      ? f.anamnesis.antecedentes.map(mapAnt).join(", ")
-      : "sin registro";
-    return `- Usuario con diagnósticos de ${diag}.`;
+    const antecedentes = f?.anamnesis?.antecedentes || [];
+    const diag = antecedentes.length ? antecedentes.map(mapAnt).join(", ") : "sin registro";
+    return `- Usuario con diagnósticos de (${diag}).`;
   };
 
   const lineAntecedentesRelevantes = (f) => {
-    const flags = f.anamnesis.flags || {};
+    const flags = f?.anamnesis?.flags || {};
     const lista = [];
     if (flags.antIAMACV) lista.push("IAM/ACV");
     if (flags.erc) lista.push("ERC");
     if (!lista.length) return "";
-    return `- Usuario con antecedentes de ${lista.join(", ")}.`;
+    return `- Usuario con antecedentes de (${lista.join(", ")}).`;
   };
 
   const linePDC = (f) => {
-    const pdc = f.anamnesis.adherencia?.pdc || "sin registro";
+    const pdc = (f?.anamnesis?.adherencia?.pdc || "sin registro").trim();
     return `- Adherencia según PDC: ${pdc}.`;
   };
 
-  function paraAntecedentes(f) {
-    const lines = [
-      "ANTECEDENTES",
-      lineDiagnosticos(f),
-      lineAntecedentesRelevantes(f),
-      linePDC(f),
-    ].filter(Boolean);
-    return lines.join("\n");
+  function buildAntecedentes(f) {
+    const lines = ["1. ANTECEDENTES", "", lineDiagnosticos(f)];
+    const relevantes = lineAntecedentesRelevantes(f);
+    if (relevantes) lines.push(relevantes);
+    lines.push(linePDC(f));
+    return lines.filter(Boolean).join("\n");
   }
 
   const formatearCantidad = (item) => {
@@ -103,60 +146,250 @@
     return `${nombre}${cantidad}${posologia}`.trim();
   };
 
-  const lineaRecetas = (label, recetas = []) => {
-    const meds = recetas.flatMap((r) => r?.meds || []);
-    if (!meds.length) return "";
-    return `- ${label}: ${meds.map(formatearMed).join("; ")}.`;
+  const formatFecha = (fechaISO) => {
+    if (!fechaISO) return "sin registro";
+    const d = new Date(fechaISO);
+    if (Number.isNaN(d.getTime())) return fechaISO;
+    return new Intl.DateTimeFormat("es-CL", { day: "2-digit", month: "2-digit", year: "numeric" }).format(d);
   };
 
-  function paraMeds(f) {
-    const aps = lineaRecetas("APS", f.meds?.apsRecetas || []);
-    const sec = lineaRecetas("Secundario", f.meds?.secRecetas || []);
-    const cuerpo = [aps, sec].filter(Boolean);
-    if (!cuerpo.length) return "";
-    return ["MEDICACION", ...cuerpo].join("\n");
-  }
-  
-  function paraPRM(f) {
-    const prm = Array.isArray(f.prm) ? f.prm : [];
-    if (!prm.length) return "PRM\nNo se identifican o no se observan.";
+  const describeReceta = (label, receta = {}) => {
+    const meds = (receta.meds || []).map(formatearMed).filter(Boolean);
+    if (!meds.length) return "";
+    const fecha = formatFecha(receta.fechaISO || new Date().toISOString().slice(0, 10));
+    const meses = receta.meses || 1;
+    const mesesTexto = `${meses} ${meses === 1 ? "mes" : "meses"}`;
+    const header = `- Receta vigente en ${label}, emitida ${fecha} por ${mesesTexto}:`;
+    const cuerpo = meds.map((m) => `· ${m}`).join("\n");
+    return `${header}\n${cuerpo}`;
+  };
 
-    const cat = { dup: [], ppi: [], inter: [], otros: [] };
-    prm.forEach((p) => {
-      const tipo = (p.tipo || "").toUpperCase();
-      const detalle = (p.detalle || "").replace(/<br>/g, "; ").trim();
-      const texto = detalle || p.tipo || "PRM";
-      if (/DUPLIC/.test(tipo)) cat.dup.push(texto);
-      else if (/PPI/.test(tipo)) cat.ppi.push(texto);
-      else if (/INTERAC/.test(tipo)) cat.inter.push(texto);
-      else cat.otros.push(texto);
+  function buildMedicacion(f) {
+    const bloques = [];
+    (f.meds?.apsRecetas || []).forEach((rec) => {
+      const bloque = describeReceta("APS", rec);
+      if (bloque) bloques.push(bloque);
     });
+    (f.meds?.secRecetas || []).forEach((rec) => {
+      const origen = rec.origenLabel || rec.origenEstablecimiento || "A2S";
+      const bloque = describeReceta(origen, rec);
+      if (bloque) bloques.push(bloque);
+    });
+    if (!bloques.length) return "";
+    return ["2. MEDICACION", "", bloques.join("\n\n")].join("\n");
+  }
 
-    const lines = ["PRM"];
-    const add = (titulo, arr) => {
-      if (!arr.length) return;
-      lines.push(titulo, ...arr.map((t) => `- ${t}`));
+  function getAllMeds(ficha) {
+    if (!ficha) return [];
+    const meds = [];
+    const pushRec = (arr = [], origen, sourceKey) => {
+      (arr || []).forEach((rec) => {
+        (rec.meds || []).forEach((m) => {
+          meds.push({
+            ...m,
+            base: (m.base || "").toUpperCase(),
+            nombre: m.nombre || "",
+            origen,
+            sourceKey,
+            recetaId: rec.id,
+          });
+        });
+      });
     };
-    add("DUPLICIDADES", cat.dup);
-    add("CRITERIOS PPI", cat.ppi);
-    add("INTERACCIONES", cat.inter);
-    add("OTROS", cat.otros);
+    pushRec(ficha.meds?.apsRecetas, "APS", "apsRecetas");
+    pushRec(ficha.meds?.secRecetas, "A2S", "secRecetas");
+    (ficha.meds?.extra || []).forEach((m) => {
+      meds.push({
+        ...m,
+        base: (m.base || "").toUpperCase(),
+        nombre: m.nombre || "",
+        origen: "Extrasistema",
+        sourceKey: "extra",
+      });
+    });
+    (ficha.meds?.automed || []).forEach((m) => {
+      const texto = (m.nombre || m.texto || "").trim();
+      meds.push({
+        ...m,
+        base: (m.base || texto.split(/\s+/)[0] || "").toUpperCase(),
+        nombre: texto || m.base || "",
+        origen: "Automedicación",
+        sourceKey: "automed",
+      });
+    });
+    return meds;
+  }
 
-    if (lines.length === 1) return "PRM\nNo se identifican o no se observan.";
+  function detectarDuplicados(meds) {
+    const mapa = new Map();
+    meds.forEach((med) => {
+      const base = (med.base || "").toUpperCase();
+      if (!base) return;
+      if (!mapa.has(base)) mapa.set(base, []);
+      mapa.get(base).push(med);
+    });
+    const duplicados = [];
+    mapa.forEach((arr, base) => {
+      if (arr.length < 2) return;
+      const claves = new Set(arr.map((m) => `${m.sourceKey || ""}:${m.recetaId || m.id || ""}`));
+      if (claves.size <= 1) return;
+      const origenes = Array.from(new Set(arr.map((m) => m.origen || "Receta")));
+      duplicados.push({ base, origenes });
+    });
+    return duplicados;
+  }
+
+  function buildBaseLabelMap(meds = []) {
+    const map = new Map();
+    meds.forEach((med) => {
+      const baseKey = normalizeBaseKey(med.base || med.nombre || "");
+      if (!baseKey) return;
+      const etiqueta = (med.base || med.nombre || "").replace(/\s+/g, " ").trim().toUpperCase();
+      if (!map.has(baseKey)) map.set(baseKey, etiqueta);
+    });
+    return map;
+  }
+
+  function buildInteraccionesList(meds) {
+    if (!dataState.interacciones) return [];
+    const bases = Array.from(new Set(meds.map((m) => (m.base || "").toUpperCase()).filter(Boolean)));
+    if (bases.length < 2) return [];
+    const baseLabels = buildBaseLabelMap(meds);
+    const inter = evaluarInteracciones({ meds: bases, interacciones: dataState.interacciones }) || [];
+    return inter
+      .map((ix) => {
+        const encontrados = ix.grupos
+          ?.flatMap((g) => g.encontrados || [])
+          .map((base) => baseLabels.get(normalizeBaseKey(base)) || base)
+          .filter(Boolean) || [];
+        const etiqueta = Array.from(new Set(encontrados)).map((txt) => txt.replace(/\s+/g, " ").trim()).join("+");
+        const texto = ix.comentario || ix.descripcion || "Interacción detectada.";
+        return etiqueta ? `${etiqueta}: ${texto}` : texto;
+      })
+      .filter(Boolean)
+      .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+  }
+
+  function buildPpiMap(raw) {
+    const map = new Map();
+    if (!raw) return map;
+    const pools = [];
+    if (Array.isArray(raw.beers)) pools.push(...raw.beers);
+    if (Array.isArray(raw.stopp)) pools.push(...raw.stopp);
+    pools.forEach((item) => {
+      const baseKey = normalizeBaseKey(item.base || item.medicamento || item.id || "");
+      const texto = (item.texto || item.descripcion || "").trim();
+      if (!baseKey || !texto) return;
+      if (!map.has(baseKey)) map.set(baseKey, new Set());
+      map.get(baseKey).add(texto);
+    });
+    return map;
+  }
+
+  function buildPpiList(ficha, meds) {
+    if (!ficha.age65) return { aplica: false, hallazgos: [] };
+    const baseLabels = buildBaseLabelMap(meds);
+    const presentes = new Set(meds.map((m) => normalizeBaseKey(m.base || m.nombre || "")).filter(Boolean));
+    const hallazgos = [];
+    presentes.forEach((clave) => {
+      if (!dataState.ppiMap.has(clave)) return;
+      const etiqueta = baseLabels.get(clave) || clave;
+      dataState.ppiMap.get(clave).forEach((texto) => {
+        hallazgos.push(`${etiqueta}: ${texto}`);
+      });
+    });
+    hallazgos.sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
+    return { aplica: true, hallazgos };
+  }
+
+  function buildErroresList(f) {
+    const arr = f?.meds?.errores || [];
+    return arr
+      .map((err) => {
+        const etapa = err.etapa ? `${err.etapa}: ` : "";
+        return `- ${etapa}${err.desc || "Revisar"}`;
+      })
+      .filter(Boolean);
+  }
+
+  function buildPRM(f) {
+    const meds = getAllMeds(f);
+    const duplicidades = detectarDuplicados(meds).map((dup) => {
+      const etiqueta = (dup.base || "").trim();
+      const origenes = dup.origenes?.length ? ` (${dup.origenes.join(", ")})` : "";
+      return `- Se identifica duplicidad de ${etiqueta}${origenes}.`;
+    });
+    const interacciones = buildInteraccionesList(meds).map((txt) => `- ${txt}`);
+    const ppi = buildPpiList(f, meds);
+    const errores = buildErroresList(f);
+
+    const lines = ["3. PROBLEMAS RELACIONADOS A MEDICAMENTOS", "", "3.1 DUPLICIDADES"];
+    if (!duplicidades.length) {
+      lines.push("No se identifican duplicidades.");
+    } else {
+      lines.push(...duplicidades);
+    }
+
+    lines.push("", "3.2 INTERACCIONES");
+    if (meds.length <= 1) {
+      lines.push("No aplica.");
+    } else if (!interacciones.length) {
+      lines.push("No se identifican interacciones de relevancia clínica.");
+    } else {
+      lines.push(...interacciones);
+    }
+
+    lines.push("", "3.3 CRITERIOS PPI");
+    if (!ppi.aplica) {
+      lines.push("No aplica (menor de 65 años).");
+    } else if (!ppi.hallazgos.length) {
+      lines.push("No se identifican prescripciones potencialmente inapropiadas.");
+    } else {
+      lines.push(...ppi.hallazgos.map((txt) => `- ${txt}`));
+    }
+
+    lines.push("", "3.4 ERRORES DE MEDICACIÓN");
+    if (!errores.length) {
+      lines.push("No se identifican errores de medicación.");
+    } else {
+      lines.push(...errores);
+    }
+
     return lines.join("\n");
   }
 
-  function paraComentarios(f) {
-    const lista = [f.notas, f.anamnesis?.textoLibre].filter(Boolean);
-    if (!lista.length) return "";
-    return ["COMENTARIOS", ...lista.map((t) => `- ${t}`)].join("\n");
+  function buildObservaciones(f) {
+    const lista = [f.notas, f.anamnesis?.textoLibre].map((txt) => (txt || "").trim()).filter(Boolean);
+    const lines = ["4. OBSERVACIONES", ""];
+    if (lista.length) {
+      lista.forEach((txt) => lines.push(`- ${txt}`));
+    }
+    return lines.join("\n");
   }
 
-  $btn.onclick=()=>{
-    const id=$sel.value; if(!id) return;
-    const f=FichasStore.get(id); if(!f) return;
-    const lines=[paraAntecedentes(f), paraMeds(f), paraPRM(f), paraComentarios(f)].filter(Boolean).join("\n\n");
-    $txt.value = lines;
+  function buildIndicaciones(f) {
+    const indicaciones = Array.isArray(f.indicaciones) ? f.indicaciones.map((txt) => (txt || "").trim()).filter(Boolean) : [];
+    const lines = ["5. INDICACIONES", ""];
+    if (indicaciones.length) {
+      indicaciones.forEach((txt) => lines.push(`- ${txt}`));
+    }
+    return lines.join("\n");
+  }
+
+  function compilarFicha(f) {
+    const bloques = [buildAntecedentes(f), buildMedicacion(f), buildPRM(f), buildObservaciones(f), buildIndicaciones(f)]
+      .filter((txt) => typeof txt === "string" && txt.trim().length)
+      .join("\n\n");
+    return bloques;
+  }
+
+  $btn.onclick = async () => {
+    const id = $sel.value;
+    if (!id) return;
+    const ficha = FichasStore.get(id);
+    if (!ficha) return;
+    await dataReady;
+    $txt.value = compilarFicha(ficha);
   };
 
   loadFichas();
