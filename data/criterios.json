@@ -1,12 +1,30 @@
 {
-  "beers": [
-    { "base": "alprazolam", "texto": "Evitar benzodiacepinas en adultos mayores por riesgo de caídas y deterioro cognitivo." }
-  ],
-  "stopp": [
-    { "base": "alprazolam", "texto": "No mantener benzodiacepinas por más de 4 semanas en adultos mayores." }
+  "ppi": [
+    { "base": "acido acetilsalicilico", "texto": "Evitar uso para prevención primaria de enfermedades cardiovasculares." },
+    {
+      "base": "alprazolam",
+      "criterio": "No mantener benzodiacepinas por más de 4 semanas en adultos mayores.",
+      "texto": "Evitar uso crónico por riesgo de dependencia, caídas, sedación y deterioro cognitivo."
+    },
+    {
+      "base": "clonazepam",
+      "criterio": "No mantener benzodiacepinas por más de 4 semanas en adultos mayores.",
+      "texto": "Evitar uso crónico por riesgo de dependencia, caídas, sedación y deterioro cognitivo."
+    },
+    {
+      "base": "diazepam",
+      "criterio": "No mantener benzodiacepinas por más de 4 semanas en adultos mayores.",
+      "texto": "Evitar uso crónico por riesgo de dependencia, caídas, sedación y deterioro cognitivo."
+    },
+    { "base": "digoxina", "texto": "Evitar si función ventricular conservada o sin FA" },
+    { "base": "glibenclamida", "texto": "Evitar uso por alto riesgo de hipoglicemia prolongada." },
+    { "base": "omeprazol", "texto": "Evitar uso crónico sin indicación clara: riesgo gastrointestinal y óseo." },
+    { "base": "quetiapina", "texto": "Evitar uso crónico sedación y deterioro cognitivo, evaluar riesgo-beneficio." },
+    { "base": "sertralina", "texto": "Riesgo de SIADH/hiponatremia y caídas." },
+    { "base": "tramadol", "texto": "Riesgo de SIADH/hiponatremia y caídas." },
+    { "base": "zopiclona", "texto": "Evitar uso crónico por riesgo de caídas, deterioro cognitivo y delirium." }
   ],
   "start": [
     { "base": "enalapril", "texto": "Indicar IECA en insuficiencia cardíaca sintomática si no está prescrito." }
   ]
 }
-

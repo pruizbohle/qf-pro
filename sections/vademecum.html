@@ -92,15 +92,13 @@
   }
 
   function render(items) {
-    const beers = DB.criterios?.beers || [];
-    const stopp = DB.criterios?.stopp || [];
+    const ppi = DB.criterios?.ppi || [];
 
     $list.innerHTML =
       items
         .map((m) => {
           const ix = INTERACCIONES.filter((registro) => participaEnInteraccion(m, registro));
-          const cb = beers.filter((c) => (c.afecta || []).includes(m.id));
-          const cs = stopp.filter((c) => (c.afecta || []).includes(m.id));
+          const cp = ppi.filter((c) => (c.base || "").toLowerCase() === m.id.toLowerCase());
 
           return `
       <div class="card">
@@ -122,21 +120,17 @@
           </div>`
           : ""}
 
-        ${(cb.length || cs.length)
+        ${cp.length
           ? `
           <div style="margin-top:8px">
-            <div class="muted">Criterios STOPP/Beers:</div>
+            <div class="muted">Criterios PPI:</div>
             <ul class="list" style="margin-top:6px">
-              ${cb
+              ${cp
                 .map(
-                  (c) =>
-                    `<li class="card"><b>Beers:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`
-                )
-                .join("")}
-              ${cs
-                .map(
-                  (c) =>
-                    `<li class="card"><b>STOPP:</b> ${c.titulo}<br><span class="muted">${c.motivo}</span><br>${c.accion}</li>`
+                  (c) => {
+                    const criterio = c.criterio ? `<div class="muted">${c.criterio}</div>` : "";
+                    return `<li class="card"><b>${m.nombre}</b>${criterio}${c.texto ? `<div>${c.texto}</div>` : ""}</li>`;
+                  }
                 )
                 .join("")}
             </ul>

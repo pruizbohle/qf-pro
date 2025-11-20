@@ -29,7 +29,7 @@
       <h2>Colecciones</h2>
       <div class="fichas-wrap" style="margin-top:10px">
         <a class="card" href="vademecum.html"><b>Vademécum</b><div class="muted">Búsqueda de fármacos y presentaciones</div></a>
-        <a class="card" href="material.html#beers"><b>Beers/STOPP/START</b><div class="muted">Criterios geriátricos</div></a>
+        <a class="card" href="material.html#ppi"><b>PPI/START</b><div class="muted">Criterios geriátricos</div></a>
         <a class="card" href="material.html#renal"><b>Ajuste renal</b><div class="muted">Medicamentos con ajuste en ERC</div></a>
         <a class="card" href="material.html#embarazo"><b>Embarazo</b><div class="muted">Precauciones y contraindicaciones</div></a>
         <a class="card" href="material.html#interacciones"><b>Interacciones</b><div class="muted">Interacciones clínicamente relevantes</div></a>
@@ -38,7 +38,7 @@
 
       <h2 style="margin-top:18px">Búsqueda rápida</h2>
       <div class="card">
-        <input id="q" placeholder="Ej: losartán, embarazo, STOPP, simvastatina+claritromicina">
+        <input id="q" placeholder="Ej: losartán, embarazo, PPI, simvastatina+claritromicina">
         <div class="row" style="margin-top:8px"><button id="go" class="btn">Buscar</button></div>
         <div id="out" class="list" style="margin-top:10px"></div>
       </div>
@@ -67,7 +67,7 @@
     $out.innerHTML='';
     if(!v) return;
     if(v.includes('interacc')) $out.innerHTML='<div class="card">🔗 Te conviene ir a <a class="pill" href="vademecum.html#interacciones">Interacciones del vademécum</a></div>';
-    else if(v.includes('beers')||v.includes('stopp')||v.includes('start')) $out.innerHTML='<div class="card">📎 Ver criterios en colecciones (demo)</div>';
+    else if(v.includes('beers')||v.includes('stopp')||v.includes('start')||v.includes('ppi')) $out.innerHTML='<div class="card">📎 Ver criterios en colecciones (demo)</div>';
     else $out.innerHTML='<div class="card">🔎 Consulta general — integraremos buscador avanzado</div>';
   };
   

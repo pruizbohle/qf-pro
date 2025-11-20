@@ -274,8 +274,7 @@
     const map = new Map();
     if (!raw) return map;
     const pools = [];
-    if (Array.isArray(raw.beers)) pools.push(...raw.beers);
-    if (Array.isArray(raw.stopp)) pools.push(...raw.stopp);
+    if (Array.isArray(raw.ppi)) pools.push(...raw.ppi);
     pools.forEach((item) => {
       const baseKey = normalizeBaseKey(item.base || item.medicamento || item.id || "");
       const texto = (item.texto || item.descripcion || "").trim();

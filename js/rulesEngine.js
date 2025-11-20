@@ -16,7 +16,7 @@ export function evaluarCriterios({ perfil, meds, criterios }){
     return true;
   };
 
-  for(const r of [...(criterios.beers||[]), ...(criterios.stopp||[]), ...(criterios.start||[])]){
+  for(const r of [...(criterios.ppi||[]), ...(criterios.start||[])]){
     if(check(r.condicion)) out.push({ tipo:"criterio", ...r });
   }
   return out;

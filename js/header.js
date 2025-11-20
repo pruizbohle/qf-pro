@@ -22,7 +22,7 @@ export function mountHeader(rootSelector="#header"){
       const q = (input.value||'').trim().toLowerCase();
       if(!q) return;
       // Router simple: si incluye palabras, deriva a material o vademécum
-      if(q.includes('interacc') || q.includes('beers') || q.includes('stopp') || q.includes('start') || q.includes('ajuste') || q.includes('embarazo')){
+      if(q.includes('interacc') || q.includes('beers') || q.includes('stopp') || q.includes('start') || q.includes('ppi') || q.includes('ajuste') || q.includes('embarazo')){
         location.href = (location.pathname.includes('/sections/') ? '' : 'sections/') + 'material.html?q='+encodeURIComponent(q);
       }else{
         location.href = (location.pathname.includes('/sections/') ? '' : 'sections/') + 'vademecum.html?q='+encodeURIComponent(q);
