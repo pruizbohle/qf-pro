@@ -844,8 +844,10 @@ const ERROR_TEMPLATES = [
 function buildMedLabel(med) {
   const parts = [];
   const nombre = (med?.nombre || med?.base || "").trim();
-  if (nombre) parts.push(nombre.toUpperCase());
-  if (med?.presentacion) parts.push(med.presentacion);
+  const upperNombre = nombre.toUpperCase();
+  if (upperNombre) parts.push(upperNombre);
+  const presentacion = (med?.presentacion || "").trim();
+  if (presentacion && !upperNombre.includes(presentacion.toUpperCase())) parts.push(presentacion);
   if (med?.origen) parts.push(med.origen);
   return parts.join(" · ") || "MEDICAMENTO";
 }
@@ -858,6 +860,7 @@ function renderErrorTemplates() {
     host.innerHTML = '<div class="muted-card">— sin ficha —</div>';
     return;
   }
+  const currentSelected = host.querySelector("#err-template-select")?.value || ERROR_TEMPLATES[0]?.id;
   const ficha = FichasStore.get(state.activeId);
   const meds = getAllMeds(ficha);
   const medLabels = [];
@@ -869,57 +872,89 @@ function renderErrorTemplates() {
     seen.add(label);
   });
 
-  ERROR_TEMPLATES.forEach((tpl) => {
-    const card = document.createElement("div");
-    card.className = "muted-card err-template";
-    const disabled = tpl.requiereMed && !medLabels.length ? "disabled" : "";
-    const medPicker = tpl.requiereMed
-      ? medLabels.length
-        ? `<div class="err-medchips" data-template="${tpl.id}">${medLabels
-            .map((lab) => `<span class="pill err-chip" data-value="${escapeHtml(lab)}">${escapeHtml(lab)}</span>`)
-            .join("")}</div>`
-        : '<div class="muted">No hay medicamentos en la ficha.</div>'
-      : "";
-    card.innerHTML = `
-      <div class="err-header"><strong>${tpl.etapa}:</strong> ${tpl.titulo}</div>
-      ${medPicker}
-      <div class="err-actions">
-        <button class="btn mini err-add-btn" data-template="${tpl.id}" ${disabled}>Agregar</button>
-      </div>`;
-    host.appendChild(card);
-  });
+  const card = document.createElement("div");
+  card.className = "muted-card err-template err-form";
 
-  host.querySelectorAll(".err-medchips").forEach((wrap) => {
-    wrap.querySelectorAll(".err-chip").forEach((chip) => {
-      chip.addEventListener("click", () => {
-        wrap.querySelectorAll(".err-chip").forEach((c) => c.classList.remove("active"));
-        chip.classList.add("active");
-        wrap.dataset.selected = chip.dataset.value || "";
-      });
-    });
+  const tplRow = document.createElement("div");
+  tplRow.className = "err-row";
+  const tplSelect = document.createElement("select");
+  tplSelect.id = "err-template-select";
+  ERROR_TEMPLATES.forEach((tpl) => {
+    const opt = document.createElement("option");
+    opt.value = tpl.id;
+    opt.textContent = `${tpl.etapa}: ${tpl.titulo}`;
+    tplSelect.appendChild(opt);
   });
-  
-  host.querySelectorAll(".err-add-btn").forEach((btn) => {
-    btn.addEventListener("click", () => {
-      if (!state.activeId) {
-        alert("Abre una ficha primero.");
+  if (currentSelected) tplSelect.value = currentSelected;
+  tplRow.appendChild(tplSelect);
+
+  const medRow = document.createElement("div");
+  medRow.className = "err-row";
+  const medSelect = document.createElement("select");
+  medSelect.id = "err-med-select";
+  medSelect.className = "err-med-select";
+  const defaultOpt = document.createElement("option");
+  defaultOpt.value = "";
+  defaultOpt.textContent = "Selecciona medicamento";
+  medSelect.appendChild(defaultOpt);
+  medLabels.forEach((lab) => {
+    const opt = document.createElement("option");
+    opt.value = lab;
+    opt.textContent = lab;
+    medSelect.appendChild(opt);
+  });
+  medRow.appendChild(medSelect);
+
+  const medHint = document.createElement("div");
+  medHint.className = "muted";
+  medHint.textContent = "No hay medicamentos en la ficha.";
+  medHint.style.display = "none";
+
+  const actionsRow = document.createElement("div");
+  actionsRow.className = "err-actions-row";
+  const addBtn = document.createElement("button");
+  addBtn.className = "btn mini";
+  addBtn.textContent = "Agregar";
+  actionsRow.appendChild(addBtn);
+  actionsRow.appendChild(medHint);
+
+  const refreshMedControls = () => {
+    const tpl = ERROR_TEMPLATES.find((t) => t.id === tplSelect.value);
+    const requiresMed = tpl?.requiereMed;
+    medRow.style.display = requiresMed ? "flex" : "none";
+    medSelect.disabled = requiresMed && !medLabels.length;
+    medHint.style.display = requiresMed && !medLabels.length ? "block" : "none";
+    if (!requiresMed) medSelect.value = "";
+    addBtn.disabled = !tpl || (requiresMed && !medLabels.length);
+  };
+
+  tplSelect.addEventListener("change", refreshMedControls);
+
+  addBtn.addEventListener("click", () => {
+    if (!state.activeId) {
+      alert("Abre una ficha primero.");
+      return;
+    }
+    const tpl = ERROR_TEMPLATES.find((t) => t.id === tplSelect.value);
+    if (!tpl) return;
+    let medLabel = null;
+    if (tpl.requiereMed) {
+      medLabel = medSelect.value || null;
+      if (!medLabel) {
+        alert("Selecciona un medicamento de la ficha.");
         return;
       }
-      const tpl = ERROR_TEMPLATES.find((t) => t.id === btn.dataset.template);
-      if (!tpl) return;
-      let medLabel = null;
-      if (tpl.requiereMed) {
-        const wrap = host.querySelector(`.err-medchips[data-template="${tpl.id}"]`);
-        medLabel = wrap?.dataset.selected || null;
-        if (!medLabel) {
-          alert("Selecciona un medicamento de la ficha.");
-          return;
-        }
-      }
-      const desc = medLabel ? `${tpl.titulo} — ${medLabel}` : tpl.titulo;
-      addMedError(tpl.etapa, desc, medLabel);
-    });
+    }
+    const desc = medLabel ? `${tpl.titulo} — ${medLabel}` : tpl.titulo;
+    addMedError(tpl.etapa, desc, medLabel);
+    medSelect.value = "";
   });
+
+  card.appendChild(tplRow);
+  card.appendChild(medRow);
+  card.appendChild(actionsRow);
+  host.appendChild(card);
+  refreshMedControls();
 }
 
 function addMedError(etapa, desc, medLabel = null) {
@@ -932,6 +967,17 @@ function addMedError(etapa, desc, medLabel = null) {
   renderLista();
   renderErrores();
   renderErrorTemplates();
+  computePRM();
+}
+
+function removeMedError(index) {
+  if (!state.activeId) return;
+  FichasStore.update(state.activeId, (f) => {
+    const arr = f?.meds?.errores;
+    if (!arr || !Array.isArray(arr)) return;
+    arr.splice(index, 1);
+  });
+  renderErrores();
   computePRM();
 }
 
@@ -953,12 +999,27 @@ function renderErrores() {
     list.innerHTML = '<li class="muted-card">— sin errores —</li>';
     return;
   }
-  arr.slice().reverse().forEach((err) => {
+  arr.slice().reverse().forEach((err, idx) => {
+    const originalIndex = arr.length - 1 - idx;
     const li = document.createElement("li");
     const medTxt = err.med ? `<div class="pill" style="margin-top:6px">${escapeHtml(err.med)}</div>` : "";
-    li.innerHTML = `<div><strong>${escapeHtml(err.etapa || "Error")}</strong></div><div class="muted">${escapeHtml(
-      err.desc || ""
-    )}</div>${medTxt}`;
+    const header = document.createElement("div");
+    header.className = "err-actions-row";
+    const title = document.createElement("div");
+    title.innerHTML = `<strong>${escapeHtml(err.etapa || "Error")}</strong>`;
+    const delBtn = document.createElement("button");
+    delBtn.className = "btn mini";
+    delBtn.textContent = "Eliminar";
+    delBtn.addEventListener("click", () => removeMedError(originalIndex));
+    header.appendChild(title);
+    header.appendChild(delBtn);
+
+    const desc = document.createElement("div");
+    desc.className = "muted";
+    desc.textContent = err.desc || "";
+    li.appendChild(header);
+    li.appendChild(desc);
+    if (medTxt) li.insertAdjacentHTML("beforeend", medTxt);
     list.appendChild(li);
   });
 }
