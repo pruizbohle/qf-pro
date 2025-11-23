@@ -1242,10 +1242,14 @@ function renderQtyUI(sku, qtyNode) {
   if (!sku) return;
   const forma = (sku.forma || "").toLowerCase();
   const id = "q" + Math.random().toString(36).slice(2, 7);
-  if (forma === "comprimido" || forma === "capsula") {
+  if (
+    forma.includes("comprimido") ||
+    forma.includes("capsula") ||
+    forma.includes("ovulo")
+  ) {
     qtyNode.innerHTML = `
       <label>Cantidad: <input id="${id}-cant" type="number" min="1" step="1" value="1" style="width:80px"></label>
-      <span class="pill">COMPRIMIDO(S)</span>
+      <span class="pill">UNIDAD(ES)</span>
     `;
   } else if (forma === "suspension") {
     qtyNode.innerHTML = `
@@ -1266,7 +1270,7 @@ function renderQtyUI(sku, qtyNode) {
   } else {
     qtyNode.innerHTML = `
       <label>Cantidad: <input id="${id}-cant" type="number" min="1" step="1" value="1" style="width:80px"></label>
-      <span class="pill">UNIDAD</span>
+      <span class="pill">UNIDAD(ES)</span>
     `;
   }
   qtyNode.dataset.qtyId = id;
@@ -1310,7 +1314,7 @@ function buildMedPayload(picked, qtyNode, posNode) {
   return {
     ...basePayload,
     cantidad: document.getElementById(`${id}-cant`)?.value || "1",
-    unidad: forma === "capsula" ? "CAPSULA(S)" : "COMPRIMIDO(S)",
+    unidad: "UNIDAD(ES)",
   };
 }
 
@@ -1967,8 +1971,8 @@ function aplicarExcepcionCelecoxib(payload, detalle = {}) {
     return {
       ...payload,
       cantidad,
-      unidad: payload.unidad || "COMPRIMIDO(S)",
-      posologia: "5 COMPRIMIDOS CADA 1 MES",
+      unidad: payload.unidad || "UNIDAD(ES)",
+      posologia: "5 UNIDADES CADA 1 MES",
     };
   }
   const esMensual = /\bMES(ES)?\b/.test(poso) || /\b30\s*D[IÍ]AS?\b/.test(poso);
@@ -2156,6 +2160,9 @@ function parseRayenPosologia(posologiaRaw = "") {
         if (maybeUnidad) {
           unidadToken = maybeUnidad;
           tokens.shift();
+          while (tokens.length && normalizeUnidadToken(tokens[0])) {
+            tokens.shift();
+          }
         }
       }
       resto = tokens.join(" ");
@@ -2205,16 +2212,20 @@ function normalizeUnidadToken(token = "") {
   if (!token) return null;
   const clean = token.replace(/[()\.]/g, "").toUpperCase();
   const map = {
-    COMPRIMIDO: "COMPRIMIDO(S)",
-    COMPRIMIDOS: "COMPRIMIDO(S)",
-    CAPSULA: "CAPSULA(S)",
-    CAPSULAS: "CAPSULA(S)",
-    UNIDAD: "UNIDAD",
-    UNIDADES: "UNIDAD",
-    TABLETA: "TABLETA(S)",
-    TABLETAS: "TABLETA(S)",
+    COMPRIMIDO: "UNIDAD(ES)",
+    COMPRIMIDOS: "UNIDAD(ES)",
+    CAPSULA: "UNIDAD(ES)",
+    CAPSULAS: "UNIDAD(ES)",
+    OVULO: "UNIDAD(ES)",
+    OVULOS: "UNIDAD(ES)",
+    UNIDAD: "UNIDAD(ES)",
+    UNIDADES: "UNIDAD(ES)",
+    TABLETA: "UNIDAD(ES)",
+    TABLETAS: "UNIDAD(ES)",
     GOTA: "GOTA(S)",
     GOTAS: "GOTA(S)",
+    MILILITRO: "ML",
+    MILILITROS: "ML",
     ML: "ML",
     CC: "ML",
     UI: "UI",
@@ -2231,20 +2242,26 @@ function normalizeUnidadToken(token = "") {
 }
 
 function inferUnidadFromSku(forma, unidadToken) {
-  switch (forma) {
+  const normalized = (forma || "")
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase();
+  switch (normalized) {
     case "insulina":
       return "UI";
     case "suspension":
       return "ML";
     case "inhalador":
       return "PUFF";
-    case "capsula":
-      return "CAPSULA(S)";
-    case "comprimido":
-      return "COMPRIMIDO(S)";
-    default:
-      return unidadToken || "UNIDAD";
   }
+  if (
+    normalized.includes("comprimido") ||
+    normalized.includes("capsula") ||
+    normalized.includes("ovulo")
+  ) {
+    return "UNIDAD(ES)";
+  }
+  return unidadToken || "UNIDAD(ES)";
 }
 
 /* ======= PRM ======= */
