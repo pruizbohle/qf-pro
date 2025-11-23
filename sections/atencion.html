@@ -270,18 +270,8 @@
 
           <!-- ======= ERRORES ======= -->
           <h3 style="margin-top:16px">3️⃣ Error de medicación</h3>
-          <div class="row" style="gap:10px;flex-wrap:wrap">
-            <select id="err-etapa">
-              <option value="">Etapa…</option>
-              <option>Prescripción</option>
-              <option>Transcripción</option>
-              <option>Dispensación</option>
-              <option>Administración</option>
-              <option>Monitorización</option>
-            </select>
-              <input id="err-desc" placeholder="Descripción breve" style="flex:1"/>
-            <button id="err-add" class="btn">Agregar</button>
-          </div>
+          <p class="muted">Selecciona el tipo de error y, cuando corresponda, asigna el medicamento afectado.</p>
+          <div id="err-templates" class="list" style="margin-top:8px"></div>
           <ul id="errores-list" class="list" style="margin-top:8px"></ul>
         </div>
 

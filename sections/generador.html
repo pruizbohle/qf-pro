@@ -306,7 +306,9 @@
     return arr
       .map((err) => {
         const etapa = err.etapa ? `${err.etapa}: ` : "";
-        return `- ${etapa}${err.desc || "Revisar"}`;
+        const baseDesc = err.desc || "Revisar";
+        const med = err.med && !baseDesc.toUpperCase().includes(err.med.toUpperCase()) ? ` (${err.med})` : "";
+        return `- ${etapa}${baseDesc}${med}`;
       })
       .filter(Boolean);
   }

@@ -5190,5 +5190,55 @@
       ]
     },
     "aware": null
+      },
+  {
+    "id": "lac_667mgml",
+    "base_name": "LACTULOSA",
+    "fuerza": "667 MG/ML",
+    "forma": "SOLUCION ORAL",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "LAXANTE OSMOTICO",
+      "HEPATICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "B",
+        "detalle": "Usar si el beneficio supera el riesgo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Flatulencia",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Distensión abdominal",
+          "prevalencia": "5%"
+        },
+        {
+          "nombre": "Diarrea",
+          "prevalencia": "<5%"
+        }
+      ]
+    },
+    "aware": null
   }
 ]

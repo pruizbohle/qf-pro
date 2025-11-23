@@ -57,7 +57,6 @@ const ANT_SUG = [
   "DLP",
   "IC",
   "HIPOT4",
-  "ERC",
   "OB",
   "TR SUEÑO",
   "TR DEPRESIVO",
@@ -662,7 +661,7 @@ const DX_PATTERNS = [
   { regex: /ARTRITIS\s+REUMATOID/i, chip: "AR" },
   { regex: /SUEÑO|INSOMNIO/i, chip: "TR SUEÑO" },
   { regex: /ASMA/i, chip: "ASMA" },
-  { regex: /EPOC|ENFERMEDAD\s+PULMONAR\s+OBSTRUCTIVA\s+CRONICA/i, chip: "EPOC" },
+  { regex: /EPOC|ENFERMEDAD\s+PULMONAR\s+OBSTRUCTIVA\s+CR[ÓO]NICA/i, chip: "EPOC" },
   { regex: /HBP|HIPERPLASIA\s+BENIGNA\s+PROSTAT/i, chip: "HBP" },
   { regex: /DEPRESI/i, chip: "TR DEPRESIVO" },
   { regex: /ANSIEDAD|ANSIOS/i, chip: "TR ANSIOSO" },
@@ -834,27 +833,110 @@ function renderConciliacion() {
     .join("");
 }
 
-function setupErrores() {
-  $("#err-add")?.addEventListener("click", () => {
-    if (!state.activeId) {
-      alert("Abre una ficha primero.");
-      return;
-    }
-    const etapa = $("#err-etapa")?.value.trim();
-    const desc = $("#err-desc")?.value.trim();
-    if (!etapa || !desc) {
-      alert("Completa etapa y descripción.");
-      return;
-    }
-    FichasStore.update(state.activeId, (f) => {
-      f.meds = f.meds || {};
-      f.meds.errores = f.meds.errores || [];
-      f.meds.errores.push({ etapa, desc, ts: Date.now() });
-    });
-    renderLista();
-    $("#err-desc").value = "";
-    renderErrores();
+const ERROR_TEMPLATES = [
+  { id: "dup", etapa: "Prescripción", titulo: "Duplicación terapéutica (recetas vigentes).", requiereMed: false },
+  { id: "freq", etapa: "Prescripción", titulo: "Frecuencia de administración incorrecta", requiereMed: true },
+  { id: "dosis", etapa: "Prescripción", titulo: "Dosis incorrecta", requiereMed: true },
+  { id: "forma", etapa: "Prescripción", titulo: "Forma farmacéutica incorrecta", requiereMed: true },
+  { id: "duracion", etapa: "Prescripción", titulo: "Duración de tratamiento incorrecto", requiereMed: true },
+];
+
+function buildMedLabel(med) {
+  const parts = [];
+  const nombre = (med?.nombre || med?.base || "").trim();
+  if (nombre) parts.push(nombre.toUpperCase());
+  if (med?.presentacion) parts.push(med.presentacion);
+  if (med?.origen) parts.push(med.origen);
+  return parts.join(" · ") || "MEDICAMENTO";
+}
+
+function renderErrorTemplates() {
+  const host = $("#err-templates");
+  if (!host) return;
+  host.innerHTML = "";
+  if (!state.activeId) {
+    host.innerHTML = '<div class="muted-card">— sin ficha —</div>';
+    return;
+  }
+  const ficha = FichasStore.get(state.activeId);
+  const meds = getAllMeds(ficha);
+  const medLabels = [];
+  const seen = new Set();
+  meds.forEach((m) => {
+    const label = buildMedLabel(m);
+    if (!label || seen.has(label)) return;
+    medLabels.push(label);
+    seen.add(label);
   });
+
+  ERROR_TEMPLATES.forEach((tpl) => {
+    const card = document.createElement("div");
+    card.className = "muted-card err-template";
+    const disabled = tpl.requiereMed && !medLabels.length ? "disabled" : "";
+    const medPicker = tpl.requiereMed
+      ? medLabels.length
+        ? `<div class="err-medchips" data-template="${tpl.id}">${medLabels
+            .map((lab) => `<span class="pill err-chip" data-value="${escapeHtml(lab)}">${escapeHtml(lab)}</span>`)
+            .join("")}</div>`
+        : '<div class="muted">No hay medicamentos en la ficha.</div>'
+      : "";
+    card.innerHTML = `
+      <div class="err-header"><strong>${tpl.etapa}:</strong> ${tpl.titulo}</div>
+      ${medPicker}
+      <div class="err-actions">
+        <button class="btn mini err-add-btn" data-template="${tpl.id}" ${disabled}>Agregar</button>
+      </div>`;
+    host.appendChild(card);
+  });
+
+  host.querySelectorAll(".err-medchips").forEach((wrap) => {
+    wrap.querySelectorAll(".err-chip").forEach((chip) => {
+      chip.addEventListener("click", () => {
+        wrap.querySelectorAll(".err-chip").forEach((c) => c.classList.remove("active"));
+        chip.classList.add("active");
+        wrap.dataset.selected = chip.dataset.value || "";
+      });
+    });
+  });
+  
+  host.querySelectorAll(".err-add-btn").forEach((btn) => {
+    btn.addEventListener("click", () => {
+      if (!state.activeId) {
+        alert("Abre una ficha primero.");
+        return;
+      }
+      const tpl = ERROR_TEMPLATES.find((t) => t.id === btn.dataset.template);
+      if (!tpl) return;
+      let medLabel = null;
+      if (tpl.requiereMed) {
+        const wrap = host.querySelector(`.err-medchips[data-template="${tpl.id}"]`);
+        medLabel = wrap?.dataset.selected || null;
+        if (!medLabel) {
+          alert("Selecciona un medicamento de la ficha.");
+          return;
+        }
+      }
+      const desc = medLabel ? `${tpl.titulo} — ${medLabel}` : tpl.titulo;
+      addMedError(tpl.etapa, desc, medLabel);
+    });
+  });
+}
+
+function addMedError(etapa, desc, medLabel = null) {
+  if (!state.activeId) return;
+  FichasStore.update(state.activeId, (f) => {
+    f.meds = f.meds || {};
+    f.meds.errores = f.meds.errores || [];
+    f.meds.errores.push({ etapa, desc, med: medLabel, ts: Date.now() });
+  });
+  renderLista();
+  renderErrores();
+  renderErrorTemplates();
+  computePRM();
+}
+
+function setupErrores() {
+  renderErrorTemplates();
 }
 
 function renderErrores() {
@@ -873,7 +955,10 @@ function renderErrores() {
   }
   arr.slice().reverse().forEach((err) => {
     const li = document.createElement("li");
-    li.innerHTML = `<div><strong>${err.etapa}</strong></div><div class="muted">${err.desc}</div>`;
+    const medTxt = err.med ? `<div class="pill" style="margin-top:6px">${escapeHtml(err.med)}</div>` : "";
+    li.innerHTML = `<div><strong>${escapeHtml(err.etapa || "Error")}</strong></div><div class="muted">${escapeHtml(
+      err.desc || ""
+    )}</div>${medTxt}`;
     list.appendChild(li);
   });
 }
@@ -911,6 +996,7 @@ function renderMedicamentos() {
     renderAutomed();
     renderPlantas();
   }
+  renderErrorTemplates();
 }
 
 function renderRecetas(kind, selector) {
@@ -1593,7 +1679,8 @@ function importarRayen(raw) {
           : Math.max(recetaDuracion, detalle.duracionMeses);
     }
     const payload = buildPayloadFromImport(picked, detalle);
-    receta.meds.push(payload);
+    const ajustado = aplicarExcepcionCelecoxib(payload, detalle);
+    receta.meds.push(ajustado);
   }
   if (!receta.meds.length) return;
   if (recetaDuracion !== null) {
@@ -1799,6 +1886,28 @@ function buildPayloadFromImport(sku, detalle = {}) {
   const cantidad = detalle.cantidad || "1";
   const unidad = inferUnidadFromSku(sku.forma, detalle.unidadToken);
   return { ...basePayload, cantidad, unidad };
+}
+
+function aplicarExcepcionCelecoxib(payload, detalle = {}) {
+  const baseUpper = (payload?.base || "").toUpperCase();
+  if (baseUpper !== "CELECOXIB") return payload;
+  const poso = (payload.posologia || "").trim();
+  const medLabel = (payload.nombre || payload.base || "CELECOXIB").toUpperCase();
+  if (!poso) {
+    const cantidad = detalle.cantidad || payload.cantidad || "5";
+    return {
+      ...payload,
+      cantidad,
+      unidad: payload.unidad || "COMPRIMIDO(S)",
+      posologia: "5 COMPRIMIDOS CADA 1 MES",
+    };
+  }
+  const esMensual = /\bMES(ES)?\b/.test(poso) || /\b30\s*D[IÍ]AS?\b/.test(poso);
+  const mencionaHoras = /HORAS?|HRS?/i.test(poso);
+  if (!esMensual && mencionaHoras) {
+    addMedError("Prescripción", `Frecuencia de administración incorrecta — ${medLabel} (${poso})`, medLabel);
+  }
+  return payload;
 }
 
 function findRayenCandidates(nombreNormalizado) {
