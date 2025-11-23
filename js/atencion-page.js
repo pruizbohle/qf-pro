@@ -72,6 +72,7 @@ const state = {
   tipoSeleccionado: null,
   medsDB: null,
   criterios: null,
+  criteriosMap: new Map(),
   interacciones: null,
   plantas: {},
 };
@@ -132,9 +133,11 @@ async function loadCriterios() {
   try {
     const data = await fetch("../data/criterios.json").then((r) => r.json());
     state.criterios = data;
+    state.criteriosMap = buildCriteriosMap(data);
   } catch (err) {
     console.error("❌ No fue posible cargar criterios.json", err);
     state.criterios = null;
+    state.criteriosMap = new Map();
   }
 }
 async function loadInteracciones() {
@@ -2313,6 +2316,56 @@ const normalizeBaseKey = (txt = "") =>
     .toUpperCase()
     .trim();
 
+function buildCriterioKey(baseKey = "", texto = "") {
+  const safeBase = normalizeBaseKey(baseKey);
+  const safeTxt = normalizeBaseKey(texto || baseKey);
+  if (!safeBase && !safeTxt) return "";
+  return `${safeBase}__${safeTxt}`;
+}
+
+function buildCriteriosMap(raw = {}) {
+  const map = new Map();
+  const addPool = (arr = [], tipo = "ppi") => {
+    arr.forEach((item) => {
+      const texto = (item.texto || item.descripcion || "").trim();
+      const base = (item.base || "").trim();
+      const recomendacion = (item["recomendación"] || item.recomendacion || "").trim();
+      const criterio = (item.criterio || item.criterios || "").trim();
+      if (!texto) return;
+
+      const bases = [base, ...(item.medicamentos || [])]
+        .map((b) => normalizeBaseKey(b))
+        .filter(Boolean);
+
+      bases.forEach((baseKey) => {
+        const entry = { base, baseKey, texto, recomendacion, criterio, tipo, key: buildCriterioKey(baseKey, texto) };
+        if (!map.has(baseKey)) map.set(baseKey, []);
+        map.get(baseKey).push(entry);
+      });
+    });
+  };
+
+  addPool(Array.isArray(raw.ppi) ? raw.ppi : [], "ppi");
+  addPool(Array.isArray(raw.start) ? raw.start : [], "start");
+  return map;
+}
+
+function normalizeRecomendacion(txt = "") {
+  const lower = txt.toLowerCase();
+  if (lower.includes("evitar")) return "evitar";
+  if (lower.includes("precauc")) return "precaucion";
+  if (lower.includes("agregar") || lower.includes("incluir")) return "incluir";
+  return "";
+}
+
+function iconForCriterio(entry = {}) {
+  const rec = normalizeRecomendacion(entry.recomendacion || "");
+  if (entry.tipo === "start" || rec === "incluir") return "✳️";
+  if (rec === "evitar") return "⛔";
+  if (rec === "precaucion") return "⚠️";
+  return "⚠️";
+}
+
 function buildBaseDisplayMap(meds = []) {
   const map = new Map();
   meds.forEach((med) => {
@@ -2348,6 +2401,63 @@ function detectarDuplicados(meds) {
   return duplicados;
 }
 
+function buildPpiAlertRows(ficha, meds) {
+  const ppiMeds = meds.filter((m) => m.flags?.ppi);
+  if (!ppiMeds.length) return [];
+
+  const criteriosMap = state.criteriosMap || new Map();
+  const prefs = ficha?.ppiChecks || {};
+  const vistos = new Set();
+  const seenKeys = new Set();
+  const filas = [];
+
+  ppiMeds.forEach((m) => {
+    const baseKey = normalizeBaseKey(m.base || m.nombre || "");
+    if (!baseKey || vistos.has(baseKey)) return;
+    vistos.add(baseKey);
+
+    const etiqueta = escapeHtml((m.nombre || m.base || "").toUpperCase());
+    const origen = m.origen ? ` (${escapeHtml(m.origen)})` : "";
+    const criterios = criteriosMap.get(baseKey) || [];
+
+    const entries = criterios.length
+      ? criterios
+      : [
+          {
+            base: m.base || m.nombre || baseKey,
+            baseKey,
+            texto: "",
+            recomendacion: "",
+            criterio: "",
+            tipo: "ppi",
+            key: buildCriterioKey(baseKey, m.nombre || m.base || baseKey),
+          },
+        ];
+
+    entries.forEach((entry, idx) => {
+      const critKey = entry.key || buildCriterioKey(baseKey, entry.texto || `${entry.tipo || "ppi"}-${idx}`);
+      if (!critKey || seenKeys.has(critKey)) return;
+      seenKeys.add(critKey);
+
+      const incluir = prefs[critKey] !== false;
+      const icon = iconForCriterio(entry);
+      const tooltip = escapeHtml(entry.criterio || entry.texto || "Criterio geriátrico");
+
+      filas.push(`
+        <div class="prm-ppi-row">
+          <span>• ${etiqueta}${origen}</span>
+          <div class="ppi-actions">
+            <label class="pick mini"><input type="checkbox" class="ppi-check" data-ppi-key="${critKey}" ${incluir ? "checked" : ""}/> Incluir</label>
+            <span class="ppi-icon" title="${tooltip}">${icon}</span>
+          </div>
+        </div>
+      `);
+    });
+  });
+
+  return filas;
+}
+
 function computePRM() {
   if (!state.activeId) {
     $("#prm-auto").innerHTML = '<div class="muted">— sin ficha —</div>';
@@ -2376,21 +2486,9 @@ function computePRM() {
   }
 
   if (ficha.age65) {
-    const ppiMeds = meds.filter((m) => m.flags?.ppi);
-    if (ppiMeds.length) {
-      const listado = [];
-      const vistos = new Set();
-      ppiMeds.forEach((m) => {
-        const clave = m.base || m.nombre || "";
-        if (!clave || vistos.has(clave)) return;
-        vistos.add(clave);
-        const etiqueta = (m.nombre || m.base || "").toUpperCase();
-        const origen = m.origen ? ` (${m.origen})` : "";
-        listado.push(`• ${etiqueta}${origen}`);
-      });
-      if (listado.length) {
-        resumen.push({ titulo: "Alertas PPI (≥65)", detalle: listado.join("<br>") });
-      }
+    const ppiRows = buildPpiAlertRows(ficha, meds);
+    if (ppiRows.length) {
+      resumen.push({ titulo: "Alertas PPI (≥65)", detalle: ppiRows.join("") });
     }
   }
 
@@ -2477,6 +2575,26 @@ function computePRM() {
         </div>`
     )
     .join("");
+
+  attachPpiCheckboxHandlers(out);
+}
+
+function attachPpiCheckboxHandlers(rootEl) {
+  if (!rootEl) return;
+  rootEl.querySelectorAll(".ppi-check").forEach((chk) => {
+    chk.addEventListener("change", () => {
+      const key = chk.dataset.ppiKey;
+      savePpiCheck(key, chk.checked);
+    });
+  });
+}
+
+function savePpiCheck(key, incluir) {
+  if (!state.activeId || !key) return;
+  FichasStore.update(state.activeId, (f) => {
+    f.ppiChecks = f.ppiChecks || {};
+    f.ppiChecks[key] = !!incluir;
+  });
 }
 
 function syncAutoPRMEntries(source, entries = []) {

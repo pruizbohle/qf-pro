@@ -86,6 +86,7 @@ export const FichasStore = {
       },
 
       prm: [],                         // {tipo,detalle,fecha}
+      ppiChecks: {},                   // { [criterioKey]: boolean }
       eventosAdversos: [],             // {medId,medNombre,efecto,nota?,fecha}
       tests: [],
       calculos: [],

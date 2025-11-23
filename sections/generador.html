@@ -100,6 +100,13 @@
       .toUpperCase()
       .trim();
 
+  const buildCriterioKey = (baseKey = "", texto = "") => {
+    const safeBase = normalizeBaseKey(baseKey);
+    const safeTxt = normalizeBaseKey(texto || baseKey);
+    if (!safeBase && !safeTxt) return "";
+    return `${safeBase}__${safeTxt}`;
+  };
+
   const lineDiagnosticos = (f) => {
     const antecedentes = f?.anamnesis?.antecedentes || [];
     const diag = antecedentes.length ? antecedentes.map(mapAnt).join(", ") : "sin registro";
@@ -273,15 +280,28 @@
   function buildPpiMap(raw) {
     const map = new Map();
     if (!raw) return map;
-    const pools = [];
-    if (Array.isArray(raw.ppi)) pools.push(...raw.ppi);
-    pools.forEach((item) => {
-      const baseKey = normalizeBaseKey(item.base || item.medicamento || item.id || "");
-      const texto = (item.texto || item.descripcion || "").trim();
-      if (!baseKey || !texto) return;
-      if (!map.has(baseKey)) map.set(baseKey, new Set());
-      map.get(baseKey).add(texto);
-    });
+
+    const addPool = (arr = [], tipo = "ppi") => {
+      arr.forEach((item) => {
+        const texto = (item.texto || item.descripcion || "").trim();
+        const recomendacion = (item["recomendación"] || item.recomendacion || "").trim();
+        const criterio = (item.criterio || item.criterios || "").trim();
+        if (!texto) return;
+
+        const bases = [item.base, ...(item.medicamentos || [])]
+          .map((b) => normalizeBaseKey(b))
+          .filter(Boolean);
+
+        bases.forEach((baseKey) => {
+          const entry = { baseKey, texto, tipo, recomendacion, criterio, key: buildCriterioKey(baseKey, texto) };
+          if (!map.has(baseKey)) map.set(baseKey, []);
+          map.get(baseKey).push(entry);
+        });
+      });
+    };
+
+    addPool(Array.isArray(raw.ppi) ? raw.ppi : [], "ppi");
+    addPool(Array.isArray(raw.start) ? raw.start : [], "start");
     return map;
   }
 
@@ -289,12 +309,16 @@
     if (!ficha.age65) return { aplica: false, hallazgos: [] };
     const baseLabels = buildBaseLabelMap(meds);
     const presentes = new Set(meds.map((m) => normalizeBaseKey(m.base || m.nombre || "")).filter(Boolean));
+    const prefs = ficha?.ppiChecks || {};
     const hallazgos = [];
     presentes.forEach((clave) => {
-      if (!dataState.ppiMap.has(clave)) return;
+      const criterios = (dataState.ppiMap.get(clave) || []).filter((item) => item.tipo === "ppi");
+      if (!criterios.length) return;
       const etiqueta = baseLabels.get(clave) || clave;
-      dataState.ppiMap.get(clave).forEach((texto) => {
-        hallazgos.push(`${etiqueta}: ${texto}`);
+      criterios.forEach((item) => {
+        const incluir = prefs[item.key] !== false;
+        if (!incluir) return;
+        hallazgos.push(`${etiqueta}: ${item.texto}`);
       });
     });
     hallazgos.sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));

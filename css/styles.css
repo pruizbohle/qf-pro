@@ -244,5 +244,25 @@ input,select,textarea{background:#0e1a2b;border:1px solid var(--line);color:#dbe
   font-size:.9rem;
 }
 
+.prm-ppi-row{
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  padding:6px 0;
+  border-bottom:1px solid rgba(226,232,240,.25);
+}
+
+.prm-ppi-row:last-child{border-bottom:none;}
+
+.ppi-actions{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  flex-wrap:wrap;
+}
+
+.ppi-icon{font-size:1.1rem;cursor:help;}
+
 .recipe-aps > .muted-card::before{content:"APS";}
 .recipe-sec > .muted-card::before{content:"SEC";}
