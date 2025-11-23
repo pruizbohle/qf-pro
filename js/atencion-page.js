@@ -1912,8 +1912,16 @@ function findSSASURCandidates(nombreNormalizado) {
 }
 
 function normalizarNombre(s = "") {
-  return s
-    .toUpperCase()
+  const replacements = [
+    [/\bTRIAMTERENO\b/g, "TRIAMTERENE"],
+  ];
+
+  let out = s.toUpperCase();
+  replacements.forEach(([re, val]) => {
+    out = out.replace(re, val);
+  });
+
+  return out
     .replace(/[().,:\/+\-]/g, " ")
     .replace(/\s+/g, " ")
     .trim();
