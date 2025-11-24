@@ -1868,15 +1868,15 @@ function buildSSASUREstablecimientoLabel(raw = "") {
   value = value.replace(/\s+/g, " ").trim();
   const upper = value.toUpperCase();
   if (upper.includes("CAPLC")) {
-    return "Establecimiento COMPLEJO ASISTENCIAL PADRE LAS CASAS";
+    return "CAPLC";
   }
   if (upper.includes("IMPERIAL HOSP")) {
-    return "Establecimiento IMPERIAL HOSP.";
+    return "IMPERIAL HOSP";
   }
   if (upper.includes("TEMUCO HOSP")) {
-    return "Establecimiento TEMUCO HOSP.";
+    return "TEMUCO HOSP";
   }
-  return `Establecimiento ${value}`.replace(/\s+/g, " ").trim();
+  return value.replace(/\s+/g, " ").trim();
 }
 
 function limpiarNombreSSASUR(producto = "") {
@@ -2333,9 +2333,13 @@ function buildCriteriosMap(raw = {}) {
       const criterio = (item.criterio || item.criterios || "").trim();
       if (!texto) return;
 
-      const bases = [base, ...(item.medicamentos || [])]
-        .map((b) => normalizeBaseKey(b))
-        .filter(Boolean);
+      const bases = Array.from(
+        new Set(
+          [base, ...(item.medicamentos || [])]
+            .map((b) => normalizeBaseKey(b))
+            .filter(Boolean)
+        )
+      );
 
       bases.forEach((baseKey) => {
         const entry = { base, baseKey, texto, recomendacion, criterio, tipo, key: buildCriterioKey(baseKey, texto) };
@@ -2402,25 +2406,24 @@ function detectarDuplicados(meds) {
 }
 
 function buildPpiAlertRows(ficha, meds) {
-  const ppiMeds = meds.filter((m) => m.flags?.ppi);
-  if (!ppiMeds.length) return [];
-
   const criteriosMap = state.criteriosMap || new Map();
   const prefs = ficha?.ppiChecks || {};
   const vistos = new Set();
   const seenKeys = new Set();
   const filas = [];
 
-  ppiMeds.forEach((m) => {
+  meds.forEach((m) => {
     const baseKey = normalizeBaseKey(m.base || m.nombre || "");
-    if (!baseKey || vistos.has(baseKey)) return;
+    const criterios = baseKey ? criteriosMap.get(baseKey) || [] : [];
+    const tieneCriterios = criterios.length > 0;
+    const esPpi = m.flags?.ppi || tieneCriterios;
+    if (!baseKey || vistos.has(baseKey) || !esPpi) return;
     vistos.add(baseKey);
 
     const etiqueta = escapeHtml((m.nombre || m.base || "").toUpperCase());
     const origen = m.origen ? ` (${escapeHtml(m.origen)})` : "";
-    const criterios = criteriosMap.get(baseKey) || [];
 
-    const entries = criterios.length
+    const entries = tieneCriterios
       ? criterios
       : [
           {

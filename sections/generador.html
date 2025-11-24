@@ -110,7 +110,7 @@
   const lineDiagnosticos = (f) => {
     const antecedentes = f?.anamnesis?.antecedentes || [];
     const diag = antecedentes.length ? antecedentes.map(mapAnt).join(", ") : "sin registro";
-    return `- Usuario con diagnósticos de (${diag}).`;
+    return `- Usuario con diagnósticos de ${diag}.`;
   };
 
   const lineAntecedentesRelevantes = (f) => {
@@ -119,7 +119,7 @@
     if (flags.antIAMACV) lista.push("IAM/ACV");
     if (flags.erc) lista.push("ERC");
     if (!lista.length) return "";
-    return `- Usuario con antecedentes de (${lista.join(", ")}).`;
+    return `- Usuario con antecedentes de ${lista.join(", ")}.`;
   };
 
   const linePDC = (f) => {
@@ -271,7 +271,8 @@
           .filter(Boolean) || [];
         const etiqueta = Array.from(new Set(encontrados)).map((txt) => txt.replace(/\s+/g, " ").trim()).join("+");
         const texto = ix.comentario || ix.descripcion || "Interacción detectada.";
-        return etiqueta ? `${etiqueta}: ${texto}` : texto;
+        const textoLimpio = etiqueta ? texto.replace(/^[^,]+,\s*/, "") : texto;
+        return etiqueta ? `${etiqueta}, ${textoLimpio}` : texto;
       })
       .filter(Boolean)
       .sort((a, b) => a.localeCompare(b, "es", { sensitivity: "base" }));
@@ -288,9 +289,13 @@
         const criterio = (item.criterio || item.criterios || "").trim();
         if (!texto) return;
 
-        const bases = [item.base, ...(item.medicamentos || [])]
-          .map((b) => normalizeBaseKey(b))
-          .filter(Boolean);
+        const bases = Array.from(
+          new Set(
+            [item.base, ...(item.medicamentos || [])]
+              .map((b) => normalizeBaseKey(b))
+              .filter(Boolean)
+          )
+        );
 
         bases.forEach((baseKey) => {
           const entry = { baseKey, texto, tipo, recomendacion, criterio, key: buildCriterioKey(baseKey, texto) };
@@ -310,6 +315,7 @@
     const baseLabels = buildBaseLabelMap(meds);
     const presentes = new Set(meds.map((m) => normalizeBaseKey(m.base || m.nombre || "")).filter(Boolean));
     const prefs = ficha?.ppiChecks || {};
+    const vistos = new Set();
     const hallazgos = [];
     presentes.forEach((clave) => {
       const criterios = (dataState.ppiMap.get(clave) || []).filter((item) => item.tipo === "ppi");
@@ -317,7 +323,8 @@
       const etiqueta = baseLabels.get(clave) || clave;
       criterios.forEach((item) => {
         const incluir = prefs[item.key] !== false;
-        if (!incluir) return;
+        if (!incluir || vistos.has(item.key)) return;
+        vistos.add(item.key);
         hallazgos.push(`${etiqueta}: ${item.texto}`);
       });
     });
@@ -347,10 +354,15 @@
     const interacciones = buildInteraccionesList(meds).map((txt) => `- ${txt}`);
     const ppi = buildPpiList(f, meds);
     const errores = buildErroresList(f);
+    const tieneSecExtra = meds.some((m) => m.origen === "A2S" || m.origen === "Extrasistema");
 
     const lines = ["3. PROBLEMAS RELACIONADOS A MEDICAMENTOS", "", "3.1 DUPLICIDADES"];
     if (!duplicidades.length) {
-      lines.push("No se identifican duplicidades.");
+      if (!tieneSecExtra) {
+        lines.push("No se encuentran recetas vigentes en nivel secundario o extra-sistema.");
+      } else {
+        lines.push("No se identifican duplicidades.");
+      }
     } else {
       lines.push(...duplicidades);
     }
@@ -383,18 +395,9 @@
     return lines.join("\n");
   }
 
-  function buildObservaciones(f) {
-    const lista = [f.notas, f.anamnesis?.textoLibre].map((txt) => (txt || "").trim()).filter(Boolean);
-    const lines = ["4. OBSERVACIONES", ""];
-    if (lista.length) {
-      lista.forEach((txt) => lines.push(`- ${txt}`));
-    }
-    return lines.join("\n");
-  }
-
   function buildIndicaciones(f) {
     const indicaciones = Array.isArray(f.indicaciones) ? f.indicaciones.map((txt) => (txt || "").trim()).filter(Boolean) : [];
-    const lines = ["5. INDICACIONES", ""];
+    const lines = ["4. INDICACIONES", ""];
     if (indicaciones.length) {
       indicaciones.forEach((txt) => lines.push(`- ${txt}`));
     }
@@ -402,7 +405,7 @@
   }
 
   function compilarFicha(f) {
-    const bloques = [buildAntecedentes(f), buildMedicacion(f), buildPRM(f), buildObservaciones(f), buildIndicaciones(f)]
+    const bloques = [buildAntecedentes(f), buildMedicacion(f), buildPRM(f), buildIndicaciones(f)]
       .filter((txt) => typeof txt === "string" && txt.trim().length)
       .join("\n\n");
     return bloques;
