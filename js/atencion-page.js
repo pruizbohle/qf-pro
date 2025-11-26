@@ -1870,6 +1870,9 @@ function buildSSASUREstablecimientoLabel(raw = "") {
   if (upper.includes("CAPLC")) {
     return "CAPLC";
   }
+    if (upper.includes("PADRE LAS CASAS")) {
+    return "CAPLC";
+  }
   if (upper.includes("IMPERIAL HOSP")) {
     return "IMPERIAL HOSP";
   }
@@ -1969,17 +1972,26 @@ function aplicarExcepcionCelecoxib(payload, detalle = {}) {
   if (baseUpper !== "CELECOXIB") return payload;
   const poso = (payload.posologia || "").trim();
   const medLabel = (payload.nombre || payload.base || "CELECOXIB").toUpperCase();
+  const cantidadFinal = detalle.cantidad || payload.cantidad || "5";
+  const unidadFinal = payload.unidad || "UNIDAD(ES)";
   if (!poso) {
-    const cantidad = detalle.cantidad || payload.cantidad || "5";
     return {
       ...payload,
-      cantidad,
-      unidad: payload.unidad || "UNIDAD(ES)",
-      posologia: "5 UNIDADES CADA 1 MES",
+      cantidad: cantidadFinal,
+      unidad: unidadFinal,
+      posologia: "5 UNIDAD(ES) CADA 30 DIAS",
     };
   }
   const esMensual = /\bMES(ES)?\b/.test(poso) || /\b30\s*D[IÍ]AS?\b/.test(poso);
   const mencionaHoras = /HORAS?|HRS?/i.test(poso);
+    if (esMensual) {
+    return {
+      ...payload,
+      cantidad: cantidadFinal,
+      unidad: unidadFinal,
+      posologia: `${cantidadFinal} ${unidadFinal} CADA 30 DIAS`,
+    };
+  }
   if (!esMensual && mencionaHoras) {
     addMedError("Prescripción", `Frecuencia de administración incorrecta — ${medLabel} (${poso})`, medLabel);
   }
@@ -2267,6 +2279,23 @@ function inferUnidadFromSku(forma, unidadToken) {
   return unidadToken || "UNIDAD(ES)";
 }
 
+function normalizeTagLabel(tag = "") {
+  return tag
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toUpperCase()
+    .trim();
+}
+
+function collectTagsForMed(med = {}) {
+  const direct = med.tags || med.etiquetas || med.raw?.tags;
+  if (Array.isArray(direct) && direct.length) return direct;
+  const skuInfo = state.medsDB?.skuById?.[med.sku] || state.medsDB?.meds?.[med.sku];
+  const skuTags = skuInfo?.tags || skuInfo?.etiquetas || skuInfo?.raw?.tags;
+  if (Array.isArray(skuTags)) return skuTags;
+  return [];
+}
+
 /* ======= PRM ======= */
 function getAllMeds(ficha) {
   if (!ficha) return [];
@@ -2276,11 +2305,12 @@ function getAllMeds(ficha) {
       (rec.meds || []).forEach((m) => {
         meds.push({
           ...m,
-          base: (m.base || "").toUpperCase(),
+          base: (m.base || m.nombre || "").toUpperCase(),
           nombre: m.nombre || "",
           origen,
           sourceKey,
           recetaId: rec.id,
+          base: (m.base || m.nombre || "").toUpperCase(),
         });
       });
     });
@@ -2294,6 +2324,7 @@ function getAllMeds(ficha) {
       nombre: m.nombre || "",
       origen: "Extrasistema",
       sourceKey: "extra",
+      tags: collectTagsForMed(m),
     });
   });
   (ficha.meds?.automed || []).forEach((m) => {
@@ -2304,6 +2335,7 @@ function getAllMeds(ficha) {
       nombre: texto || m.base || "",
       origen: "Automedicación",
       sourceKey: "automed",
+      tags: collectTagsForMed(m),
     });
   });
   return meds;
@@ -2386,21 +2418,50 @@ function buildBaseDisplayMap(meds = []) {
   return plainMap;
 }
 
+function buildFamiliaKeys(med = {}) {
+  const etiquetas = collectTagsForMed(med);
+  return etiquetas
+    .slice(1)
+    .map((et) => normalizeTagLabel(et))
+    .filter(Boolean);
+}
+
 function detectarDuplicados(meds) {
-  const mapa = new Map();
+  const mapaBase = new Map();
+  const mapaFamilia = new Map();
+
+  const addToMap = (mapa, clave, med) => {
+    if (!clave) return;
+    if (!mapa.has(clave)) mapa.set(clave, []);
+    mapa.get(clave).push(med);
+  };
+
   meds.forEach((med) => {
     const base = (med.base || "").toUpperCase();
-    if (!base) return;
-    if (!mapa.has(base)) mapa.set(base, []);
-    mapa.get(base).push(med);
+    addToMap(mapaBase, base, med);
+    buildFamiliaKeys(med).forEach((fam) => addToMap(mapaFamilia, fam, med));
   });
-  const duplicados = [];
-  mapa.forEach((arr, base) => {
-    if (arr.length < 2) return;
+
+  const buildEntry = (label, arr, tipo = "base") => {
+    if (arr.length < 2) return null;
     const claves = new Set(arr.map((m) => `${m.sourceKey || ""}:${m.recetaId || m.id || ""}`));
-    if (claves.size <= 1) return;
+    if (claves.size <= 1) return null;
+    if (tipo === "familia") {
+      const bases = new Set(arr.map((m) => m.base || m.nombre || ""));
+      if (bases.size <= 1) return null;
+    }
     const origenes = Array.from(new Set(arr.map((m) => m.origen || "Receta")));
-    duplicados.push({ base, meds: arr, origenes });
+    return { base: label, meds: arr, origenes, tipo };
+  };
+
+  const duplicados = [];
+  mapaBase.forEach((arr, base) => {
+    const entry = buildEntry(base, arr, "base");
+    if (entry) duplicados.push(entry);
+  });
+  mapaFamilia.forEach((arr, familia) => {
+    const entry = buildEntry(`FAMILIA: ${familia}`, arr, "familia");
+    if (entry) duplicados.push(entry);
   });
   return duplicados;
 }

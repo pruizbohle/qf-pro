@@ -762,7 +762,12 @@
       "start": true
     },
     "ram": {
-      "efectos": []
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "1-10%"
+        }
+      ]
     },
     "aware": null
   },
@@ -800,7 +805,12 @@
       "start": true
     },
     "ram": {
-      "efectos": []
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "1-10%"
+        }
+      ]
     },
     "aware": null
   },
@@ -837,7 +847,12 @@
       "start": true
     },
     "ram": {
-      "efectos": []
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "1-10%"
+        }
+      ]
     },
     "aware": null
   },
@@ -2822,7 +2837,7 @@
       "efectos": []
     },
     "aware": null
-      },
+  },
   {
     "id": "aas_100mg",
     "base_name": "ACIDO ACETILSALICILICO",
@@ -5190,7 +5205,7 @@
       ]
     },
     "aware": null
-      },
+  },
   {
     "id": "lac_667mgml",
     "base_name": "LACTULOSA",
@@ -5240,5 +5255,503 @@
       ]
     },
     "aware": null
-  }
+  },
+  {
+    "id": "lin_5mg",
+    "base_name": "LINAGLIPTINA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INHIBIDOR DPP-4"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ins_glar100lapz",
+    "base_name": "INSULINA GLARGINA",
+    "fuerza": "100 U/ML",
+    "forma": "INSULINA LAPIZ",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INSULINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ins_glar300lapz",
+    "base_name": "INSULINA GLARGINA",
+    "fuerza": "300 U/ML",
+    "forma": "INSULINA FRASCO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INSULINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "ins_aspa100lapz",
+    "base_name": "INSULINA ASPARTA",
+    "fuerza": "100 U/ML",
+    "forma": "INSULINA LAPIZ",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INSULINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dox_2mg",
+    "base_name": "DOXAZOSINA",
+    "fuerza": "2 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA CARDIOVASCULAR",
+      "ANTIHIPERTENSIVOS",
+      "ALFA-BLOQUEANTES"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "tra_par_37_325",
+    "base_name": "TRAMADOL/PARACETAMOL",
+    "fuerza": "37,5/325 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "APARATO LOCOMOTOR",
+      "ANALGESICOS",
+      "OPIOIDE + AINE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Ajustar en TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Evitar salvo indicación clínica."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "dapa_met_5_1000",
+    "base_name": "DAPAGLIFLOZINA/METFORMINA",
+    "fuerza": "5/1000 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INHIBIDOR SGLT2"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Evitar salvo indicación clínica."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "mela_5mg",
+    "base_name": "MELATONINA",
+    "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA NERVIOSO",
+      "HIPNOTICOS",
+      "HORMONAS NATURALES"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "sal_met5",
+    "base_name": "SALICILATO DE METILO",
+    "fuerza": "5%",
+    "forma": "POTE",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "APARATO LOCOMOTOR",
+      "ANALGESICOS",
+      "TOPICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "urea_emul10",
+    "base_name": "UREA EMULSION",
+    "fuerza": "10%",
+    "forma": "POTE",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "PIEL Y MUCOSAS",
+      "DERMATOLOGICOS",
+      "HIDRATANTE"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "meto_10mg",
+    "base_name": "METOCLOPRAMIDA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA DIGESTIVO",
+      "ANTIEMETICOS",
+      "INHIBIDOR D2 Y 5HT3"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+    "id": "terb_250mg",
+    "base_name": "TERBINAFINA",
+    "fuerza": "250 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "PIEL Y MUCOSAS",
+      "ANTIMICOTICOS",
+      "SISTEMICO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
+  "id": "jeringa_insulina",
+  "base_name": "JERINGA INSULINA",
+  "fuerza": null,
+  "forma": "JERINGA",
+  "programas": {
+    "aps": true,
+    "secundario": true,
+    "cronico": true
+  },
+  "tags": ["INSUMO"],
+  "flags": {
+    "ajuste_renal": { "requerido": false, "umbral": null, "detalle": null },
+    "contraindicado_renal": { "activo": false, "umbral": null, "detalle": null },
+    "embarazo": { "riesgo": "N/A", "detalle": null },
+    "ppi": false,
+    "start": false
+  },
+  "ram": { "efectos": [] },
+  "aware": null
+},
+{
+  "id": "aguja_lapiz_insulina",
+  "base_name": "AGUJA LAPIZ INSULINA",
+  "fuerza": null,
+  "forma": "AGUJA LAPIZ",
+  "programas": {
+    "aps": false,
+    "secundario": true,
+    "cronico": true
+  },
+  "tags": ["INSUMO"],
+  "flags": {
+    "ajuste_renal": { "requerido": false, "umbral": null, "detalle": null },
+    "contraindicado_renal": { "activo": false, "umbral": null, "detalle": null },
+    "embarazo": { "riesgo": "N/A", "detalle": null },
+    "ppi": false,
+    "start": false
+  },
+  "ram": { "efectos": [] },
+  "aware": null
+}
 ]

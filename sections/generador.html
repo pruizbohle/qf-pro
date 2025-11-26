@@ -43,6 +43,7 @@
   import { mountHeader } from "../js/header.js";
   import { FichasStore } from "../js/fichasStore.js";
   import { evaluarInteracciones } from "../js/rulesEngine.js";
+  import { loadAll as loadMeds } from "../js/medStore.js";
 
   mountHeader();
 
@@ -54,15 +55,16 @@
     interacciones: null,
     criterios: null,
     ppiMap: new Map(),
+    medsDB: null,
   };
 
   const dataReady = loadCatalogos();
 
   async function loadCatalogos() {
-    await Promise.all([loadInteracciones(), loadCriterios()]);
+    await Promise.all([loadInteracciones(), loadCriterios(), loadMedsDB()]);
   }
 
-    async function loadInteracciones() {
+  async function loadInteracciones() {
     try {
       const data = await fetch("../data/interacciones.json").then((r) => r.json());
       dataState.interacciones = data;
@@ -81,6 +83,15 @@
       console.error("❌ No fue posible cargar criterios.json", err);
       dataState.criterios = null;
       dataState.ppiMap = new Map();
+    }
+  }
+
+    async function loadMedsDB() {
+    try {
+      dataState.medsDB = await loadMeds();
+    } catch (err) {
+      console.error("❌ No fue posible cargar medicamentos.json", err);
+      dataState.medsDB = null;
     }
   }
 
@@ -106,6 +117,28 @@
     if (!safeBase && !safeTxt) return "";
     return `${safeBase}__${safeTxt}`;
   };
+
+    const normalizeTagLabel = (tag = "") =>
+    tag
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "")
+      .toUpperCase()
+      .trim();
+
+  const collectTagsForMed = (med = {}) => {
+    const direct = med.tags || med.etiquetas || med.raw?.tags;
+    if (Array.isArray(direct) && direct.length) return direct;
+    const skuInfo = dataState.medsDB?.skuById?.[med.sku] || dataState.medsDB?.meds?.[med.sku];
+    const skuTags = skuInfo?.tags || skuInfo?.etiquetas || skuInfo?.raw?.tags;
+    if (Array.isArray(skuTags)) return skuTags;
+    return [];
+  };
+
+  const buildFamiliaKeys = (med = {}) =>
+    collectTagsForMed(med)
+      .slice(1)
+      .map((et) => normalizeTagLabel(et))
+      .filter(Boolean);
 
   const lineDiagnosticos = (f) => {
     const antecedentes = f?.anamnesis?.antecedentes || [];
@@ -146,10 +179,21 @@
     return "";
   };
 
+    const limpiarPosologia = (item) => {
+    let posologia = (item.posologia || "").trim();
+    if (!posologia) return "";
+    const unidad = (item.unidad || "").toUpperCase();
+    if (unidad === "UNIDAD(ES)") {
+      posologia = posologia.replace(/^\s*(C[ÁA]PSULAS?|C[ÁA]PSULA|COMPRIMIDOS?|TABLETAS?|UNIDADES?)\s+/i, "");
+    }
+    return posologia.replace(/\s+/g, " ").trim();
+  };
+
   const formatearMed = (item) => {
     const nombre = (item.nombre || item.base || "").trim();
     const cantidad = formatearCantidad(item);
-    const posologia = item.posologia ? ` ${item.posologia}` : "";
+    const posologiaTxt = limpiarPosologia(item);
+    const posologia = posologiaTxt ? ` ${posologiaTxt}` : "";
     return `${nombre}${cantidad}${posologia}`.trim();
   };
 
@@ -194,11 +238,12 @@
         (rec.meds || []).forEach((m) => {
           meds.push({
             ...m,
-            base: (m.base || "").toUpperCase(),
+            base: (m.base || m.nombre || "").toUpperCase(),
             nombre: m.nombre || "",
             origen,
             sourceKey,
             recetaId: rec.id,
+            tags: collectTagsForMed(m),
           });
         });
       });
@@ -212,6 +257,7 @@
         nombre: m.nombre || "",
         origen: "Extrasistema",
         sourceKey: "extra",
+        tags: collectTagsForMed(m),
       });
     });
     (ficha.meds?.automed || []).forEach((m) => {
@@ -222,26 +268,48 @@
         nombre: texto || m.base || "",
         origen: "Automedicación",
         sourceKey: "automed",
+        tags: collectTagsForMed(m),
       });
     });
     return meds;
   }
 
   function detectarDuplicados(meds) {
-    const mapa = new Map();
+    const mapaBase = new Map();
+    const mapaFamilia = new Map();
+
+    const addToMap = (mapa, clave, med) => {
+      if (!clave) return;
+      if (!mapa.has(clave)) mapa.set(clave, []);
+      mapa.get(clave).push(med);
+    };
+
     meds.forEach((med) => {
       const base = (med.base || "").toUpperCase();
-      if (!base) return;
-      if (!mapa.has(base)) mapa.set(base, []);
-      mapa.get(base).push(med);
+      addToMap(mapaBase, base, med);
+      buildFamiliaKeys(med).forEach((fam) => addToMap(mapaFamilia, fam, med));
     });
-    const duplicados = [];
-    mapa.forEach((arr, base) => {
-      if (arr.length < 2) return;
+
+      addToMap(mapaBase, base, med);
+      buildFamiliaKeys(med).forEach((fam) => addToMap(mapaFamilia, fam, med));
       const claves = new Set(arr.map((m) => `${m.sourceKey || ""}:${m.recetaId || m.id || ""}`));
-      if (claves.size <= 1) return;
+      if (claves.size <= 1) return null;
+      if (tipo === "familia") {
+        const bases = new Set(arr.map((m) => m.base || m.nombre || ""));
+        if (bases.size <= 1) return null;
+      }
       const origenes = Array.from(new Set(arr.map((m) => m.origen || "Receta")));
-      duplicados.push({ base, origenes });
+      return { base: label, origenes, tipo };
+    };
+
+    const duplicados = [];
+    mapaBase.forEach((arr, base) => {
+      const entry = buildEntry(base, arr, "base");
+      if (entry) duplicados.push(entry);
+    });
+    mapaFamilia.forEach((arr, familia) => {
+      const entry = buildEntry(`FAMILIA: ${familia}`, arr, "familia");
+      if (entry) duplicados.push(entry);
     });
     return duplicados;
   }
@@ -356,12 +424,12 @@
     const errores = buildErroresList(f);
     const tieneSecExtra = meds.some((m) => m.origen === "A2S" || m.origen === "Extrasistema");
 
-    const lines = ["3. PROBLEMAS RELACIONADOS A MEDICAMENTOS", "", "3.1 DUPLICIDADES"];
+    const lines = ["3. PROBLEMAS RELACIONADOS A MEDICAMENTOS", "", "3.1 DISCREPANCIAS"];
     if (!duplicidades.length) {
       if (!tieneSecExtra) {
         lines.push("No se encuentran recetas vigentes en nivel secundario o extra-sistema.");
       } else {
-        lines.push("No se identifican duplicidades.");
+        lines.push("No se identifican discrepancias.");
       }
     } else {
       lines.push(...duplicidades);
