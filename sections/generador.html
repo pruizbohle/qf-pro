@@ -290,8 +290,8 @@
       buildFamiliaKeys(med).forEach((fam) => addToMap(mapaFamilia, fam, med));
     });
 
-      addToMap(mapaBase, base, med);
-      buildFamiliaKeys(med).forEach((fam) => addToMap(mapaFamilia, fam, med));
+    const buildEntry = (label, arr, tipo = "base") => {
+      if (arr.length < 2) return null;
       const claves = new Set(arr.map((m) => `${m.sourceKey || ""}:${m.recetaId || m.id || ""}`));
       if (claves.size <= 1) return null;
       if (tipo === "familia") {
