@@ -190,6 +190,44 @@
     "aware": null
   },
   {
+    "id": "vitd_800comp",
+    "base_name": "VITAMINA D",
+    "fuerza": "800 UI",
+    "forma": "CAPSULA",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "VITAMINAS Y NUTRIENTES",
+      "ELECTROLITO TERAPIA",
+      "SUPLEMENTO"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+  {
     "id": "fe_comp",
     "base_name": "COMPLEJO HIERRO",
     "fuerza": "",
@@ -3474,6 +3512,56 @@
     "id": "dul_30mg",
     "base_name": "DULOXETINA",
     "fuerza": "30 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANTIDEPRESIVOS",
+      "ISRS"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": true,
+        "umbral": "<30",
+        "detalle": "Contraindicado si TFG <30 mL/min."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Nauseas",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Insomnio",
+          "prevalencia": "9%"
+        },
+        {
+          "nombre": "Hiperhidrosis",
+          "prevalencia": "6%"
+        }
+      ]
+    },
+    "aware": null
+  },
+  {
+    "id": "dul_60mg",
+    "base_name": "DULOXETINA",
+    "fuerza": "60 MG",
     "forma": "COMPRIMIDO",
     "programas": {
       "aps": true,

@@ -12,6 +12,10 @@
     .tabs-row{display:flex;margin-left:8px;gap:10px;flex-wrap:wrap;margin:10px 0 8px}
     .tab-btn{border:1px solid rgba(148,163,184,.18);background:transparent;color:#d1d5db;border-radius:999px;padding:6px 10px;cursor:pointer}
     .tab-btn.active{background:#0c172c;border-color:rgba(148,163,184,.35)}
+    .tab-btn[data-tab="ficha"]{background:rgba(59,130,246,.12);border-color:rgba(59,130,246,.28)}
+    .tab-btn[data-tab="ficha"].active{background:rgba(59,130,246,.25);border-color:rgba(59,130,246,.5)}
+    .tab-btn[data-tab="prm"]{background:rgba(239,68,68,.12);border-color:rgba(239,68,68,.3)}
+    .tab-btn[data-tab="prm"].active{background:rgba(239,68,68,.22);border-color:rgba(239,68,68,.55)}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:center}
     .grid3{display:grid;grid-template-columns:1fr 280px;gap:24px;align-items:flex-start}
     .card{background:#0c172c;border:1px solid rgba(148,163,184,.18);border-radius:12px;padding:12px}
@@ -50,6 +54,11 @@
     .sugg div.picked{outline:2px solid #4663ff;background:#0b224a}
     .qty-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-top:8px}
     .muted-card{background:#0f172a;border:1px solid rgba(148,163,184,.2);border-radius:12px;padding:10px;color:#94a3b8}
+    .ram-card{background:#0f172a;border:1px solid rgba(148,163,184,.2);border-radius:12px;padding:12px;display:flex;flex-direction:column;gap:10px}
+    .ram-effects{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:8px}
+    .ram-saved{margin-top:6px}
+    .ram-meta{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+    .ram-pill{background:#111c33;border:1px solid rgba(148,163,184,.3);padding:2px 8px;border-radius:999px;font-size:12px;color:#e2e8f0}
     .modal{display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(15,23,42,.76);z-index:1000;justify-content:center;align-items:center;padding:16px}
     .modal .modal-card{background:#0f172a;border:1px solid rgba(148,163,184,.35);border-radius:16px;padding:20px;width:100%;max-width:720px;max-height:90vh;overflow:auto}
     .err-form{display:flex;flex-direction:column;gap:10px}
@@ -91,7 +100,7 @@
       <button class="tab-btn" data-tab="ante">ANTECEDENTES</button>
       <button class="tab-btn" data-tab="anam">ANAMNESIS</button>
       <button class="tab-btn" data-tab="meds">MEDICAMENTOS</button>
-      <button class="tab-btn" data-tab="ea">Reacciones adversas</button>
+      <button class="tab-btn" data-tab="ea">RAM</button>
       <button class="tab-btn" data-tab="prm">PRM</button>
       <button class="tab-btn" data-tab="edu">EDUCACIÓN</button>
       <button class="tab-btn" data-tab="herr">HERRAMIENTAS</button>
@@ -279,9 +288,9 @@
           <ul id="errores-list" class="list" style="margin-top:8px"></ul>
         </div>
 
-        <div id="panel-ea" data-panel class="card">
-          <div class="seg-title">Reacciones adversas (RAM)</div>
-          <div id="ea-out" class="row"></div>
+          <div id="panel-ea" data-panel class="card">
+          <div class="seg-title">RAM</div>
+          <div id="ea-out" class="col"></div>
         </div>
 
         <div id="panel-prm" data-panel class="card">

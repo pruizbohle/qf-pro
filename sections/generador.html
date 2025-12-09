@@ -400,6 +400,42 @@
     return { aplica: true, hallazgos };
   }
 
+   const normalizeRamEntry = (entry = {}) => {
+    const efectos = Array.isArray(entry.efectos)
+      ? entry.efectos
+      : entry.efecto
+      ? [{ nombre: entry.efecto, prevalencia: entry.prevalencia || "" }]
+      : [];
+    return { ...entry, efectos };
+  };
+
+  const parsePrevalencia = (prev = "") => {
+    const clean = String(prev).replace(/,/g, ".");
+    const match = clean.match(/([0-9]*\.?[0-9]+)/);
+    if (!match) return null;
+    const val = parseFloat(match[1]);
+    return Number.isNaN(val) ? null : val;
+  };
+
+  const categorizePrevalencia = (prev = "") => {
+    const val = parsePrevalencia(prev);
+    if (val === null) return null;
+    if (val >= 1) return "comunes";
+    if (val >= 0.1) return "raros";
+    return "muy raros";
+  };
+
+  const resumenCategoriaRam = (efectos = []) => {
+    const prioridad = { comunes: 3, raros: 2, "muy raros": 1 };
+    let mejor = null;
+    efectos.forEach((ef) => {
+      const cat = categorizePrevalencia(ef.prevalencia);
+      if (!cat) return;
+      if (!mejor || prioridad[cat] > prioridad[mejor]) mejor = cat;
+    });
+    return mejor;
+  };
+ 
   function buildErroresList(f) {
     const arr = f?.meds?.errores || [];
     return arr
@@ -411,6 +447,27 @@
       })
       .filter(Boolean);
   }
+
+    const buildRamLines = (f) => {
+    const eventos = (f?.eventosAdversos || []).map(normalizeRamEntry);
+    const lines = [];
+    eventos.forEach((ev) => {
+      const efectos = Array.isArray(ev.efectos) ? ev.efectos.filter((ef) => ef?.nombre) : [];
+      if (!efectos.length) return;
+      const sintomas = efectos.map((ef) => ef.nombre).filter(Boolean);
+      if (!sintomas.length) return;
+      const sintomasTxt = sintomas.join(", ");
+      const detalles = efectos
+        .map((ef) => `${ef.nombre}${ef.prevalencia ? ` (${ef.prevalencia})` : ""}`)
+        .join(", ");
+      const categoria = resumenCategoriaRam(efectos);
+      const catTxt = categoria ? ` ${categoria}` : "";
+      lines.push(
+        `- Usuario presenta ${sintomasTxt} a uso de ${ev.medNombre || "medicamento"}. La prevalencia de estos efectos adversos son${catTxt}: ${detalles}. Dejo constancia de notificación a plataforma SVI, referencia _____.`
+      );
+    });
+    return lines;
+  };
 
   function buildPRM(f) {
     const meds = getAllMeds(f);
@@ -458,6 +515,14 @@
       lines.push("No se identifican errores de medicación.");
     } else {
       lines.push(...errores);
+    }
+
+    const ram = buildRamLines(f);
+    lines.push("", "3.5 REACCIONES ADVERSAS A MEDICAMENTOS");
+    if (!ram.length) {
+      lines.push("No se registran reacciones adversas a medicamentos.");
+    } else {
+      lines.push(...ram);
     }
 
     return lines.join("\n");

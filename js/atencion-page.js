@@ -1608,6 +1608,88 @@ function renderPlantas() {
 }
 
 /* ======= EA ======= */
+function normalizeRamEntry(entry = {}) {
+  const efectos = Array.isArray(entry.efectos)
+    ? entry.efectos
+    : entry.efecto
+    ? [{ nombre: entry.efecto, prevalencia: entry.prevalencia || "" }]
+    : [];
+  return {
+    ...entry,
+    efectos,
+  };
+}
+
+function parsePrevalencia(prev = "") {
+  const clean = String(prev).replace(/,/g, ".");
+  const match = clean.match(/([0-9]*\.?[0-9]+)/);
+  if (!match) return null;
+  const val = parseFloat(match[1]);
+  return Number.isNaN(val) ? null : val;
+}
+
+function categorizePrevalencia(prev = "") {
+  const val = parsePrevalencia(prev);
+  if (val === null) return null;
+  if (val >= 1) return "comunes";
+  if (val >= 0.1) return "raros";
+  return "muy raros";
+}
+
+function resumenCategoriaRam(efectos = []) {
+  const prioridad = { comunes: 3, raros: 2, "muy raros": 1 };
+  let mejor = null;
+  efectos.forEach((ef) => {
+    const cat = categorizePrevalencia(ef.prevalencia);
+    if (!cat) return;
+    if (!mejor || prioridad[cat] > prioridad[mejor]) mejor = cat;
+  });
+  return mejor;
+}
+
+function findRamInfoForMed(med = {}) {
+  const candidatos = [];
+  if (med.sku) candidatos.push(med.sku);
+  if (med.id && !candidatos.includes(med.id)) candidatos.push(med.id);
+  const baseKey = (med.base || med.nombre || "").toLowerCase();
+  const baseMatches = state.medsDB?.byBase?.[baseKey];
+  if (Array.isArray(baseMatches)) {
+    baseMatches.forEach((sku) => {
+      if (!candidatos.includes(sku.skuId)) candidatos.push(sku.skuId);
+    });
+  }
+
+  for (const id of candidatos) {
+    const ram = state.medsDB?.meds?.[id]?.ram || [];
+    if (Array.isArray(ram) && ram.length) {
+      return { medId: id, efectos: ram };
+    }
+  }
+
+  const fallbackId = candidatos[0] || baseKey || med.nombre || null;
+  const fallbackRam = fallbackId ? state.medsDB?.meds?.[fallbackId]?.ram || [] : [];
+  return { medId: fallbackId, efectos: Array.isArray(fallbackRam) ? fallbackRam : [] };
+}
+
+function buildRamMedList(ficha) {
+  const meds = getAllMeds(ficha);
+  const uniq = new Map();
+  meds.forEach((m) => {
+    const info = findRamInfoForMed(m);
+    const key = info.medId || m.sku || m.id;
+    if (!key || uniq.has(key)) return;
+    const etiquetaOrigen = m.origen ? ` · ${m.origen}` : "";
+    const presentacion = m.presentacion ? ` (${m.presentacion})` : "";
+    uniq.set(key, {
+      key,
+      medNombre: m.nombre || m.base || "Medicamento",
+      label: `${m.nombre || m.base || "Medicamento"}${presentacion}${etiquetaOrigen}`.trim(),
+      efectos: info.efectos || [],
+    });
+  });
+  return Array.from(uniq.values()).sort((a, b) => a.medNombre.localeCompare(b.medNombre, "es", { sensitivity: "base" }));
+}
+
 function renderEA() {
   const out = $("#ea-out");
   if (!out) return;
@@ -1616,20 +1698,170 @@ function renderEA() {
     out.innerHTML = '<div class="muted">— sin datos —</div>';
     return;
   }
+
   const ficha = FichasStore.get(state.activeId);
-  const arr = ficha?.eventosAdversos || [];
-  if (!arr.length) {
-    out.innerHTML = '<div class="muted">— sin eventos registrados —</div>';
+  const meds = buildRamMedList(ficha);
+  if (!meds.length) {
+    out.innerHTML = '<div class="muted-card" style="width:100%">Agrega medicamentos para registrar RAM asociadas.</div>';
     return;
   }
-  const ul = document.createElement("ul");
-  ul.className = "list";
-  ul.innerHTML = arr
-    .slice()
-    .reverse()
-    .map((x) => `<li><strong>${x.medNombre}</strong><div class="muted">${x.efecto} · ${fmt(x.fecha)}</div></li>`)
-    .join("");
-  out.appendChild(ul);
+
+  const eventos = (ficha?.eventosAdversos || []).map(normalizeRamEntry);
+  const medMap = new Map(meds.map((m) => [m.key, m]));
+  const wrapper = document.createElement("div");
+  wrapper.className = "col";
+  wrapper.style.gap = "10px";
+
+  const card = document.createElement("div");
+  card.className = "ram-card";
+
+  const selectorRow = document.createElement("div");
+  selectorRow.className = "row";
+  selectorRow.style.gap = "8px";
+  selectorRow.style.alignItems = "center";
+
+  const label = document.createElement("label");
+  label.textContent = "Medicamento:";
+  const select = document.createElement("select");
+  select.id = "ram-med-select";
+  select.innerHTML = meds.map((m) => `<option value="${m.key}">${escapeHtml(m.label)}</option>`).join("");
+  label.appendChild(select);
+
+  const saveBtn = document.createElement("button");
+  saveBtn.className = "btn mini";
+  saveBtn.textContent = "Guardar RAM";
+
+  selectorRow.appendChild(label);
+  selectorRow.appendChild(saveBtn);
+
+  const efectosBox = document.createElement("div");
+  efectosBox.className = "ram-effects";
+
+  card.appendChild(selectorRow);
+  card.appendChild(efectosBox);
+
+  const savedWrap = document.createElement("div");
+  savedWrap.className = "ram-saved";
+
+  wrapper.appendChild(card);
+  wrapper.appendChild(savedWrap);
+  out.appendChild(wrapper);
+
+  const defaultSel = medMap.has(eventos[0]?.medId) ? eventos[0].medId : meds[0]?.key;
+  if (defaultSel) select.value = defaultSel;
+
+  function drawEfectos() {
+    const medId = select.value;
+    const med = medMap.get(medId);
+    efectosBox.innerHTML = "";
+    if (!med) {
+      efectosBox.innerHTML = '<div class="muted-card">Selecciona un medicamento.</div>';
+      saveBtn.disabled = true;
+      return;
+    }
+    const efectos = med.efectos || [];
+    const registroPrevio = eventos.find((ev) => ev.medId === medId);
+    const selected = new Set((registroPrevio?.efectos || []).map((ef) => ef.nombre));
+    if (!efectos.length) {
+      efectosBox.innerHTML = '<div class="muted-card">Sin reacciones adversas registradas en la base de medicamentos.</div>';
+      saveBtn.disabled = true;
+      return;
+    }
+    saveBtn.disabled = false;
+    efectos.forEach((ef, idx) => {
+      const wrap = document.createElement("label");
+      wrap.className = "pick mini";
+      wrap.style.alignItems = "flex-start";
+      wrap.style.gap = "6px";
+      const id = `ram-${idx}-${Math.random().toString(36).slice(2, 7)}`;
+      wrap.innerHTML = `
+        <input type="checkbox" id="${id}" data-ram-ef value="${escapeHtml(ef.nombre || "")}" ${selected.has(ef.nombre) ? "checked" : ""}>
+        <div class="col" style="gap:2px;">
+          <strong>${escapeHtml(ef.nombre || "Reacción")}</strong>
+          <span class="muted">Prevalencia: ${escapeHtml(ef.prevalencia || "s/d")}</span>
+        </div>
+      `;
+      efectosBox.appendChild(wrap);
+    });
+  }
+
+  function drawSaved() {
+    savedWrap.innerHTML = "";
+    if (!eventos.length) {
+      savedWrap.innerHTML = '<div class="muted">— sin RAM registradas —</div>';
+      return;
+    }
+    const ul = document.createElement("ul");
+    ul.className = "list";
+    eventos
+      .slice()
+      .reverse()
+      .forEach((ev, idx) => {
+        const li = document.createElement("li");
+        const efectosTxt = (ev.efectos || [])
+          .map((ef) => `${escapeHtml(ef.nombre || "")}${ef.prevalencia ? ` (${escapeHtml(ef.prevalencia)})` : ""}`)
+          .filter(Boolean)
+          .join(", ");
+        const categoria = resumenCategoriaRam(ev.efectos);
+        li.innerHTML = `
+          <div class="ram-meta" style="justify-content:space-between;">
+            <div class="col" style="gap:4px;">
+              <strong>${escapeHtml(ev.medNombre || "Medicamento")}</strong>
+              <div class="muted">${efectosTxt || "Sin detalle"}</div>
+            </div>
+            <div class="row" style="gap:8px;align-items:center;">
+              ${categoria ? `<span class="ram-pill">${categoria}</span>` : ""}
+              <button class="btn mini" data-rm-ram="${eventos.length - 1 - idx}">Quitar</button>
+            </div>
+          </div>`;
+        ul.appendChild(li);
+      });
+    ul.querySelectorAll("[data-rm-ram]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const originalIdx = parseInt(btn.dataset.rmRam || "0", 10);
+        FichasStore.update(state.activeId, (f) => {
+          f.eventosAdversos = (f.eventosAdversos || []).filter((_, i) => i !== originalIdx);
+        });
+        renderEA();
+        computePRM();
+      });
+    });
+    savedWrap.appendChild(ul);
+  }
+
+  select.addEventListener("change", drawEfectos);
+  saveBtn.addEventListener("click", () => {
+    const medId = select.value;
+    const med = medMap.get(medId);
+    if (!med) return;
+    const checks = Array.from(efectosBox.querySelectorAll("input[data-ram-ef]"));
+    const picked = checks.filter((c) => c.checked).map((c) => c.value);
+    if (!picked.length) {
+      alert("Selecciona al menos una reacción adversa.");
+      return;
+    }
+    const efectos = med.efectos
+      .filter((ef) => picked.includes(ef.nombre))
+      .map((ef) => ({ nombre: ef.nombre, prevalencia: ef.prevalencia || "" }));
+    FichasStore.update(state.activeId, (f) => {
+      f.eventosAdversos = (f.eventosAdversos || []).map(normalizeRamEntry);
+      const idx = f.eventosAdversos.findIndex((ev) => ev.medId === medId);
+      const payload = {
+        id: uuid(),
+        medId,
+        medNombre: med.medNombre,
+        efectos,
+        fecha: Date.now(),
+      };
+      if (idx >= 0) f.eventosAdversos[idx] = payload;
+      else f.eventosAdversos.push(payload);
+    });
+    renderEA();
+    computePRM();
+  });
+
+  drawEfectos();
+  drawSaved();
 }
 
 /* ======= IMPORTACIÓN SSASUR ======= */
