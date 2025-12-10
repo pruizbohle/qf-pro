@@ -1616,6 +1616,7 @@ function normalizeRamEntry(entry = {}) {
     : [];
   return {
     ...entry,
+    medId: entry.medId != null ? String(entry.medId) : entry.medId,
     efectos,
   };
 }
@@ -1676,7 +1677,14 @@ function buildRamMedList(ficha) {
   const uniq = new Map();
   meds.forEach((m) => {
     const info = findRamInfoForMed(m);
-    const key = info.medId || m.sku || m.id;
+    const key =
+      info.medId != null
+        ? String(info.medId)
+        : m.sku != null
+        ? String(m.sku)
+        : m.id != null
+        ? String(m.id)
+        : null;
     if (!key || uniq.has(key)) return;
     const etiquetaOrigen = m.origen ? ` · ${m.origen}` : "";
     const presentacion = m.presentacion ? ` (${m.presentacion})` : "";
