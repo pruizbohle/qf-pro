@@ -2027,7 +2027,7 @@
     "id": "ins_cristalina",
     "base_name": "INSULINA CRISTALINA",
     "fuerza": "100 UI/ML",
-    "forma": "UI",
+    "forma": "FRASCO",
     "programas": {
       "aps": true,
       "secundario": true,
@@ -2063,9 +2063,9 @@
   },
   {
     "id": "ins_lenta",
-    "base_name": "INSULINA RETARDADA",
+    "base_name": "INSULINA NPH",
     "fuerza": "100 UI/ML",
-    "forma": "UI",
+    "forma": "FRASCO",
     "programas": {
       "aps": true,
       "secundario": true,
@@ -2599,6 +2599,14 @@
         {
           "nombre": "Dolor abdominal",
           "prevalencia": "5%"
+                  },
+        {
+          "nombre": "Meteorismo",
+          "prevalencia": "s/d"
+        },
+        {
+          "nombre": "Distensión abdominal",
+          "prevalencia": "s/d"
         }
       ]
     },

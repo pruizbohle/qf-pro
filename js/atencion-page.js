@@ -1648,54 +1648,15 @@ function resumenCategoriaRam(efectos = []) {
   return mejor;
 }
 
-function findRamInfoForMed(med = {}) {
-  const candidatos = [];
-  if (med.sku) candidatos.push(med.sku);
-  if (med.id && !candidatos.includes(med.id)) candidatos.push(med.id);
-  const baseKey = (med.base || med.nombre || "").toLowerCase();
-  const baseMatches = state.medsDB?.byBase?.[baseKey];
-  if (Array.isArray(baseMatches)) {
-    baseMatches.forEach((sku) => {
-      if (!candidatos.includes(sku.skuId)) candidatos.push(sku.skuId);
-    });
-  }
-
-  for (const id of candidatos) {
-    const ram = state.medsDB?.meds?.[id]?.ram || [];
-    if (Array.isArray(ram) && ram.length) {
-      return { medId: id, efectos: ram };
-    }
-  }
-
-  const fallbackId = candidatos[0] || baseKey || med.nombre || null;
-  const fallbackRam = fallbackId ? state.medsDB?.meds?.[fallbackId]?.ram || [] : [];
-  return { medId: fallbackId, efectos: Array.isArray(fallbackRam) ? fallbackRam : [] };
+function buildSkuLabel(sku) {
+  if (!sku) return "Medicamento";
+  const presentacion = sku.presentacion ? ` (${sku.presentacion})` : "";
+  return `${sku.nombre || sku.base || "Medicamento"}${presentacion}`.trim();
 }
 
-function buildRamMedList(ficha) {
-  const meds = getAllMeds(ficha);
-  const uniq = new Map();
-  meds.forEach((m) => {
-    const info = findRamInfoForMed(m);
-    const key =
-      info.medId != null
-        ? String(info.medId)
-        : m.sku != null
-        ? String(m.sku)
-        : m.id != null
-        ? String(m.id)
-        : null;
-    if (!key || uniq.has(key)) return;
-    const etiquetaOrigen = m.origen ? ` · ${m.origen}` : "";
-    const presentacion = m.presentacion ? ` (${m.presentacion})` : "";
-    uniq.set(key, {
-      key,
-      medNombre: m.nombre || m.base || "Medicamento",
-      label: `${m.nombre || m.base || "Medicamento"}${presentacion}${etiquetaOrigen}`.trim(),
-      efectos: info.efectos || [],
-    });
-  });
-  return Array.from(uniq.values()).sort((a, b) => a.medNombre.localeCompare(b.medNombre, "es", { sensitivity: "base" }));
+function getRamEfectosById(medId) {
+  const efectos = state.medsDB?.meds?.[medId]?.ram;
+  return Array.isArray(efectos) ? efectos : [];
 }
 
 function renderEA() {
@@ -1706,16 +1667,14 @@ function renderEA() {
     out.innerHTML = '<div class="muted">— sin datos —</div>';
     return;
   }
-
-  const ficha = FichasStore.get(state.activeId);
-  const meds = buildRamMedList(ficha);
-  if (!meds.length) {
-    out.innerHTML = '<div class="muted-card" style="width:100%">Agrega medicamentos para registrar RAM asociadas.</div>';
+  if (!state.medsDB?.skus?.length) {
+    out.innerHTML = '<div class="muted-card" style="width:100%">Base de medicamentos no disponible.</div>';
     return;
   }
 
+  const ficha = FichasStore.get(state.activeId);
   const eventos = (ficha?.eventosAdversos || []).map(normalizeRamEntry);
-  const medMap = new Map(meds.map((m) => [m.key, m]));
+  let selectedMed = null;
   const wrapper = document.createElement("div");
   wrapper.className = "col";
   wrapper.style.gap = "10px";
@@ -1730,10 +1689,16 @@ function renderEA() {
 
   const label = document.createElement("label");
   label.textContent = "Medicamento:";
-  const select = document.createElement("select");
-  select.id = "ram-med-select";
-  select.innerHTML = meds.map((m) => `<option value="${m.key}">${escapeHtml(m.label)}</option>`).join("");
-  label.appendChild(select);
+  const search = document.createElement("div");
+  search.className = "searchbox";
+  const searchInput = document.createElement("input");
+  searchInput.id = "ram-med-select";
+  searchInput.placeholder = "Escribe al menos 2 letras…";
+  const sugg = document.createElement("div");
+  sugg.className = "sugg";
+  search.appendChild(searchInput);
+  search.appendChild(sugg);
+  label.appendChild(search);
 
   const saveBtn = document.createElement("button");
   saveBtn.className = "btn mini";
@@ -1755,20 +1720,47 @@ function renderEA() {
   wrapper.appendChild(savedWrap);
   out.appendChild(wrapper);
 
-  const defaultSel = medMap.has(eventos[0]?.medId) ? eventos[0].medId : meds[0]?.key;
-  if (defaultSel) select.value = defaultSel;
+  function closeSuggestions() {
+    sugg.style.display = "none";
+    sugg.innerHTML = "";
+  }
+
+  function pickMed(sku) {
+    selectedMed = sku || null;
+    searchInput.value = sku?.nombre || "";
+    closeSuggestions();
+    drawEfectos();
+  }
+
+  function renderSuggestions(q) {
+    if (!q || q.length < 2) {
+      closeSuggestions();
+      return;
+    }
+    const items = (state.medsDB?.skus || []).filter((s) => s.nombre.includes(q)).slice(0, 60);
+    sugg.style.display = "block";
+    sugg.innerHTML = items.length
+      ? items.map((s) => `<div data-sku="${s.skuId}">${escapeHtml(s.nombre)}</div>`).join("")
+      : '<div class="muted">Sin resultados</div>';
+    sugg.querySelectorAll("[data-sku]").forEach((opt) => {
+      opt.addEventListener("click", () => {
+        sugg.querySelectorAll("div").forEach((n) => n.classList.remove("picked"));
+        opt.classList.add("picked");
+        const sku = state.medsDB?.skuById?.[opt.dataset.sku] || null;
+        pickMed(sku);
+      });
+    });
+  }
 
   function drawEfectos() {
-    const medId = select.value;
-    const med = medMap.get(medId);
     efectosBox.innerHTML = "";
-    if (!med) {
+    if (!selectedMed) {
       efectosBox.innerHTML = '<div class="muted-card">Selecciona un medicamento.</div>';
       saveBtn.disabled = true;
       return;
     }
-    const efectos = med.efectos || [];
-    const registroPrevio = eventos.find((ev) => ev.medId === medId);
+    const efectos = getRamEfectosById(selectedMed.skuId);
+    const registroPrevio = eventos.find((ev) => ev.medId === selectedMed.skuId);
     const selected = new Set((registroPrevio?.efectos || []).map((ef) => ef.nombre));
     if (!efectos.length) {
       efectosBox.innerHTML = '<div class="muted-card">Sin reacciones adversas registradas en la base de medicamentos.</div>';
@@ -1837,18 +1829,32 @@ function renderEA() {
     savedWrap.appendChild(ul);
   }
 
-  select.addEventListener("change", drawEfectos);
+  searchInput.addEventListener("input", () => {
+    const q = (searchInput.value || "").trim().toUpperCase();
+    renderSuggestions(q);
+  });
+
+  searchInput.addEventListener("focus", () => {
+    const q = (searchInput.value || "").trim().toUpperCase();
+    renderSuggestions(q);
+  });
+
+  searchInput.addEventListener("blur", () => {
+    setTimeout(closeSuggestions, 150);
+  });
   saveBtn.addEventListener("click", () => {
-    const medId = select.value;
-    const med = medMap.get(medId);
-    if (!med) return;
+    if (!selectedMed) {
+      alert("Selecciona un medicamento válido.");
+      return;
+    }
+    const medId = selectedMed.skuId;
     const checks = Array.from(efectosBox.querySelectorAll("input[data-ram-ef]"));
     const picked = checks.filter((c) => c.checked).map((c) => c.value);
     if (!picked.length) {
       alert("Selecciona al menos una reacción adversa.");
       return;
     }
-    const efectos = med.efectos
+    const efectos = getRamEfectosById(medId)
       .filter((ef) => picked.includes(ef.nombre))
       .map((ef) => ({ nombre: ef.nombre, prevalencia: ef.prevalencia || "" }));
     FichasStore.update(state.activeId, (f) => {
@@ -1857,7 +1863,7 @@ function renderEA() {
       const payload = {
         id: uuid(),
         medId,
-        medNombre: med.medNombre,
+        medNombre: buildSkuLabel(selectedMed),
         efectos,
         fecha: Date.now(),
       };
@@ -1867,6 +1873,13 @@ function renderEA() {
     renderEA();
     computePRM();
   });
+
+    if (eventos[0]?.medId) {
+    const sku = state.medsDB?.skuById?.[eventos[0].medId];
+    if (sku) {
+      pickMed(sku);
+    }
+  }
 
   drawEfectos();
   drawSaved();
@@ -2164,6 +2177,8 @@ function findSSASURCandidates(nombreNormalizado) {
 function normalizarNombre(s = "") {
   const replacements = [
     [/\bTRIAMTERENO\b/g, "TRIAMTERENE"],
+    [/\bINSULINA\s+RETARDADA\b/g, "INSULINA NPH"],
+    [/\bINSULATARD\b/g, "INSULINA NPH"],
   ];
 
   let out = s.toUpperCase();
