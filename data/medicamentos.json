@@ -804,6 +804,10 @@
         {
           "nombre": "Cefalea",
           "prevalencia": "1-10%"
+        },
+        {
+          "nombre": "Mialgia",
+          "prevalencia": "1-10%"
         }
       ]
     },
@@ -847,6 +851,10 @@
         {
           "nombre": "Cefalea",
           "prevalencia": "1-10%"
+        },
+        {
+          "nombre": "Mialgia",
+          "prevalencia": "1-10%"
         }
       ]
     },
@@ -888,6 +896,56 @@
       "efectos": [
         {
           "nombre": "Cefalea",
+          "prevalencia": "1-10%"
+        },
+        {
+          "nombre": "Mialgia",
+          "prevalencia": "1-10%"
+        }
+      ]
+    },
+    "aware": null
+  },
+    {
+    "id": "ros_10mg",
+    "base_name": "ROSUVASTATINA",
+    "fuerza": "10 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "HIPOLIPEMIANTES",
+      "ESTATINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "X",
+        "detalle": "Categoría X en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": false,
+      "start": true
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Cefalea",
+          "prevalencia": "1-10%"
+        },
+        {
+          "nombre": "Mialgia",
           "prevalencia": "1-10%"
         }
       ]
@@ -2762,7 +2820,7 @@
     "aware": null
   },
   {
-    "id": "tra_100mg",
+    "id": "tra_gts_100mg",
     "base_name": "TRAMADOL",
     "fuerza": "100 MG/ML",
     "forma": "GOTAS",
@@ -2796,8 +2854,24 @@
     "ram": {
       "efectos": [
         {
+          "nombre": "Constipación",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "25%"
+        },
+        {
+          "nombre": "Mareos",
+          "prevalencia": "25%"
+        },
+        {
           "nombre": "Nausea",
           "prevalencia": "20%"
+        },
+        {
+          "nombre": "Vómitos",
+          "prevalencia": "15%"
         }
       ]
     },
@@ -2816,7 +2890,6 @@
     "tags": [
       "ANALGESICOS",
       "OPIOIDE",
-      "CONTROLADO",
       "ARTROSIS LEVE Y MODERADA DE CADERA"
     ],
     "flags": {
@@ -2840,8 +2913,83 @@
     "ram": {
       "efectos": [
         {
+          "nombre": "Constipación",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "25%"
+        },
+        {
+          "nombre": "Mareos",
+          "prevalencia": "25%"
+        },
+        {
           "nombre": "Nausea",
           "prevalencia": "20%"
+        },
+        {
+          "nombre": "Vómitos",
+          "prevalencia": "15%"
+        }
+      ]
+    },
+    "aware": null
+  },
+    {
+    "id": "tra_100mg",
+    "base_name": "TRAMADOL",
+    "fuerza": "100 MG",
+    "forma": "COMPRIMIDO LP",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "ANALGESICOS",
+      "OPIOIDE",
+      "ARTROSIS LEVE Y MODERADA DE CADERA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": true,
+        "umbral": "<30",
+        "detalle": "Requiere ajuste si TFG <30 mL/min."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "C",
+        "detalle": "Categoría C en embarazo; evaluar riesgo/beneficio."
+      },
+      "ppi": true,
+      "start": false
+    },
+    "ram": {
+      "efectos": [
+        {
+          "nombre": "Constipación",
+          "prevalencia": "40%"
+        },
+        {
+          "nombre": "Somnolencia",
+          "prevalencia": "25%"
+        },
+        {
+          "nombre": "Mareos",
+          "prevalencia": "25%"
+        },
+        {
+          "nombre": "Nausea",
+          "prevalencia": "20%"
+        },
+        {
+          "nombre": "Vómitos",
+          "prevalencia": "15%"
         }
       ]
     },
@@ -2880,7 +3028,12 @@
       "start": false
     },
     "ram": {
-      "efectos": []
+      "efectos": [
+        {
+          "nombre": "Sabor amargo o metálico",
+          "prevalencia": "40%"
+        }
+      ]
     },
     "aware": null
   },
@@ -5504,6 +5657,44 @@
     },
     "aware": null
   },
+    {
+    "id": "ins_deg100lapz",
+    "base_name": "INSULINA DEGLUDEC",
+    "fuerza": "100 U/ML",
+    "forma": "INSULINA LAPIZ",
+    "programas": {
+      "aps": false,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "MEDICAMENTOS ENDOCRINOLOGICOS",
+      "HIPOGLICEMIANTES",
+      "INSULINA"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
   {
     "id": "dox_2mg",
     "base_name": "DOXAZOSINA",
@@ -5622,6 +5813,44 @@
     "id": "mela_5mg",
     "base_name": "MELATONINA",
     "fuerza": "5 MG",
+    "forma": "COMPRIMIDO",
+    "programas": {
+      "aps": true,
+      "secundario": true,
+      "cronico": true
+    },
+    "tags": [
+      "SISTEMA NERVIOSO",
+      "HIPNOTICOS",
+      "HORMONAS NATURALES"
+    ],
+    "flags": {
+      "ajuste_renal": {
+        "requerido": false,
+        "umbral": null,
+        "detalle": "No requiere ajuste renal específico."
+      },
+      "contraindicado_renal": {
+        "activo": false,
+        "umbral": null,
+        "detalle": "No contraindicado por función renal."
+      },
+      "embarazo": {
+        "riesgo": "N/A",
+        "detalle": "Sin información específica para embarazo."
+      },
+      "ppi": false,
+      "start": false
+    },
+    "ram": {
+      "efectos": []
+    },
+    "aware": null
+  },
+    {
+    "id": "mela_3mg",
+    "base_name": "MELATONINA",
+    "fuerza": "3 MG",
     "forma": "COMPRIMIDO",
     "programas": {
       "aps": true,
